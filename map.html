@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .editor-link img {
+            padding-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<script src="https://maps.api.2gis.ru/2.0/loader.js"
+        data-id="dgLoader"></script>
+<style type="text/css">
+    button {
+        background-color: #eee;
+    }
+</style>
+<div id="map" style="width: 100%; height: 100%;"></div>
+
+<script>
+    var map, wkts;
+    /* пример переопределения конфига для бесшовки
+    DG.customConfig = {
+        "protocol": "http:",
+        "webApiServer": "//catalog.web-staging.2gis.ru",
+        "tileServer": "//tileserver.web-staging.2gis.ru/tiles?x={x}&y={y}&z={z}&v=1&ts=solid_testing_sd",
+        "retinaTileServer": "//tileserver.web-staging.2gis.ru/tiles?x={x}&y={y}&z={z}&v=1&ts=solid_testing_hd",
+        "previewTileServer": "//tileserver.web-staging.2gis.ru/tiles?x={x}&y={y}&z={z}&v=1&size=64&ts=solid_testing_sd",
+        "previewRetinaTileServer": "//tileserver.web-staging.2gis.ru/tiles?x={x}&y={y}&z={z}&v=1&size=64&ts=solid_testing_hd",
+        "poiMetaServer": "//tileserver.web-staging.2gis.ru/poi?x={x}&y={y}&z={z}&v=1&ts=solid_testing_sd",
+        "retinaPoiMetaServer": "//tileserver.web-staging.2gis.ru?x={x}&y={y}&z={z}&v=1&ts=solid_testing_hd"
+    };
+    */
+    DG.then(function() {
+        map = DG.map('map', {
+            center: [54.98, 82.89],
+            zoom: 13
+        });
+        wkts = DG.featureGroup().addTo(map);
+        DG.control.ruler().addTo(map);
+        style = { color: "#3388ff"};
+
+        var inputGeo = location.hash.slice(1);
+        if (inputGeo) {
+            inputGeo = decodeURIComponent(inputGeo);
+            DG.Wkt.geoJsonLayer(inputGeo.trim(), style).addTo(wkts);
+            map.fitBounds(wkts.getBounds());
+        }
+    });
+
+
+</script>
+
+</body>
+</html>
+
+
+
