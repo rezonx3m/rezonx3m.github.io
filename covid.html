@@ -25,7 +25,7 @@
                 case "Italy":
                     return "#009246";
                 case "China":
-                    return "#FFFF00";
+                    return "#fffd45";
                 case "Spain":
                     return "#FABD00";
                 case "Germany":
@@ -36,6 +36,24 @@
                     return "#FF69B4";
                 default:
                     return stringToColor(str)
+            }
+        }
+
+
+        function getPopulation(str) {
+            switch (str) {
+                case "Russia":
+                    return 144000000;
+                case "Italy":
+                    return 60000000;
+                case "China":
+                    return 1393000000;
+                case "Germany":
+                    return 82000000;
+                case "United States":
+                    return 328000000;
+                default:
+                    return 1;
             }
 
         }
@@ -49,36 +67,74 @@
             -ms-user-select: none;
         }
 
-        body {
+        html, body {
             background-color: #EAEAEA;
+            margin: 0 0 0 0;
+            padding: 0 0 0 0;
+            height: 100%;
+            width: 100%;
         }
     </style>
 </head>
 
 
 <body>
-<div style="width: 100%">
-    <canvas id="canvas1"></canvas>
+
+<div style="width: 50%; float: left;">
+    <canvas id="canvas_confirmed_rate"></canvas>
+</div>
+
+
+<div style="width: 50%; float: left;">
+    <canvas id="canvas_deaths_rate"></canvas>
 
 </div>
-<br><br>
-<div style="width: 100%">
-    <canvas id="canvas2"></canvas>
+<br/>
+
+
+<div style="width: 50%; float: left;">
+    <canvas id="canvas_confirmed_inc_per_population"></canvas>
+</div>
+
+
+<div style="width: 50%; float: left;">
+    <canvas id="canvas_deaths_inc_per_population"></canvas>
 
 </div>
-<br><br>
+<br/>
 
-<div style="width: 100%">
-    <canvas id="canvas3"></canvas>
+
+<div style="width: 50%; float: left;">
+    <canvas id="canvas_confirmed_inc"></canvas>
+</div>
+<div style="width: 50%; float: left;">
+    <canvas id="canvas_deaths_inc"></canvas>
+</div>
+
+<br/>
+<div style="width: 50%; float:left;">
+    <canvas id="canvas_confirmed"></canvas>
+
+</div>
+<div style="width: 50%; float:left;">
+    <canvas id="canvas_deaths"></canvas>
+
 </div>
 
 <script>
 
 
     window.onload = function () {
-        var datasets1 = [];
-        var datasets2 = [];
-        var datasets3 = [];
+        var datasets_confirmed = [];
+        var datasets_confirmed_inc = [];
+        var datasets_confirmed_rate = [];
+        var datasets_deaths = [];
+        var datasets_deaths_inc = [];
+        var datasets_deaths_rate = [];
+
+        var datasets_confirmed_inc_per_pupolation = [];
+        var datasets_deaths_inc_per_pupolation = [];
+
         $.getJSON("https://covid.2gis.ru/covid19-global-history.json", function (json) {
             var rusLenght = 0;
             for (let prop in json) {
@@ -88,7 +144,7 @@
             }
 
             for (let prop in json) {
-                var item1 = {
+                var item_confirmed = {
                     label: prop,
                     data: json[prop].confirmed,
                     backgroundColor: getColor(prop),
@@ -98,7 +154,7 @@
                 }
 
 
-                var item2 = {
+                var item_confirmed_inc = {
                     label: prop,
                     data: json[prop].confirmed_inc,
                     backgroundColor: getColor(prop),
@@ -110,11 +166,60 @@
                 var confirmed = json[prop].confirmed;
                 var dataset = [];
                 for (j = 0; j < confirmed.length; j++) {
-                    if (j > 0) {
-                        dataset.push(((confirmed[j] - confirmed[j - 1]) / confirmed[j] * 100).toFixed(2))
+                    if (j >= 3) {
+                        var value =
+                            (
+                                ((confirmed[j - 2] - confirmed[j - 3]) / confirmed[j - 2]) +
+                                ((confirmed[j - 1] - confirmed[j - 2]) / confirmed[j - 1]) +
+                                ((confirmed[j] - confirmed[j - 1]) / confirmed[j])
+                            ) / 3 * 100
+                                .toFixed(2);
+                        dataset.push(value)
                     }
                 }
-                var item3 = {
+                var item_confirmed_rate = {
+                    label: prop,
+                    data: dataset,
+                    backgroundColor: getColor(prop),
+                    borderColor: getColor(prop),
+
+                    fill: false
+                }
+
+                var item_deaths = {
+                    label: prop,
+                    data: json[prop].deaths,
+                    backgroundColor: getColor(prop),
+                    borderColor: getColor(prop),
+
+                    fill: false
+                }
+
+
+                var item_deaths_inc = {
+                    label: prop,
+                    data: json[prop].deaths_inc,
+                    backgroundColor: getColor(prop),
+                    borderColor: getColor(prop),
+
+                    fill: false
+                }
+
+                var deaths = json[prop].deaths;
+                var dataset = [];
+                for (j = 0; j < deaths.length; j++) {
+                    if (j >= 3) {
+                        var value =
+                            (
+                                ((deaths[j - 2] - deaths[j - 3]) / deaths[j - 2]) +
+                                ((deaths[j - 1] - deaths[j - 2]) / deaths[j - 1]) +
+                                ((deaths[j] - deaths[j - 1]) / deaths[j])
+                            ) / 3 * 100
+                                .toFixed(2);
+                        dataset.push(value)
+                    }
+                }
+                var item_deaths_rate = {
                     label: prop,
                     data: dataset,
                     backgroundColor: getColor(prop),
@@ -124,19 +229,75 @@
                 }
 
 
-                if (prop == "Russia") {
-                    item1.borderWidth = 15;
-                    item2.borderWidth = 15;
-                    item3.borderWidth = 15;
-                } else {
-                    item1.borderWidth = 5;
-                    item2.borderWidth = 5;
-                    item3.borderWidth = 5;
+                var confirmed_inc = json[prop].confirmed_inc;
+
+
+                var dataset = [];
+
+                for (let j = 0; j < confirmed_inc.length; j++) {
+
+                    var value = (confirmed_inc[j] / getPopulation(prop) * 100).toFixed(5)
+                    dataset.push(value)
+
                 }
 
-                datasets1.push(item1);
-                datasets2.push(item2);
-                datasets3.push(item3);
+                var item_confirmed_inc_per_population = {
+                    label: prop,
+                    data: dataset,
+                    backgroundColor: getColor(prop),
+                    borderColor: getColor(prop),
+
+                    fill: false
+                }
+
+
+                dataset = [];
+
+                var deaths_inc = json[prop].deaths_inc;
+                for (let j = 0; j < deaths_inc.length; j++) {
+
+                    var value = (deaths_inc[j] / getPopulation(prop) * 100).toFixed(5)
+                    dataset.push(value)
+
+                }
+
+
+
+                var item_deaths_inc_per_population = {
+                    label: prop,
+                    data: dataset,
+                    backgroundColor: getColor(prop),
+                    borderColor: getColor(prop),
+
+                    fill: false
+                }
+
+
+
+                if (prop == "Russia") {
+                    item_confirmed.pointBorderColor = item_confirmed_inc.pointBorderColor = item_confirmed_rate.pointBorderColor = 'red';
+                    item_deaths.pointBorderColor = item_deaths_inc.pointBorderColor = item_deaths_rate.pointBorderColor = 'red';
+                    item_confirmed_inc_per_population.pointBorderColor = item_deaths_inc_per_population.pointBorderColor = 'red';
+                    item_confirmed.borderWidth = item_confirmed_inc.borderWidth = item_confirmed_rate.borderWidth = 5;
+                    item_deaths.borderWidth = item_deaths_inc.borderWidth = item_deaths_rate.borderWidth = 5;
+                    item_confirmed_inc_per_population.borderWidth = item_deaths_inc_per_population.borderWidth = 5;
+
+
+                } else {
+                    item_confirmed.borderDash = item_confirmed_inc.borderDash = item_confirmed_rate.borderDash = [15, 3]
+                    item_deaths.borderDash = item_deaths_inc.borderDash = item_deaths_rate.borderDash = [15, 3]
+                    item_confirmed_inc_per_population.borderDash = item_deaths_inc_per_population.borderDash = [15, 3]
+
+                }
+
+                datasets_confirmed.push(item_confirmed);
+                datasets_confirmed_inc.push(item_confirmed_inc);
+                datasets_confirmed_rate.push(item_confirmed_rate);
+                datasets_deaths.push(item_deaths);
+                datasets_deaths_inc.push(item_deaths_inc);
+                datasets_deaths_rate.push(item_deaths_rate);
+                datasets_confirmed_inc_per_pupolation.push(item_confirmed_inc_per_population);
+                datasets_deaths_inc_per_pupolation.push(item_deaths_inc_per_population);
             }
 
 
@@ -150,7 +311,7 @@
 
                 data: {
                     labels: labels,
-                    datasets: datasets1
+                    datasets: datasets_confirmed
                 },
                 options: {
                     responsive: true,
@@ -179,6 +340,9 @@
                             scaleLabel: {
                                 display: true,
                                 labelString: 'кол-во человек'
+                            },
+                            ticks: {
+                                min: 0
                             }
                         }]
                     }
@@ -186,8 +350,8 @@
             };
 
 
-            var ctx = document.getElementById('canvas1').getContext('2d');
-            window.myLine = new Chart(ctx, config);
+            var ctx = document.getElementById('canvas_confirmed').getContext('2d');
+            window.myLine_canvas_confirmed = new Chart(ctx, config);
 
             ///////////////////////
 
@@ -197,7 +361,7 @@
 
                 data: {
                     labels: labels,
-                    datasets: datasets2
+                    datasets: datasets_confirmed_inc
                 },
                 options: {
                     responsive: true,
@@ -226,6 +390,9 @@
                             scaleLabel: {
                                 display: true,
                                 labelString: 'кол-во человек'
+                            },
+                            ticks: {
+                                min: 0
                             }
                         }]
                     }
@@ -233,8 +400,8 @@
             };
 
 
-            ctx = document.getElementById('canvas2').getContext('2d');
-            window.myLine = new Chart(ctx, config);
+            ctx = document.getElementById('canvas_confirmed_inc').getContext('2d');
+            window.myLine_canvas_confirmed_inc = new Chart(ctx, config);
 
 
             ///////////////////////
@@ -245,13 +412,13 @@
 
                 data: {
                     labels: labels,
-                    datasets: datasets3
+                    datasets: datasets_confirmed_rate
                 },
                 options: {
                     responsive: true,
                     title: {
                         display: true,
-                        text: 'Скорость распростронения в % относительно предыдущего дня'
+                        text: 'Сколько человек заболело за день относительно общего числа заболевших'
                     },
                     tooltips: {
                         mode: 'index',
@@ -273,7 +440,10 @@
                             display: true,
                             scaleLabel: {
                                 display: true,
-                                labelString: '% '
+                                labelString: '%'
+                            },
+                            ticks: {
+                                min: 0
                             }
                         }]
                     }
@@ -281,8 +451,250 @@
             };
 
 
-            ctx = document.getElementById('canvas3').getContext('2d');
-            window.myLine = new Chart(ctx, config);
+            ctx = document.getElementById('canvas_confirmed_rate').getContext('2d');
+            window.myLine_canvas_confirmed_rate = new Chart(ctx, config);
+
+            var config = {
+                type: 'line',
+
+                data: {
+                    labels: labels,
+                    datasets: datasets_deaths
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Количество смертей'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Номер дня, после того, как заразилось 100 человек'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'кол-во человек'
+                            },
+                            ticks: {
+                                min: 0
+                            }
+                        }]
+                    }
+                }
+            };
+
+
+            var ctx = document.getElementById('canvas_deaths').getContext('2d');
+            window.myLine_canvas_deaths = new Chart(ctx, config);
+
+            ///////////////////////
+
+
+            config = {
+                type: 'line',
+
+                data: {
+                    labels: labels,
+                    datasets: datasets_deaths_inc
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Количество новых смертей'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Номер дня, после того, как заразилось 100 человек'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'кол-во человек'
+                            },
+                            ticks: {
+                                min: 0
+                            }
+                        }]
+                    }
+                }
+            };
+
+
+            ctx = document.getElementById('canvas_deaths_inc').getContext('2d');
+            window.myLine_canvas_deaths_inc = new Chart(ctx, config);
+
+
+            ///////////////////////
+
+
+            config = {
+                type: 'line',
+
+                data: {
+                    labels: labels,
+                    datasets: datasets_deaths_rate
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Сколько человек умерло за день относительно общего числа смертей'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Номер дня, после того, как заразилось 100 человек'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: '%'
+                            },
+                            ticks: {
+                                min: 0
+                            }
+                        }]
+                    }
+                }
+            };
+
+
+            ctx = document.getElementById('canvas_deaths_rate').getContext('2d');
+            window.myLine_canvas_deaths_rate = new Chart(ctx, config);
+
+            config = {
+                type: 'line',
+
+                data: {
+                    labels: labels,
+                    datasets: datasets_confirmed_inc_per_pupolation
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: '% новых случаев заболевания относительно населения страны'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Номер дня, после того, как заразилось 100 человек'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: '%'
+                            },
+                            ticks: {
+                                min: 0
+                            }
+                        }]
+                    }
+                }
+            };
+
+
+            ctx = document.getElementById('canvas_confirmed_inc_per_population').getContext('2d');
+            window.myLine_canvas_deaths_rate = new Chart(ctx, config);
+
+            config = {
+                type: 'line',
+
+                data: {
+                    labels: labels,
+                    datasets: datasets_deaths_inc_per_pupolation
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: '% новых смертей относительно населения страны'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Номер дня, после того, как заразилось 100 человек'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: '%'
+                            },
+                            ticks: {
+                                min: 0
+                            }
+                        }]
+                    }
+                }
+            };
+
+
+            ctx = document.getElementById('canvas_deaths_inc_per_population').getContext('2d');
+            window.myLine_canvas_deaths_rate = new Chart(ctx, config);
 
 
         });
