@@ -167,18 +167,19 @@
                     fill: false
                 }
 
-                var confirmed = json[prop].confirmed;
                 var dataset = [];
-                for (j = 0; j < confirmed.length; j++) {
-                    if (j >= 3) {
+                for (j = 0; j < json[prop].confirmed.length; j++) {
+                    if (j >= 2) {
                         var value =
                             (
-                                ((confirmed[j - 2] - confirmed[j - 3]) / confirmed[j - 2]) +
-                                ((confirmed[j - 1] - confirmed[j - 2]) / confirmed[j - 1]) +
-                                ((confirmed[j] - confirmed[j - 1]) / confirmed[j])
+                                (json[prop].confirmed_inc[j - 2] / json[prop].confirmed[j - 2]) +
+                                (json[prop].confirmed_inc[j - 1] / json[prop].confirmed[j - 1]) +
+                                (json[prop].confirmed_inc[j] / json[prop].confirmed[j])
                             ) / 3 * 100
                                 .toFixed(2);
                         dataset.push(value)
+                    } else {
+                        dataset.push(null)
                     }
                 }
                 var item_confirmed_rate = {
@@ -209,18 +210,19 @@
                     fill: false
                 }
 
-                var deaths = json[prop].deaths;
                 var dataset = [];
-                for (j = 0; j < deaths.length; j++) {
-                    if (j >= 3) {
+                for (j = 0; j < json[prop].deaths.length; j++) {
+                    if (j >= 2) {
                         var value =
                             (
-                                ((deaths[j - 2] - deaths[j - 3]) / deaths[j - 2]) +
-                                ((deaths[j - 1] - deaths[j - 2]) / deaths[j - 1]) +
-                                ((deaths[j] - deaths[j - 1]) / deaths[j])
+                                (json[prop].deaths_inc[j - 2] / json[prop].deaths[j - 2]) +
+                                (json[prop].deaths_inc[j - 1] / json[prop].deaths[j - 1]) +
+                                (json[prop].deaths_inc[j] / json[prop].deaths[j])
                             ) / 3 * 100
                                 .toFixed(2);
                         dataset.push(value)
+                    } else {
+                        dataset.push(null)
                     }
                 }
                 var item_deaths_rate = {
@@ -266,7 +268,6 @@
                 }
 
 
-
                 var item_deaths_inc_per_population = {
                     label: prop,
                     data: dataset,
@@ -275,7 +276,6 @@
 
                     fill: false
                 }
-
 
 
                 if (prop == "Russia") {
@@ -422,7 +422,7 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: 'Отношение количества заболевших за сутки к общему числу заболевших'
+                        text: 'Отношение количества заболевших за сутки к общему числу заболевших (среднее за 3 предыдущих дня)'
                     },
                     tooltips: {
                         mode: 'index',
@@ -570,7 +570,7 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: 'Отношение количества умерших за сутки к общему числу умерших'
+                        text: 'Отношение количества умерших за сутки к общему числу умерших (среднее за 3 предыдущих дня)'
                     },
                     tooltips: {
                         mode: 'index',
