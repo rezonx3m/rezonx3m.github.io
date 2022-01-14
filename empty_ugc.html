@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2GIS Map API</title>
+    <meta name="description" content="Quckstart with 2GIS Map API" />
+    <style>
+      html,
+      body,
+      #container {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .buttonRoot {
+        width: 32px;
+        box-shadow: 0 1px 3px 0 rgba(38, 38, 38, 0.5);
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .button {
+        padding: 0;
+        outline: 0;
+        border: none;
+        cursor: pointer;
+        background: #fff;
+        width: 32px;
+        height: 32px;
+        color: #262626;
+        box-sizing: border-box;
+      }
+
+      .button:hover {
+        opacity: 0.7;
+      }
+
+      .button:active {
+        color: #028eff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script src="./empty_ugc.js"></script>
+    <script>
+      const map = new mapgl.Map('container', {
+        center: [82.92126, 54.98759],
+        zoom: 8.63,
+        key: '4970330e-7f1c-4921-808c-0eb7c4e63001',
+        style: 'c080bb6a-8134-4993-93a1-5b4d8c36a59b',
+      });
+
+      source = new mapgl.GeoJsonTileSource(map._impl, {
+        url: 'https://tileserver.web-staging.2gis.ru/ald?x={x}&y={y}&z={z}&ts=ald&type=emptyugc',
+        maxZoom: 20,
+        attributes: {
+          bar: 'asd',
+        },
+      });
+
+      map._impl.on('click', (e) => {
+        e.targetData.getFeatureProperties().then((res) => {
+          window.location.href = `https://2gis.ru/firm/${res.id}`;
+        });
+      });
+
+      const layer = {
+        id: 'my-polygons-layer', // ID каждого слоя должен быть уникальным
+        name: 'test',
+        // Логика фильтрации или выбора данных для этого слоя
+        filter: [
+          'match',
+          ['sourceAttr', 'bar'],
+          ['asd'],
+          true, // Значение при совпадении атрибута bar источника cо значением "asd"
+          false, // Значение при несовпадении
+        ],
+
+        // Тип объекта отрисовки
+        type: 'point',
+
+        // Стиль объекта отрисовки
+        style: {
+          textField: ['get', ['name']],
+          iconImage: 'poi_shootingrange_7_i',
+          allowOverlap: true,
+          textFont: 'Noto_Sans',
+          textFontSize: 12,
+        },
+      };
+
+      map.on('styleload', () => {
+        map.addLayer(layer);
+      });
+
+      const controlContent = `
+                <div class="buttonRoot" id="find-me">
+                    <button class="button">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="32"
+                            height="32"
+                            viewBox="0 0 32 32"
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M17.89 26.27l-2.7-9.46-9.46-2.7 18.92-6.76zm-5.62-12.38l4.54 1.3 1.3 4.54 3.24-9.08z"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <p id="status"></p>
+            `;
+
+      const control = new mapgl.Control(map, controlContent, {
+        position: 'topLeft',
+      });
+
+      const status = control.getContainer().querySelector('#status');
+      let circle;
+
+      function success(pos) {
+        const center = [pos.coords.longitude, pos.coords.latitude];
+
+        status.textContent = '';
+        if (circle) {
+          circle.destroy();
+        }
+
+        circle = new mapgl.CircleMarker(map, {
+          coordinates: center,
+          radius: 14,
+          color: '#0088ff',
+          strokeWidth: 4,
+          strokeColor: '#ffffff',
+          stroke2Width: 6,
+          stroke2Color: '#0088ff55',
+        });
+        map.setCenter(center);
+        map.setZoom(16);
+      }
+
+      function error() {
+        status.textContent = 'Unable to retrieve your location';
+      }
+
+      function geoFindMe() {
+        if (!navigator.geolocation) {
+          status.textContent = 'Geolocation is not supported by your browser';
+        } else {
+          status.textContent = 'Locating…';
+          navigator.geolocation.getCurrentPosition(success, error);
+        }
+      }
+
+      control.getContainer().querySelector('#find-me').addEventListener('click', geoFindMe);
+    </script>
+  </body>
+</html>
