@@ -48,13 +48,13 @@
   </head>
   <body>
     <div id="container"></div>
-    <script src="./empty_ugc.js"></script>
+    <script src="./index.js"></script>
     <script>
       const map = new mapgl.Map('container', {
         center: [82.92126, 54.98759],
-        zoom: 8.63,
+        zoom: 12,
         key: '4970330e-7f1c-4921-808c-0eb7c4e63001',
-        style: 'c080bb6a-8134-4993-93a1-5b4d8c36a59b',
+        style: 'df507a78-69d9-4002-b55b-3bf591b8a850',
         lang: 'ru',
       });
 
@@ -91,9 +91,19 @@
         style: {
           textField: ['get', ['name']],
           iconImage: 'poi_shootingrange_7_i',
-          allowOverlap: true,
+          allowOverlap: false,
+
           textFont: 'Noto_Sans',
           textFontSize: 12,
+
+          iconPriority: 999,
+          textPriority: 999,
+          textHaloWidth: 1,
+          textHaloColor: 'rgba(255, 255, 255, 0.8)',
+          iconLabelingMargin: {
+            topBottom: 2,
+            leftRight: 2,
+          },
         },
       };
 
