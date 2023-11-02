@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Друзья на карте</title>
+    <script src="https://mapgl.2gis.com/api/js/v1"></script>
+    <style>
+        html,
+        body,
+        #container {
+            position: fixed 0;
+        }
+
+        /* stylelint-disable */
+        :global #map {
+            position: absolute 0;
+        }
+
+
+        /* stylelint-enable */
+    </style>
+
+</head>
+
+<body>
+
+
+    <div id="container"></div>
+    <script type="text/javascript">
+        const map = new mapgl.Map("container", {
+            center: [82.963483, 55.009882],
+            zoom: 13,
+            key: "042b5b75-f847-4f2a-b695-b5f58adc9dfd"
+        });
+    </script>
+
+</body>
+
+</html>
