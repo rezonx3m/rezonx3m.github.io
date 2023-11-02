@@ -1,442 +1,444 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Друзья на карте</title>
-    <script src="https://mapgl.2gis.com/api/js/v1"></script>
-    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-      
-    <style>
-html,
-body,
-#container {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: fixed 0;
-}
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Друзья на карте</title>
+  <script src="https://mapgl.2gis.com/api/js/v1"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+
+  <style>
+    html,
+    body,
+    #container {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: fixed 0;
+    }
 
 
-/* stylelint-disable */
-:global #map {
-  position: absolute 0;
-}      
+    /* stylelint-disable */
+    :global #map {
+      position: absolute 0;
+    }
 
-#main {
-  padding: 0px;
-  height: 100%;
-}
+    #main {
+      padding: 0px;
+      height: 100%;
+    }
 
-#div-id {
-  position: absolute;
-  top: 30px;
-  left: 30px;
-}
+    #div-id {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+    }
 
-.ava {
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 0px;
-  background-size: cover;
-  background-color: gray;
-  color: white;
-  font-weight: bold;
-  text-align: center;
-  transition-duration: 0.8s;
-    transition-property: transform;
-}
+    .ava {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 0px;
+      background-size: cover;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      transition-duration: 0.8s;
+      transition-property: transform;
+    }
 
-.ava-only-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .ava-only-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.fired-ava-container {
-  height: 31px;
-  width: 31px;
-  border-radius: 100px;
-  color: #262626;
-  background: #ffffff;
-  box-shadow: 0px 0px 5px white;
-  overflow: hidden;
-  position: absolute;
-  top: 24px;
-  left: 42px;
-  box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
-  overflow: hidden;
-  border: 3px solid white;
-  animation: scale 2s ease-in-out infinite;
-}
+    .fired-ava-container {
+      height: 31px;
+      width: 31px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      box-shadow: 0px 0px 5px white;
+      overflow: hidden;
+      position: absolute;
+      top: 24px;
+      left: 42px;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
 
-.ava-container {
-  height: 31px;
-  width: 31px;
-  border-radius: 100px;
-  color: #262626;
-  background: #ffffff;
-  box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
-  overflow: hidden;
-  border: 3px solid white;
-  animation: scale 2s ease-in-out infinite;
-}
+    .ava-container {
+      height: 31px;
+      width: 31px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
 
-.fire-marker-container {
-  transform-origin: 70% 50%;
-  transition-duration: 0.8s;
-    transition-property: transform;
-}
+    .fire-marker-container {
+      transform-origin: 70% 50%;
+      transition-duration: 0.8s;
+      transition-property: transform;
+    }
 
-@keyframes scale {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
+    @keyframes scale {
+      0% {
+        transform: scale(1);
+      }
 
+      50% {
+        transform: scale(1.05);
+      }
 
-    </style>
-  </head>
-  <body>
-      <div id="main">
-      <div id="container"></div>
-      </div>
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
 
-      <div id="controls">
-        <div id="div-id">
-          <input id="input-id" size="10" placeholder="userid"/>
-          <button onClick="changeId();">connect</button>
-          <!--
+<body>
+  <div id="main">
+    <div id="container"></div>
+  </div>
+
+  <div id="controls">
+    <div id="div-id">
+      <input id="input-id" size="10" placeholder="userid" />
+      <button onClick="changeId();">connect</button>
+      <!--
           <button onClick="test1();">test1</button>
           <button onClick="test2();">test2</button>
           <button onClick="test3();">test3</button> -->
 
-        </div>
-      </div>
+    </div>
+  </div>
 
-    <script type="text/javascript">
-      const map = new mapgl.Map("container", {
-  center: [82.963483, 55.009882],
-  zoom: 13,
-  key: "042b5b75-f847-4f2a-b695-b5f58adc9dfd"
-});
+  <script type="text/javascript">
+    const map = new mapgl.Map("container", {
+      center: [82.963483, 55.009882],
+      zoom: 13,
+      key: "042b5b75-f847-4f2a-b695-b5f58adc9dfd"
+    });
 
-var testMessage = {
-  type: "friendState",
-  payload: {
-    id: "d33df51bd4ce41e7a5bbbe28bc4cfc35",
-    lastSeen: 1698736151973,
-    location: {
-      lat: 55.01,
-      lon: 82.95,
-      azimuth: 206.91267,
-      speed: 160,
-      accuracy: 17.823999404907227
-    },
-    battery: {
-      level: 0.81
-    },
-    movement: {
-      status: "moving",
-      stoppedAt: 1698728448409
+    var testMessage = {
+      type: "friendState",
+      payload: {
+        id: "d33df51bd4ce41e7a5bbbe28bc4cfc35",
+        lastSeen: 1698736151973,
+        location: {
+          lat: 55.01,
+          lon: 82.95,
+          azimuth: 206.91267,
+          speed: 160,
+          accuracy: 17.823999404907227
+        },
+        battery: {
+          level: 0.81
+        },
+        movement: {
+          status: "moving",
+          stoppedAt: 1698728448409
+        }
+      }
+    };
+
+    function test1() {
+      processMessage(testMessage);
+      const multiplier1 = Math.random() > 0.5 ? 1 : -1;
+      const multiplier2 = Math.random() > 0.5 ? 1 : -1;
+      testMessage.payload.location.lon += 0.01 * multiplier1;
+      testMessage.payload.location.lat += 0.01 * multiplier2;
     }
-  }
-};
 
-function test1() {
-  processMessage(testMessage);
-  const multiplier1 = Math.random() > 0.5 ? 1 : -1;
-  const multiplier2 = Math.random() > 0.5 ? 1 : -1;
-  testMessage.payload.location.lon += 0.01 * multiplier1;
-  testMessage.payload.location.lat += 0.01 * multiplier2;
-}
+    function test2() {
+      testMessage.payload.location.lon = 82.936536;
+      testMessage.payload.location.lat = 55.007961;
+      processMessage(testMessage);
+    }
 
-function test2() {
-  testMessage.payload.location.lon = 82.936536;
-  testMessage.payload.location.lat = 55.007961;
-  processMessage(testMessage);
-}
+    function test3() {
+      rotateMarker("d33df51bd4ce41e7a5bbbe28bc4cfc35", Math.random() * 360);
+    }
 
-function test3() {
-  rotateMarker("d33df51bd4ce41e7a5bbbe28bc4cfc35", Math.random() * 360);
-}
+    var globalProfiles = {};
+    var globalMarkers = {};
+    var globalStates = {};
+    var globalWS = null;
 
-var globalProfiles = {};
-var globalMarkers = {};
-var globalStates = {};
-var globalWS = null;
+    const SOCKET_PATH = "wss://zond.api.2gis.ru/api/1.1/user/:id/ws";
 
-const SOCKET_PATH = "wss://zond.api.2gis.ru/api/1.1/user/:id/ws";
+    const FIRE_MARKER_CONTAINER = "fire-marker-container";
+    const BASIC_MARKER_CONTAINER = "basic-marker-container";
+    const STATE_MOVING = "moving";
+    const STATE_STOPPED = "stopped";
 
-const FIRE_MARKER_CONTAINER = "fire-marker-container";
-const BASIC_MARKER_CONTAINER = "basic-marker-container";
-const STATE_MOVING = "moving";
-const STATE_STOPPED = "stopped";
+    const BASE_ANIMATION_TIME = 0.2;
+    const BASE_SPEED = 1;
 
-const BASE_ANIMATION_TIME = 0.2;
-const BASE_SPEED = 1;
+    function changeId() {
+      clearAll();
+      globalWS = initSocket(document.getElementById("input-id").value);
+    }
 
-function changeId() {
-  clearAll();
-  globalWS = initSocket(document.getElementById("input-id").value);
-}
-
-function clearAll() {
-  globalProfiles = {};
-  for (const id in globalMarkers) {
-    removeMarker(id);
-  }
-  globalMarkers = {};
-  globalStates = {};
-
-  if (globalWS !== null) {
-    globalWS.close();
-  }
-}
-
-function setStateConnected() {}
-
-function initSocket(id) {
-  const wssUrlPattern = SOCKET_PATH;
-  const wssUrl = wssUrlPattern.replace(":id", id);
-  const ws = new WebSocket(wssUrl);
-
-  ws.onopen = function () {};
-
-  ws.onerror = function (e) {
-    console.log("ws error");
-    console.log(e);
-  };
-  ws.onclose = function () {
-    console.log("ws closed");
-  };
-
-  ws.onmessage = function (msgevent) {
-    const msg = JSON.parse(msgevent.data);
-    processMessage(msg);
-  };
-
-  return ws;
-}
-
-function processMessage(msg) {
-  switch (msg.type) {
-    case "initialState":
-      processInitState(msg.payload);
-      break;
-
-    case "friendState":
-      console.log("process state", msg.payload);
-      processState(msg.payload);
-      break;
-
-    case "friendRemoved":
-      removeProfile(msg.payload);
-      break;
-
-    case "profile":
-      addProfile(msg.payload);
-      break;
-
-    default:
-      break;
-  }
-}
-
-function processInitState(payload) {
-  payload.profiles.forEach((profile) => {
-    addProfile(profile);
-  });
-  payload.states.forEach((state) => {
-    processState(state);
-  });
-}
-
-function addProfile(profile) {
-  const key = profile.id;
-  globalProfiles[key] = profile;
-}
-
-function removeProfile(id) {
-  delete globalProfiles[id];
-  removeMarker(id);
-  delete globalStates[id];
-}
-
-function removeMarker(id) {
-  if (globalMarkers.hasOwnProperty(id)) {
-    globalMarkers[id].destroy();
-    delete globalMarkers[id];
-  }
-}
-
-function processState(state) {
-  const id = state.id;
-  const lon = state.location.lon;
-  const lat = state.location.lat;
-  const isInit = !globalStates.hasOwnProperty(id);
-  const lastLon = isInit ? null : globalStates[id]["lon"];
-  const lastLat = isInit ? null : globalStates[id]["lat"];
-  const marker = isInit ? null : globalMarkers[id];
-  const locationSpeed = state.location.hasOwnProperty("speed")
-    ? state.location.speed
-    : BASE_SPEED;
-  const animationTime = isInit
-    ? BASE_ANIMATION_TIME
-    : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
-  const azimuth = isInit ? null : bearing(lastLat, lastLon, lat, lon);
-
-  if (isInit) {
-    globalStates[id] = {};
-  }
-
-  const isMoving = state.movement.status == STATE_MOVING ? true : false;
-  const avaUrl = globalProfiles[id].logo;
-  const name = globalProfiles[id].name;
-
-  switch (true) {
-    case !isInit && !isMoving: // кейсы, когда маркер останавливается
-      console.log("case stopped");
-
-      if (globalStates[id]["state"] == STATE_STOPPED) {
-        // маркер остался стоять, но теоретически могла прилететь новая позиция
-        moveMarker(marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
-      } else {
-        // маркер был движущимся, а стал cтоящим, поэтому заменяем
-        // @todo рассчитать скорость
-        moveMarker(marker, lastLon, lastLat, lon, lat, animationTime);
-        globalMarkers[id] = addOrReplaceMarker(
-          id,
-          lon,
-          lat,
-          isInit,
-          isMoving,
-          null,
-          avaUrl,
-          name
-        );
-        globalStates[id]["state"] = STATE_STOPPED;
+    function clearAll() {
+      globalProfiles = {};
+      for (const id in globalMarkers) {
+        removeMarker(id);
       }
-      break;
-    case !isInit && isMoving: // кейсы, когда маркер движется
-      console.log("case moving");
-      if (globalStates[id]["state"] == STATE_STOPPED) {
-        // раньше стоял, начал двигаться, меняем маркер и стейт
-        // рисуем маркер сперва в предыдущей точке
-        globalMarkers[id] = addOrReplaceMarker(
-          id,
-          lastLon,
-          lastLat,
-          isInit,
-          isMoving,
-          azimuth,
-          avaUrl,
-          name
-        );
+      globalMarkers = {};
+      globalStates = {};
 
-        moveMarker(
-          globalMarkers[id],
-          lastLon,
-          lastLat,
-          lon,
-          lat,
-          animationTime
-        );
-        globalStates[id]["state"] = STATE_MOVING;
-      } else {
-        rotateMarker(id, azimuth);
-        // @todo рассчитать скорость
-        console.log(marker, lastLon, lastLat, lon, lat);
-        moveMarker(marker, lastLon, lastLat, lon, lat, animationTime);
+      if (globalWS !== null) {
+        globalWS.close();
       }
-      break;
-    case isInit:
-      globalMarkers[id] = addOrReplaceMarker(
-        id,
-        lon,
-        lat,
-        isInit,
-        false,
-        null,
-        avaUrl,
-        name
-      );
-      globalStates[id]["state"] = STATE_STOPPED;
-      break;
-    default:
-      console("hbz case");
-  }
+    }
 
-  globalStates[id]["lon"] = lon;
-  globalStates[id]["lat"] = lat;
-}
+    function setStateConnected() { }
 
-function addOrReplaceMarker(
-  id,
-  lon,
-  lat,
-  isInit,
-  isMoving,
-  azimuth,
-  avaUrl,
-  name
-) {
-  removeMarker(id);
+    function initSocket(id) {
+      const wssUrlPattern = SOCKET_PATH;
+      const wssUrl = wssUrlPattern.replace(":id", id);
+      const ws = new WebSocket(wssUrl);
 
-  const markerClass =
-    isMoving && !isInit // маркер из инита всегда рисуем стоячим
-      ? // Math.random() < 0.5 ?
-        FIRE_MARKER_CONTAINER
-      : BASIC_MARKER_CONTAINER;
+      ws.onopen = function () { };
 
-  const acronym = name
-    .split(/\s/)
-    .reduce((response, word) => (response += word.slice(0, 1)), "");
+      ws.onerror = function (e) {
+        console.log("ws error");
+        console.log(e);
+      };
+      ws.onclose = function () {
+        console.log("ws closed");
+      };
 
-  // для дебага, чтобы проверить соответствуют ли маркера реальным позициям
-  // const marker = new mapgl.Marker(map, {
-  //   coordinates: [lon, lat]
-  // });
+      ws.onmessage = function (msgevent) {
+        const msg = JSON.parse(msgevent.data);
+        processMessage(msg);
+      };
 
-  const htmlMarker = new mapgl.HtmlMarker(map, {
-    coordinates: [lon, lat],
-    html: getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth)
-  });
+      return ws;
+    }
 
-  if (markerClass === FIRE_MARKER_CONTAINER) {
-    htmlMarker.setAnchor([58, 50]);
-  } else {
-    htmlMarker.setAnchor([18, 25]);
-  }
+    function processMessage(msg) {
+      switch (msg.type) {
+        case "initialState":
+          processInitState(msg.payload);
+          break;
 
-  return htmlMarker;
-}
+        case "friendState":
+          console.log("process state", msg.payload);
+          processState(msg.payload);
+          break;
 
-function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth) {
-  var html = "";
+        case "friendRemoved":
+          removeProfile(msg.payload);
+          break;
 
-  const backgroundImage =
-    avaUrl !== null ? "background-image: url(" + avaUrl + ");" : null;
+        case "profile":
+          addProfile(msg.payload);
+          break;
 
-  if (backgroundImage !== null) {
-    acronym = "";
-  }
+        default:
+          break;
+      }
+    }
 
-  const rotateText = azimuth !== null ? azimuth + "deg" : "0deg";
-  const invertRotateText = azimuth !== null ? azimuth * -1 + "deg" : "0deg";
+    function processInitState(payload) {
+      payload.profiles.forEach((profile) => {
+        addProfile(profile);
+      });
+      payload.states.forEach((state) => {
+        processState(state);
+      });
+    }
 
-  const textClass = acronym != "" ? "ava-only-text" : "";
+    function addProfile(profile) {
+      const key = profile.id;
+      globalProfiles[key] = profile;
+    }
 
-  if (markerClass === FIRE_MARKER_CONTAINER) {
-    html = `
+    function removeProfile(id) {
+      delete globalProfiles[id];
+      removeMarker(id);
+      delete globalStates[id];
+    }
+
+    function removeMarker(id) {
+      if (globalMarkers.hasOwnProperty(id)) {
+        globalMarkers[id].destroy();
+        delete globalMarkers[id];
+      }
+    }
+
+    function processState(state) {
+      const id = state.id;
+      const lon = state.location.lon;
+      const lat = state.location.lat;
+      const isInit = !globalStates.hasOwnProperty(id);
+      const lastLon = isInit ? null : globalStates[id]["lon"];
+      const lastLat = isInit ? null : globalStates[id]["lat"];
+      const marker = isInit ? null : globalMarkers[id];
+      const locationSpeed = state.location.hasOwnProperty("speed")
+        ? state.location.speed
+        : BASE_SPEED;
+      const animationTime = isInit
+        ? BASE_ANIMATION_TIME
+        : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
+      const azimuth = isInit ? null : bearing(lastLat, lastLon, lat, lon);
+
+      if (isInit) {
+        globalStates[id] = {};
+      }
+
+      const isMoving = state.movement.status == STATE_MOVING ? true : false;
+      const avaUrl = globalProfiles[id].logo;
+      const name = globalProfiles[id].name;
+
+      switch (true) {
+        case !isInit && !isMoving: // кейсы, когда маркер останавливается
+          console.log("case stopped");
+
+          if (globalStates[id]["state"] == STATE_STOPPED) {
+            // маркер остался стоять, но теоретически могла прилететь новая позиция
+            moveMarker(marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
+          } else {
+            // маркер был движущимся, а стал cтоящим, поэтому заменяем
+            // @todo рассчитать скорость
+            moveMarker(marker, lastLon, lastLat, lon, lat, animationTime);
+            globalMarkers[id] = addOrReplaceMarker(
+              id,
+              lon,
+              lat,
+              isInit,
+              isMoving,
+              null,
+              avaUrl,
+              name
+            );
+            globalStates[id]["state"] = STATE_STOPPED;
+          }
+          break;
+        case !isInit && isMoving: // кейсы, когда маркер движется
+          console.log("case moving");
+          if (globalStates[id]["state"] == STATE_STOPPED) {
+            // раньше стоял, начал двигаться, меняем маркер и стейт
+            // рисуем маркер сперва в предыдущей точке
+            globalMarkers[id] = addOrReplaceMarker(
+              id,
+              lastLon,
+              lastLat,
+              isInit,
+              isMoving,
+              azimuth,
+              avaUrl,
+              name
+            );
+
+            moveMarker(
+              globalMarkers[id],
+              lastLon,
+              lastLat,
+              lon,
+              lat,
+              animationTime
+            );
+            globalStates[id]["state"] = STATE_MOVING;
+          } else {
+            rotateMarker(id, azimuth);
+            // @todo рассчитать скорость
+            console.log(marker, lastLon, lastLat, lon, lat);
+            moveMarker(marker, lastLon, lastLat, lon, lat, animationTime);
+          }
+          break;
+        case isInit:
+          globalMarkers[id] = addOrReplaceMarker(
+            id,
+            lon,
+            lat,
+            isInit,
+            false,
+            null,
+            avaUrl,
+            name
+          );
+          globalStates[id]["state"] = STATE_STOPPED;
+          break;
+        default:
+          console("hbz case");
+      }
+
+      globalStates[id]["lon"] = lon;
+      globalStates[id]["lat"] = lat;
+    }
+
+    function addOrReplaceMarker(
+      id,
+      lon,
+      lat,
+      isInit,
+      isMoving,
+      azimuth,
+      avaUrl,
+      name
+    ) {
+      removeMarker(id);
+
+      const markerClass =
+        isMoving && !isInit // маркер из инита всегда рисуем стоячим
+          ? // Math.random() < 0.5 ?
+          FIRE_MARKER_CONTAINER
+          : BASIC_MARKER_CONTAINER;
+
+      const acronym = name
+        .split(/\s/)
+        .reduce((response, word) => (response += word.slice(0, 1)), "");
+
+      // для дебага, чтобы проверить соответствуют ли маркера реальным позициям
+      // const marker = new mapgl.Marker(map, {
+      //   coordinates: [lon, lat]
+      // });
+
+      const htmlMarker = new mapgl.HtmlMarker(map, {
+        coordinates: [lon, lat],
+        html: getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth)
+      });
+
+      if (markerClass === FIRE_MARKER_CONTAINER) {
+        htmlMarker.setAnchor([58, 50]);
+      } else {
+        htmlMarker.setAnchor([18, 25]);
+      }
+
+      return htmlMarker;
+    }
+
+    function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth) {
+      var html = "";
+
+      const backgroundImage =
+        avaUrl !== null ? "background-image: url(" + avaUrl + ");" : null;
+
+      if (backgroundImage !== null) {
+        acronym = "";
+      }
+
+      const rotateText = azimuth !== null ? azimuth + "deg" : "0deg";
+      const invertRotateText = azimuth !== null ? azimuth * -1 + "deg" : "0deg";
+
+      const textClass = acronym != "" ? "ava-only-text" : "";
+
+      if (markerClass === FIRE_MARKER_CONTAINER) {
+        html = `
       <div id="marker-${id}" class="${markerClass}" style="transform: rotate(${rotateText});">
         <dotlottie-player src="https://lottie.host/8dd41a0e-5c47-4646-a8f7-0adb8d4a7f88/HxGxgGoHVp.json" background="transparent" speed="1" style="width: 84px; height: 84px;" loop autoplay>
         </dotlottie-player>
@@ -446,127 +448,128 @@ function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth) {
           </div>
         </div>
       </div>`;
-  } else {
-    html = `<div id="marker-${id}" class="${markerClass}">
+      } else {
+        html = `<div id="marker-${id}" class="${markerClass}">
         <div class="ava-container">
           <div id="ava-${id}" style="${backgroundImage};" class="ava ${textClass}">
             ${acronym}
           </div>
         </div>
       </div>`;
-  }
-  return html;
-}
-
-function toRadians(degrees) {
-  return (degrees * Math.PI) / 180;
-}
-
-// Converts from radians to degrees.
-function toDegrees(radians) {
-  return (radians * 180) / Math.PI;
-}
-
-function bearing(startLat, startLon, destLat, destLon) {
-  startLat = toRadians(startLat);
-  startLon = toRadians(startLon);
-  destLat = toRadians(destLat);
-  destLon = toRadians(destLon);
-
-  y = Math.sin(destLon - startLon) * Math.cos(destLat);
-  x =
-    Math.cos(startLat) * Math.sin(destLat) -
-    Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLon - startLon);
-  brng = Math.atan2(y, x);
-  brng = toDegrees(brng);
-  return ((brng + 360) % 360) - 90;
-}
-
-function moveMarker(marker, prevLon, prevLat, currentLon, currentLat, time) {
-  const track = [
-    { coordinates: [prevLon, prevLat], t: 0 },
-    { coordinates: [currentLon, currentLat], t: time }
-  ];
-
-  // делаем анимацию для значимых движений
-  if (
-    Math.abs(prevLon - currentLon) > 0.0001 ||
-    Math.abs(prevLat - currentLat) > 0.0001
-  ) {
-    moveOn(track, marker);
-  }
-}
-
-function rotateMarker(id, azimuth) {
-  const avaElement = document.getElementById(`ava-${id}`);
-  const markerElement = document.getElementById(`marker-${id}`);
-  // console.log(avaElement, markerElement);
-  const invertAzimut = azimuth * -1;
-  markerElement.style.transform = `rotate(${azimuth}deg)`;
-  avaElement.style.transform = `rotate(${invertAzimut}deg)`;
-}
-
-async function moveOn(track, marker) {
-  // current segment index
-  let i = 0;
-
-  // startup absolute time
-  const start = performance.now();
-
-  // segment points
-  let curr = track[i],
-    next = track[i + 1];
-  while (next) {
-    // time from start, ms
-    const dt = (performance.now() - start) / 1000;
-
-    // position in segment
-    const ratio = (dt - curr.t) / (next.t - curr.t);
-
-    // get current pos via lienar interpolation
-    const pos = lerp(curr.coordinates, next.coordinates, ratio);
-    marker.setCoordinates(pos);
-
-    // wait next animation frame
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-
-    // iterate segments if needed
-    if (dt > next.t) {
-      i += 1;
-      curr = next;
-      next = track[i + 1];
+      }
+      return html;
     }
-  }
-}
 
-function lerp(x, y, ratio) {
-  return [x[0] + (y[0] - x[0]) * ratio, x[1] + (y[1] - x[1]) * ratio];
-}
+    function toRadians(degrees) {
+      return (degrees * Math.PI) / 180;
+    }
 
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radius of the earth in km
-  const dLat = toRadians(lat2 - lat1); // deg2rad below
-  const dLon = toRadians(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRadians(lat1)) *
-      Math.cos(toRadians(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distance in km
-  return d;
-}
+    // Converts from radians to degrees.
+    function toDegrees(radians) {
+      return (radians * 180) / Math.PI;
+    }
 
-function calculateAnimationTime(lastLat, lastLon, lat, lon, speed) {
-  const distInMeters =
-    getDistanceFromLatLonInKm(lastLat, lastLon, lat, lon) * 1000;
-  const time = distInMeters / speed;
-  return time;
-}
+    function bearing(startLat, startLon, destLat, destLon) {
+      startLat = toRadians(startLat);
+      startLon = toRadians(startLon);
+      destLat = toRadians(destLat);
+      destLon = toRadians(destLon);
 
-window.addEventListener("resize", () => map.invalidateSize());
+      y = Math.sin(destLon - startLon) * Math.cos(destLat);
+      x =
+        Math.cos(startLat) * Math.sin(destLat) -
+        Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLon - startLon);
+      brng = Math.atan2(y, x);
+      brng = toDegrees(brng);
+      return ((brng + 360) % 360) - 90;
+    }
 
-    </script>
-   </body>
+    function moveMarker(marker, prevLon, prevLat, currentLon, currentLat, time) {
+      const track = [
+        { coordinates: [prevLon, prevLat], t: 0 },
+        { coordinates: [currentLon, currentLat], t: time }
+      ];
+
+      // делаем анимацию для значимых движений
+      if (
+        Math.abs(prevLon - currentLon) > 0.0001 ||
+        Math.abs(prevLat - currentLat) > 0.0001
+      ) {
+        moveOn(track, marker);
+      }
+    }
+
+    function rotateMarker(id, azimuth) {
+      const avaElement = document.getElementById(`ava-${id}`);
+      const markerElement = document.getElementById(`marker-${id}`);
+      // console.log(avaElement, markerElement);
+      const invertAzimut = azimuth * -1;
+      markerElement.style.transform = `rotate(${azimuth}deg)`;
+      avaElement.style.transform = `rotate(${invertAzimut}deg)`;
+    }
+
+    async function moveOn(track, marker) {
+      // current segment index
+      let i = 0;
+
+      // startup absolute time
+      const start = performance.now();
+
+      // segment points
+      let curr = track[i],
+        next = track[i + 1];
+      while (next) {
+        // time from start, ms
+        const dt = (performance.now() - start) / 1000;
+
+        // position in segment
+        const ratio = (dt - curr.t) / (next.t - curr.t);
+
+        // get current pos via lienar interpolation
+        const pos = lerp(curr.coordinates, next.coordinates, ratio);
+        marker.setCoordinates(pos);
+
+        // wait next animation frame
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        // iterate segments if needed
+        if (dt > next.t) {
+          i += 1;
+          curr = next;
+          next = track[i + 1];
+        }
+      }
+    }
+
+    function lerp(x, y, ratio) {
+      return [x[0] + (y[0] - x[0]) * ratio, x[1] + (y[1] - x[1]) * ratio];
+    }
+
+    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Radius of the earth in km
+      const dLat = toRadians(lat2 - lat1); // deg2rad below
+      const dLon = toRadians(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(lat1)) *
+        Math.cos(toRadians(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const d = R * c; // Distance in km
+      return d;
+    }
+
+    function calculateAnimationTime(lastLat, lastLon, lat, lon, speed) {
+      const distInMeters =
+        getDistanceFromLatLonInKm(lastLat, lastLon, lat, lon) * 1000;
+      const time = distInMeters / speed;
+      return time;
+    }
+
+    window.addEventListener("resize", () => map.invalidateSize());
+
+  </script>
+</body>
+
 </html>
