@@ -9,7 +9,7 @@
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 
   <style>
-  html,
+html,
 body,
 #container {
   margin: 0;
@@ -107,9 +107,15 @@ body,
 }
 
 .emoji-marker {
-  font-size: 20px;
-  animation: emoji-scale 0.5s ease-in-out;
-  -webkit-animation: emoji-scale 0.5s ease-in-out;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  animation: emoji-scale 1s ease-in-out;
+  -webkit-animation: emoji-scale 1s ease-in-out;
 }
 
 @keyframes emoji-scale {
@@ -117,19 +123,49 @@ body,
     transform: scale(1);
     -webkit-transform: scale(1);
   }
-  75% {
+  70% {
     transform: scale(5);
     -webkit-transform: scale(5);
   }
   100% {
-    transform: scale(0);
-    -webkit-transform: scale(0);
+    transform: scale(1);
+    -webkit-transform: scale(1);
   }
 }
 
 .hidden-test-button {
   display: none;
 }
+
+.emogi-fire {
+  background-image: url("https://rezonx3m.github.io/friends/static/fire.png");
+}
+.emogi-greenheart {
+  background-image: url("https://rezonx3m.github.io/friends/static/greenheart.png");
+}
+.emogi-snowball {
+  background-image: url("https://rezonx3m.github.io/friends/static/snowball.png");
+}
+.emogi-poop {
+  background-image: url("https://rezonx3m.github.io/friends/static/poop.png");
+}
+.emogi-wavinghand {
+  background-image: url("https://rezonx3m.github.io/friends/static/wavinghand.png");
+}
+.emogi-angry {
+  background-image: url("https://rezonx3m.github.io/friends/static/angry.png");
+}
+.emogi-eyes {
+  background-image: url("https://rezonx3m.github.io/friends/static/eyes.png");
+}
+.emogi-party {
+  background-image: url("https://rezonx3m.github.io/friends/static/party.png");
+}
+
+.emogi-go {
+  background-image: url("https://rezonx3m.github.io/friends/static/go!.png");
+}
+
 
   </style>
 </head>
@@ -144,15 +180,27 @@ body,
       <input id="input-id" size="10" placeholder="userid" />
       <button onClick="changeId();">connect</button>
   
-      <button class="hidden-test-button" onClick="test1();">random move</button>
-      <button class="hidden-test-button" onClick="test2();">move to rechnik</button>
-      <button class="hidden-test-button" onClick="test3();">random rotate</button>
-  
+      <button class="hidden-test-button" onClick="testMove();">random move</button>
+      <button class="hidden-test-button" onClick="testRotate();">random rotate</button>
+      <button class="hidden-test-button" onClick="processStickerFromTo(testMessageStickerFromTo);">send fire</button>
+      <button class="hidden-test-button" onClick="perfTest();">perf tests</button>
     </div>
   </div>
 
   <script type="text/javascript">
  const DEBUG = false;
+
+const SUPPORTED_EMOJI = [
+  "fire",
+  "greenheart",
+  "snowball",
+  "poop",
+  "wavinghand",
+  "angry",
+  "eyes",
+  "party",
+  "go"
+];
 
 if (DEBUG) {
   const buttons = document.getElementsByClassName("hidden-test-button");
@@ -162,21 +210,34 @@ if (DEBUG) {
 }
 
 const map = new mapgl.Map("container", {
-  center: [82.963483, 55.009882],
-  zoom: 13,
+  center: [82.963483, 55.039882],
+  zoom: 12,
   key: "042b5b75-f847-4f2a-b695-b5f58adc9dfd"
 });
 
-// 21642
-const myId = "cd3f16bcdd5b4fc7a9bb02ba68e75536";
+// фиксим рамер карты при ресайзе
+window.addEventListener("resize", () => map.invalidateSize());
 
 // 45755262
-const testId = "d33df51bd4ce41e7a5bbbe28bc4cfc35";
+const testId1 = "abc123";
+const testId2 = "xyz789";
+
+var testProfile = {
+  id: testId1,
+  name: "Poop Boop",
+  logo: "https://rezonx3m.github.io/friends/static/poop.png"
+};
+
+var testProfile2 = {
+  id: testId2,
+  name: "Foo Bar",
+  logo: null
+};
 
 var testMessage = {
   type: "friendState",
   payload: {
-    id: myId,
+    id: testId1,
     lastSeen: 1698736151973,
     location: {
       lat: 55.01,
@@ -195,22 +256,38 @@ var testMessage = {
   }
 };
 
-function test1() {
-  processMessage(testMessage);
+var testMessage2 = {
+  type: "friendState",
+  payload: {
+    id: testId2,
+    lastSeen: 1698736151973,
+    location: {
+      lat: 54.995,
+      lon: 82.99,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+function testMove() {
   const multiplier1 = Math.random() > 0.5 ? 1 : -1;
   const multiplier2 = Math.random() > 0.5 ? 1 : -1;
   testMessage.payload.location.lon += 0.01 * multiplier1;
   testMessage.payload.location.lat += 0.01 * multiplier2;
-}
-
-function test2() {
-  testMessage.payload.location.lon = 82.936536;
-  testMessage.payload.location.lat = 55.007961;
   processMessage(testMessage);
 }
 
-function test3() {
-  rotateMarker(myId, Math.random() * 360);
+function testRotate() {
+  rotateMarker(testId1, Math.random() * 360);
 }
 
 var globalProfiles = {};
@@ -228,6 +305,13 @@ const STATE_STOPPED = "stopped";
 
 const BASE_ANIMATION_TIME = 0.2;
 const BASE_SPEED = 1;
+
+if (DEBUG) {
+  addProfile(testProfile);
+  addProfile(testProfile2);
+  processMessage(testMessage);
+  processMessage(testMessage2);
+}
 
 function changeId() {
   clearAll();
@@ -348,7 +432,9 @@ function processState(state) {
   const animationTime = isInit
     ? BASE_ANIMATION_TIME
     : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
-  const azimuth = isInit ? null : bearing(lastLat, lastLon, lat, lon);
+  const azimuth = isInit
+    ? null
+    : bearing(marker.getCoordinates()[1], marker.getCoordinates()[0], lat, lon);
 
   if (isInit) {
     globalStates[id] = {};
@@ -372,8 +458,7 @@ function processState(state) {
         moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
       } else {
         // маркер был движущимся, а стал cтоящим, поэтому заменяем
-        // @todo рассчитать скорость
-        moveMarker(id, marker, lastLon, lastLat, lon, lat, animationTime);
+        moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
         globalMarkers[id] = addOrReplaceMarker(
           id,
           lon,
@@ -494,7 +579,7 @@ function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth) {
   if (markerClass === FIRE_MARKER_CONTAINER) {
     html = `
       <div id="marker-${id}" class="${markerClass}" style="transform: rotate(${rotateText});">
-        <dotlottie-player src="https://lottie.host/8dd41a0e-5c47-4646-a8f7-0adb8d4a7f88/HxGxgGoHVp.json" background="transparent" speed="1" style="width: 84px; height: 84px;" loop autoplay>
+        <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 84px; height: 84px;" loop autoplay>
         </dotlottie-player>
         <div class="fired-ava-container">
           <div id="ava-${id}" style="${backgroundImage}; transform: rotate(${invertRotateText});" class="ava ${textClass}">
@@ -538,30 +623,23 @@ function bearing(startLat, startLon, destLat, destLon) {
   return ((brng + 360) % 360) - 90;
 }
 
-function moveMarker(
-  id,
-  marker,
-  prevLon,
-  prevLat,
-  currentLon,
-  currentLat,
-  time
-) {
+function moveMarker(id, marker, prevLon, prevLat, nextLon, nextLat, time) {
   const mapLon = marker.getCoordinates()[0];
   const mapLat = marker.getCoordinates()[1];
 
+  // @todo рассчитать расстояние между текущим положением на карте и тем, что должно быть финальным в последней анимации, в новую анимацию добавить две точки, а общее время разбить на два этапа пропорционально расстаянию
   const track = [
     { coordinates: [mapLon, mapLat], t: 0 },
-    { coordinates: [prevLon, prevLat], t: 0.2 },
-    { coordinates: [currentLon, currentLat], t: time }
+    // { coordinates: [prevLon, prevLat], t: 0.2 },
+    { coordinates: [nextLon, nextLat], t: time }
   ];
 
   // делаем анимацию для значимых движений
   if (
-    Math.abs(prevLon - currentLon) > 0.0001 ||
-    Math.abs(prevLat - currentLat) > 0.0001
+    Math.abs(mapLon - nextLon) > 0.0001 ||
+    Math.abs(mapLat - nextLat) > 0.0001
   ) {
-    moveOn(id, track, marker);
+    moveOn(track, marker, id);
   }
 }
 
@@ -574,7 +652,7 @@ function rotateMarker(id, azimuth) {
   avaElement.style.transform = `rotate(${invertAzimut}deg)`;
 }
 
-async function moveOn(userId, track, marker) {
+async function moveOn(track, marker, userId) {
   // current segment index
   let i = 0;
 
@@ -587,15 +665,15 @@ async function moveOn(userId, track, marker) {
 
   // сохраняем рандомный номер созданной анимации, чтобы не играть те, что не актуальны
   const animationRandomNumber = Math.random();
-  globalStates[userId]["animationRandomNumber"] = animationRandomNumber;
+  if (userId) {
+    globalStates[userId]["animationRandomNumber"] = animationRandomNumber;
+  }
 
   while (
     next &&
-    globalStates[userId]["animationRandomNumber"] == animationRandomNumber
+    (userId == null ||
+      globalStates[userId]["animationRandomNumber"] == animationRandomNumber)
   ) {
-    if (DEBUG) {
-      console.log(animationRandomNumber);
-    }
     // time from start, ms
     const dt = (performance.now() - start) / 1000;
 
@@ -644,9 +722,6 @@ function calculateAnimationTime(lastLat, lastLon, lat, lon, speed) {
   return time;
 }
 
-// фиксим рамер карты при ресайзе
-window.addEventListener("resize", () => map.invalidateSize());
-
 function reRotateMarkers() {
   for (const id in globalStates) {
     if (globalStates[id]["state"] == STATE_MOVING) {
@@ -664,10 +739,6 @@ map.on("rotationend", () => {
 
 map.on("moveend", () => {
   sendBounds(globalWS);
-});
-
-map.on("zoomend", () => {
-  //sendBounds(globalWS);
 });
 
 function sendBounds(ws) {
@@ -702,7 +773,10 @@ function processStickerToMe(payload) {
   const senderId = payload.senderId;
   const stickerId = payload.stickerRecord.sticker.stickerId;
   const stickersCount = payload.stickerRecord.sticker.count;
-  spawnEmoji(senderId, stickerId, stickersCount);
+  const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+  setTimeout(function () {
+    htmlMarker.destroy();
+  }, 1000); // change time if changed animation css time
 }
 
 function spawnEmoji(senderId, stickerId, stickersCount) {
@@ -715,48 +789,80 @@ function spawnEmoji(senderId, stickerId, stickersCount) {
 
   const mapCenter = map.getCenter();
 
-  var markerText = "";
-
-  switch (stickerId) {
-    case "fire": // fire
-      markerText = "🔥";
-      break;
-    case "greenheart": // greenheart
-      markerText = "💚";
-      break;
-    case "snowball": // snowball
-      markerText = "❄️";
-      break;
-    case "poop": // poop
-      markerText = "💩";
-      break;
-    case "wavinghand": // wavinghand
-      markerText = "👋";
-      break;
-    case "angry": // angry
-      markerText = "😡";
-      break;
-    case "eyes": // eyes
-      markerText = "👀";
-      break;
-    case "party": // party
-      markerText = "🎉";
-      break;
-
-    default:
-      // go
-      console.log("unsupported emoji", stickerId);
+  if (!SUPPORTED_EMOJI.includes(stickerId)) {
+    console.log("unsupported emoji", stickerId);
+    return;
   }
+
+  const markerClass = "emogi-" + stickerId;
+
   const htmlMarker = new mapgl.HtmlMarker(map, {
     coordinates: [senderLon, senderLat],
     interactive: true, // @todo false
-    html: "<div class='emoji-marker'>" + markerText + "</div>"
+    html: `<div class="emoji-marker ${markerClass}"></div>`
   });
   htmlMarker.setAnchor([10, 16]);
+  return htmlMarker;
+}
+
+function processStickerFromTo(payload) {
+  const senderId = payload.senderId;
+  const receiverId = payload.receiverId;
+  const stickerId = payload.stickerRecord.sticker.stickerId;
+  const stickersCount = payload.stickerRecord.sticker.count;
+  const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+  const coordinates = htmlMarker.getCoordinates();
+  const nextLon = globalStates[receiverId]["lon"];
+  const nextLat = globalStates[receiverId]["lat"];
+
+  moveMarker(
+    null,
+    htmlMarker,
+    coordinates[0],
+    coordinates[1],
+    nextLon,
+    nextLat,
+    1
+  );
   setTimeout(function () {
     htmlMarker.destroy();
-  }, 500); // change time if changed animation css time
+  }, 1000); // change time if changed animation css time
 }
+
+var testMessageStickerFromTo = {
+  senderId: testId1,
+  receiverId: testId2,
+  stickerRecord: {
+    sticker: {
+      stickerId: "fire",
+      count: 1
+    }
+  }
+};
+
+function perfTest() {
+  const maxI = 1000;
+  const floor = Math.floor(Math.sqrt(maxI));
+  for (i = 1; i <= maxI; i++) {
+    testProfile.id = "test-" + i;
+    testMessage.payload.id = testProfile.id;
+
+    addProfile(testProfile);
+
+    testMessage.payload.location.lon += 0.01;
+
+    processMessage(testMessage);
+    if (i % floor == 0) {
+      testMessage.payload.location.lat += 0.01;
+      testMessage.payload.location.lon -= 0.01 * floor;
+      processMessage(testMessage);
+      testMessageStickerFromTo.senderId = "test-" + i;
+      testMessageStickerFromTo.receiverId = "test-" + (i - 9);
+      processStickerFromTo(testMessageStickerFromTo);
+    }
+  }
+}
+
 
   </script>
 </body>
