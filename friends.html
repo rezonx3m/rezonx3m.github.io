@@ -29,7 +29,14 @@
       left: 30px;
     }
 
-    #connect-button {}
+    #connect-button {
+      width: 100px;
+    }
+
+    #connect-status {
+      background-color: #ff8f8f;
+      width: 100px;
+    }
 
     #test-buttons {
       display: none;
@@ -209,14 +216,23 @@
     <div id="container"></div>
   </div>
 
+  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+
+  <script src="https://mapgl.2gis.com/api/js/v1"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+  <div id="main">
+    <div id="container"></div>
+  </div>
+
   <div id="controls">
     <div id="div-id">
       <input id="input-id" size="10" placeholder="userid" />
-      <button id="connect-button" onClick="changeId();">connect</button>
+      <button id="connect-button" onClick="connectButtonClick();">connect</button>
+      <button disabled id="connect-status">disconnected</button>
       <!--
-  <input type="checkbox" checked="true" id="send-viewport" />
-      <label for="send-viewport">Send viewport</label>
-  -->
+<input type="checkbox" checked="true" id="send-viewport" />
+    <label for="send-viewport">Send viewport</label>
+-->
     </div>
     <div id="test-buttons">
       <div class="test-buttons-line">
@@ -233,10 +249,12 @@
   <script type="text/javascript">
     const DEBUG = false;
     const ENABLE_DEBUG_MARKERS = false;
-    const ENABLE_AUTO_RECONNECT = false;
-    var LAST_USER_ID = null;
+    const ENABLE_AUTO_RECONNECT = true;
+
     var reconnectTimerId = null;
+    var connectTimerId = null;
     var needReconnect = false;
+    var isConnected = false;
 
     var movingLivenessTimeout = 100000;
     var stoppedLivenessTimeout = 100000;
@@ -268,20 +286,31 @@
       }
     }
 
-    function setConnectButtonState(state) {
+    function setConnectionState(state) {
       const button = document.getElementById("connect-button");
+      const status = document.getElementById("connect-status");
+      const input = document.getElementById("input-id");
       switch (state) {
         case "connected":
-          button.style.backgroundColor = "#9cf19c";
+          status.style.backgroundColor = "#9cf19c";
+          input.disabled = true;
+          button.innerText = "disconnect";
+          isConnected = true;
           break;
         case "reconnecting":
-          button.style.backgroundColor = "#ff8f8f";
+          status.style.backgroundColor = "#ff8f8f";
           break;
         case "connecting":
-          button.style.backgroundColor = "#839bff";
+          status.style.backgroundColor = "#839bff";
+          break;
+        case "disconnect":
+          status.style.backgroundColor = "#fc8016";
+          button.innerText = "connect";
+          input.disabled = false;
+          isConnected = false;
           break;
       }
-      button.innerHTML = state;
+      status.innerText = state;
     }
 
     const map = new mapgl.Map("container", {
@@ -309,15 +338,19 @@
     const BASE_ANIMATION_TIME = 0.2;
     const BASE_SPEED = 1;
 
-    function changeId() {
-      setConnectButtonState("connecting");
-      hideVisibilityTestButtons(true);
+    function connectButtonClick() {
       clearAll();
-      if (globalWS) {
-        needReconnect = false;
-        globalWS.close();
+      if (!isConnected) {
+        hideVisibilityTestButtons(true);
+        setConnectionState("connecting");
+        globalWS = initSocket(document.getElementById("input-id").value);
+      } else {
+        if (globalWS) {
+          needReconnect = false;
+          globalWS.close();
+        }
+        setConnectionState("disconnect");
       }
-      globalWS = initSocket(document.getElementById("input-id").value);
     }
 
     function clearAll() {
@@ -345,17 +378,22 @@
       ws.onopen = function () {
         sendBounds(ws);
         needReconnect = true;
-        setConnectButtonState("connected");
+        connectTimerId = setInterval(() => {
+          ws.send('{"type":"ping-from-web-ui","payload":{}}');
+        }, 1000);
+        setConnectionState("connected");
+        //{"type":"foobar","payload":{}}
       };
 
       ws.onclose = function () {
         console.log("ws closed");
+        clearInterval(connectTimerId);
         reconnectTimerId = setInterval(() => {
           if (needReconnect && ENABLE_AUTO_RECONNECT) {
-            setConnectButtonState("reconnecting");
+            setConnectionState("reconnecting");
             globalWS = initSocket(id);
           }
-        }, 2000);
+        }, 5000);
       };
 
       ws.onerror = function (e) {
@@ -776,8 +814,7 @@
     });
 
     function sendBounds(ws) {
-      const checked = true; //document.getElementById("send-viewport").checked;
-      if (checked && ws) {
+      if (ws.readyState == 1) {
         const bounds = map.getBounds();
         const message = {
           type: "viewportChanged",
