@@ -248,11 +248,10 @@
 
   <script type="text/javascript">
     const urlParams = new URLSearchParams(window.location.search);
-    const getParamDebugMarkers = urlParams.get("debug_markers");
-    const getParamDebug = urlParams.get("debug");
-    const getParamUserId = urlParams.get("user_id");
+    const getParamDebugMarkers = urlParams.get('debug_markers');
+    const getParamDebug = urlParams.get('debug');
     const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
-    const ENABLE_DEBUG_MARKERS = true || getParamDebugMarkers === "true";
+    const ENABLE_DEBUG_MARKERS = false || getParamDebugMarkers === "true";
     const ENABLE_AUTO_RECONNECT = true;
 
     var reconnectTimerId = null;
@@ -277,6 +276,46 @@
       "nav"
     ];
 
+    if (DEBUG) {
+      hideVisibilityTestButtons(false);
+    }
+
+    function hideVisibilityTestButtons(hide) {
+      const button = document.getElementById("test-buttons");
+      if (hide) {
+        button.style.display = "none";
+      } else {
+        button.style.display = "block";
+      }
+    }
+
+    function setConnectionState(state) {
+      const button = document.getElementById("connect-button");
+      const status = document.getElementById("connect-status");
+      const input = document.getElementById("input-id");
+      switch (state) {
+        case "connected":
+          status.style.backgroundColor = "#9cf19c";
+          input.disabled = true;
+          button.innerText = "disconnect";
+          isConnected = true;
+          break;
+        case "reconnecting":
+          status.style.backgroundColor = "#ff8f8f";
+          break;
+        case "connecting":
+          status.style.backgroundColor = "#839bff";
+          break;
+        case "disconnect":
+          status.style.backgroundColor = "#fc8016";
+          button.innerText = "connect";
+          input.disabled = false;
+          isConnected = false;
+          break;
+      }
+      status.innerText = state;
+    }
+
     const map = new mapgl.Map("container", {
       center: [82.963483, 55.039882],
       zoom: 12,
@@ -291,8 +330,6 @@
     var globalStates = {};
     var globalWS = null;
     var globalMapRotation = 0;
-    var debugMarkers = [];
-    const maxDebugMarkersLenght = 1000;
 
     const SOCKET_PATH = "wss://zond.api.2gis.ru/api/1.1/user/:id/ws";
 
@@ -304,84 +341,25 @@
     const BASE_ANIMATION_TIME = 0.2;
     const BASE_SPEED = 1;
 
-    if (DEBUG) {
-      hideVisibilityTestButtons(false);
-    }
-
-    if (getParamUserId !== null) {
-      document.getElementById("input-id").value = getParamUserId;
-      connectButtonClick();
-    }
-
-    // скрытие кнопок дле тестов
-    function hideVisibilityTestButtons(hide) {
-      const button = document.getElementById("test-buttons");
-      if (hide) {
-        button.style.display = "none";
-      } else {
-        button.style.display = "block";
-      }
-    }
-
-    // управления контролами и статусом коннекта
-    function setConnectionState(state) {
-      const button = document.getElementById("connect-button");
-      const status = document.getElementById("connect-status");
-      const input = document.getElementById("input-id");
-      switch (state) {
-        case "connected":
-          status.style.backgroundColor = "#9cf19c";
-          input.disabled = true;
-          button.innerText = "disconnect";
-          isConnected = true;
-          break;
-        case "reconnecting":
-          status.style.backgroundColor = "#fc8016";
-          break;
-        case "connecting":
-          status.style.backgroundColor = "#839bff";
-          break;
-        case "disconnected":
-          status.style.backgroundColor = "#ff8f8f";
-          button.innerText = "connect";
-          input.disabled = false;
-          isConnected = false;
-          break;
-      }
-      status.innerText = state;
-    }
-
-    // нажатие в кнопку коннекта
     function connectButtonClick() {
-      const userId = document.getElementById("input-id").value;
-      if (userId.length > 0) {
-        if (!isConnected) {
-          hideVisibilityTestButtons(true);
-          setConnectionState("connecting");
-          globalWS = initSocket(document.getElementById("input-id").value);
-        } else {
-          if (globalWS) {
-            needReconnect = false;
-            globalWS.close();
-          }
-          setConnectionState("disconnected");
+      if (!isConnected) {
+        hideVisibilityTestButtons(true);
+        setConnectionState("connecting");
+        globalWS = initSocket(document.getElementById("input-id").value);
+      } else {
+        if (globalWS) {
+          needReconnect = false;
+          globalWS.close();
         }
+        setConnectionState("disconnect");
       }
     }
 
-    // уничтожение всех данных
     function clearAll() {
       globalProfiles = {};
       for (const id in globalMarkers) {
         removeMarker(id);
       }
-
-      for (const id in globalMarkers) {
-        removeMarker(id);
-      }
-
-      debugMarkers.forEach((element) => element.destroy());
-
       globalMarkers = {};
       globalStates = {};
 
@@ -390,7 +368,8 @@
       }
     }
 
-    // инициализация соккета
+    function setStateConnected() { }
+
     function initSocket(id) {
       const wssUrlPattern = SOCKET_PATH;
       const wssUrl = wssUrlPattern.replace(":id", id);
@@ -401,22 +380,18 @@
       ws.onopen = function () {
         // чистимся от греха подальше, так как в коннекте прилетит инит
         clearAll();
-        // отправка баундов, чтобы слежение было во вьюпорте
         sendBounds(ws);
-        // при открытие соккета сообщаем, что его нужно реконнектить
         needReconnect = true;
-        // циклически отправляем пинг, чтобы брайзер понял, что коннект сдох на случай проблем
         connectTimerId = setInterval(() => {
           ws.send('{"type":"ping-from-web-ui","payload":{}}');
         }, 1000);
         setConnectionState("connected");
+        //{"type":"foobar","payload":{}}
       };
 
       ws.onclose = function () {
         console.log("ws closed");
-        // стираем старый интервал
         clearInterval(connectTimerId);
-        // шедулим новый интервал для реконнекта
         reconnectTimerId = setInterval(() => {
           if (needReconnect && ENABLE_AUTO_RECONNECT) {
             setConnectionState("reconnecting");
@@ -439,7 +414,10 @@
       return ws;
     }
 
-    // обработка входящих
+    function reconnectSocket(id) {
+      console.log("reconnection to id", id, reconnectTimerId);
+    }
+
     function processMessage(msg) {
       switch (msg.type) {
         case "initialState":
@@ -474,7 +452,6 @@
     function processInitState(payload) {
       movingLivenessTimeout = payload.markerSettings.movingLivenessTimeout;
       stoppedLivenessTimeout = payload.markerSettings.stoppedLivenessTimeout;
-      // поправка на серверное время
       serverTimestampShift = Date.now() - payload.serverTime;
 
       payload.profiles.forEach((profile) => {
@@ -488,7 +465,6 @@
     function addProfile(profile) {
       const key = profile.id;
       globalProfiles[key] = profile;
-      // @todo менять маркер, если поменялась аватарка
     }
 
     function removeProfile(id) {
@@ -506,13 +482,11 @@
 
     function processState(state) {
       const id = state.id;
-      const lastSeen = state.lastSeen;
       const lon = state.location.lon;
       const lat = state.location.lat;
-      // первое вхождение на карту
       const isInit = !globalStates.hasOwnProperty(id);
+      const lastSeen = state.lastSeen;
 
-      // дропаем "серые" (давно стоящие) маркера
       if (Date.now() + serverTimestampShift - lastSeen > stoppedLivenessTimeout) {
         removeMarker(id);
         return;
@@ -551,12 +525,6 @@
         const debugMarker = new mapgl.Marker(map, {
           coordinates: [lon, lat]
         });
-
-        if (debugMarkers.length >= maxDebugMarkersLenght) {
-          const first = debugMarkers.shift();
-          first.destroy();
-        }
-        debugMarkers.push(debugMarker);
       }
 
       switch (true) {
@@ -1078,6 +1046,7 @@
         SUPPORTED_EMOJI[stickerN];
       processStickerFromTo(testMessageStickerFromTo);
     }
+
 
 
   </script>
