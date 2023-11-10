@@ -252,7 +252,7 @@
     const getParamDebug = urlParams.get("debug");
     const getParamUserId = urlParams.get("user_id");
     const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
-    const ENABLE_DEBUG_MARKERS = true || getParamDebugMarkers === "true";
+    const ENABLE_DEBUG_MARKERS = false || getParamDebugMarkers === "true";
     const ENABLE_AUTO_RECONNECT = true;
 
     var reconnectTimerId = null;
