@@ -247,8 +247,11 @@
   </div>
 
   <script type="text/javascript">
-    const DEBUG = window.location.host == "cdpn.io";
-    const ENABLE_DEBUG_MARKERS = false;
+    const urlParams = new URLSearchParams(window.location.search);
+    const getParamDebugMarkers = urlParams.get('debug_markers');
+    const getParamDebug = urlParams.get('debug');
+    const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
+    const ENABLE_DEBUG_MARKERS = false || getParamDebugMarkers === "true";
     const ENABLE_AUTO_RECONNECT = true;
 
     var reconnectTimerId = null;
