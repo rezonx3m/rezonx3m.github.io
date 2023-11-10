@@ -94,10 +94,6 @@
       overflow: hidden;
       border: 3px solid white;
       animation: scale 2s ease-in-out infinite;
-      filter: blur(0);
-      -webkit-filter: blur(0);
-      -webkit-backface-visibility: hidden;
-      -webkit-transform: translateZ(0) scale(1, 1);
     }
 
     .fire-marker-container {
@@ -204,6 +200,43 @@
     .emogi-nav {
       background-image: url("https://cachizer2.2gis.com/common/e213fd69-105d-441c-8fe9-426c42b39d7c.png?w=200&h=200");
     }
+
+    /* fade in out */
+
+    #popup {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      background-image: url("https://rezonx3m.github.io/friends/static/port-qr-code.png");
+      background-repeat: no-repeat;
+      background-position: center center;
+      -webkit-animation: fadeinout 10s linear infinite;
+      animation: fadeinout 10s linear infinite;
+      opacity: 0;
+      display: none;
+    }
+
+    @-webkit-keyframes fadeinout {
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeinout {
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+    }
   </style>
 </head>
 
@@ -212,20 +245,16 @@
 
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+
+  <script src="https://mapgl.2gis.com/api/js/v1"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+
   <div id="main">
     <div id="container"></div>
   </div>
 
-  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
-
-  <script src="https://mapgl.2gis.com/api/js/v1"></script>
-  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
-
-  <script src="https://mapgl.2gis.com/api/js/v1"></script>
-  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-  <div id="main">
-    <div id="container"></div>
+  <div id="popup" class="elementToFadeInAndOut">
   </div>
 
   <div id="controls">
@@ -244,6 +273,7 @@
         </div>
         <div class="test-buttons-line">
           <button onClick="startScene2fest();">2fest scene</button>
+          <button onClick="startScenePort();">port</button>
         </div>
       </div>
     </div>
@@ -258,6 +288,7 @@
     const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
     const ENABLE_DEBUG_MARKERS = false || getParamDebugMarkers === "true";
     const ENABLE_AUTO_RECONNECT = true;
+    var currentScene = null;
 
     var reconnectTimerId = null;
     var connectTimerId = null;
@@ -284,7 +315,13 @@
     const map = new mapgl.Map("container", {
       center: [82.963483, 55.039882],
       zoom: 12,
-      key: "042b5b75-f847-4f2a-b695-b5f58adc9dfd"
+      key: "042b5b75-f847-4f2a-b695-b5f58adc9dfd",
+      floorsEnabled: false,
+      minZoom: 2,
+      maxZoom: 20,
+      minPitch: 0,
+      maxPitch: 70,
+      lowZoomMaxPitch: 45
     });
 
     // фиксим рамер карты при ресайзе
@@ -944,14 +981,42 @@
         startScene2fest();
         break;
       }
+
+      case "port": {
+        startScene2port();
+        break;
+      }
     }
 
     function startScene2fest() {
+      currentScene = "2fest";
       map.setCenter([82.9145, 55.0295]);
       map.setZoom(17.5);
       map.setPitch(50);
       map.setRotation(-170.85);
       document.getElementById("input-id").value = 45755262;
+      connectButtonClick();
+      document.getElementById("input-id").style.display = "none";
+      document.getElementById("connect-button").style.display = "none";
+    }
+
+    function startScenePort() {
+      addEventListener("keypress", (event) => {
+        element = document.getElementById("popup");
+        element.style.display = "block";
+        if (event.code == "Enter") {
+          setTimeout(function () {
+            element.style.display = "none";
+          }, 10000);
+        }
+      });
+
+      currentScene = "port";
+      map.setCenter([30.2423, 59.9235]);
+      map.setZoom(18.2);
+      map.setPitch(28.59);
+      map.setRotation(142.11);
+      document.getElementById("input-id").value = 46914337;
       connectButtonClick();
       document.getElementById("input-id").style.display = "none";
       document.getElementById("connect-button").style.display = "none";
