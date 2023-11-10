@@ -342,7 +342,6 @@
     const BASE_SPEED = 1;
 
     function connectButtonClick() {
-      clearAll();
       if (!isConnected) {
         hideVisibilityTestButtons(true);
         setConnectionState("connecting");
@@ -379,6 +378,8 @@
       clearInterval(reconnectTimerId);
 
       ws.onopen = function () {
+        // чистимся от греха подальше, так как в коннекте прилетит инит
+        clearAll();
         sendBounds(ws);
         needReconnect = true;
         connectTimerId = setInterval(() => {
