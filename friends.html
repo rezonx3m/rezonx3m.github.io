@@ -25,8 +25,8 @@
 
     #controls {
       position: absolute;
-      top: 30px;
-      left: 30px;
+      top: 10px;
+      left: 10px;
     }
 
     #connect-button {
@@ -220,6 +220,10 @@
 
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+
+  <script src="https://mapgl.2gis.com/api/js/v1"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <div id="main">
     <div id="container"></div>
   </div>
@@ -229,10 +233,6 @@
       <input id="input-id" size="10" placeholder="userid" />
       <button id="connect-button" onClick="connectButtonClick();">connect</button>
       <button disabled id="connect-status">disconnected</button>
-      <!--
-<input type="checkbox" checked="true" id="send-viewport" />
-    <label for="send-viewport">Send viewport</label>
--->
     </div>
     <div id="test-buttons">
       <div class="test-buttons-line">
@@ -241,6 +241,9 @@
         <button onClick="testRandomSticker();">send random sticker</button>
         <div class="test-buttons-line">
           <button onClick="perfTest();">perf tests</button>
+        </div>
+        <div class="test-buttons-line">
+          <button onClick="startScene2fest();">2fest scene</button>
         </div>
       </div>
     </div>
@@ -251,6 +254,7 @@
     const getParamDebugMarkers = urlParams.get("debug_markers");
     const getParamDebug = urlParams.get("debug");
     const getParamUserId = urlParams.get("user_id");
+    const getParamScene = urlParams.get("scene");
     const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
     const ENABLE_DEBUG_MARKERS = false || getParamDebugMarkers === "true";
     const ENABLE_AUTO_RECONNECT = true;
@@ -328,6 +332,7 @@
       const button = document.getElementById("connect-button");
       const status = document.getElementById("connect-status");
       const input = document.getElementById("input-id");
+      status.innerText = state;
       switch (state) {
         case "connected":
           status.style.backgroundColor = "#9cf19c";
@@ -348,7 +353,6 @@
           isConnected = false;
           break;
       }
-      status.innerText = state;
     }
 
     // нажатие в кнопку коннекта
@@ -933,6 +937,25 @@
       }, 1000); // change time if changed animation css time
     }
 
+    // ------------------------------------ scenes ------------------------------- //
+
+    switch (getParamScene) {
+      case "2fest": {
+        startScene2fest();
+        break;
+      }
+    }
+
+    function startScene2fest() {
+      map.setCenter([82.9145, 55.0295]);
+      map.setZoom(17.5);
+      map.setPitch(50);
+      map.setRotation(-170.85);
+      document.getElementById("input-id").value = 45755262;
+      connectButtonClick();
+      document.getElementById("input-id").style.display = "none";
+      document.getElementById("connect-button").style.display = "none";
+    }
     // ------------------------------------ tests ------------------------------- //
 
     function prewarm() {
