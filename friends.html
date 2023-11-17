@@ -316,7 +316,7 @@ const SUPPORTED_EMOJI = [
 const map = new mapgl.Map("container", {
   center: [82.963483, 55.039882],
   zoom: 12,
-  key: "042b5b75-f847-4f2a-b695-b5f58adc9dfd",
+  key: "2a5f353b-5172-411f-b1a2-8ea58b3f290c",
   floorsEnabled: false,
   minZoom: 2,
   maxZoom: 20,
@@ -338,7 +338,8 @@ var globalMapRotation = 0;
 var debugMarkers = [];
 const maxDebugMarkersLenght = 1000;
 
-const SOCKET_PATH = "wss://zond.api.2gis.ru/api/1.1/user/:id/ws";
+const SOCKET_PATH =
+  "wss://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/:id/ws";
 
 const FIRE_MARKER_CONTAINER = "fire-marker-container";
 const BASIC_MARKER_CONTAINER = "basic-marker-container";
@@ -1085,8 +1086,6 @@ function createClusterMarkers(ids) {
     sumLon += coordinates[0];
     sumLat += coordinates[1];
     removeMarker(ids[id]);
-
-    //addOrReplaceMarker();
   }
   const medianLon = sumLon / ids.length;
   const medianLat = sumLat / ids.length;
@@ -1095,7 +1094,7 @@ function createClusterMarkers(ids) {
   const debugMarker = new mapgl.Marker(map, {
     coordinates: [medianLon, medianLat]
   });
-  
+
   addClusterMarker(ids, medianLon, medianLat);
 }
 
@@ -1161,6 +1160,9 @@ function startScenePort() {
   map.setZoom(18.2);
   map.setPitch(28.59);
   map.setRotation(142.11);
+
+  const snow = new mapglSnow.Snow(map);
+
   document.getElementById("input-id").value = 46914337;
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
@@ -1319,6 +1321,8 @@ if (DEBUG) {
   processMessage(testMessage2);
   processMessage(testMessage3);
 }
+
+//startScenePort();
 
 
 
