@@ -16,7 +16,6 @@
 .itcss__wrapper {
   position: relative;
   overflow: hidden;
-  background-color: gray;
 }
 
 /* стили для элемента, в котором непосредственно расположены элементы (слайды) */
