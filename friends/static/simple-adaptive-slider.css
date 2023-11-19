@@ -106,6 +106,7 @@
   padding-left: 0;
   list-style: none;
   user-select: none;
+  display: none; /* my fix */
 }
 
 .itcss__indicator {
