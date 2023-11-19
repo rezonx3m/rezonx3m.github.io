@@ -866,8 +866,12 @@
       const avaElement = document.getElementById(`ava-${id}`);
       const markerElement = document.getElementById(`marker-${id}`);
       const invertAzimut = fixedAzimuth * -1;
-      markerElement.style.transform = `rotate(${fixedAzimuth}deg)`;
-      avaElement.style.transform = `rotate(${invertAzimut}deg)`;
+      if (markerElement !== null) {
+        markerElement.style.transform = `rotate(${fixedAzimuth}deg)`;
+      }
+      if (avaElement !== null) {
+        avaElement.style.transform = `rotate(${invertAzimut}deg)`;
+      }
     }
 
     async function moveOn(track, marker, userId) {
