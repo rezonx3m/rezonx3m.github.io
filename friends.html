@@ -355,6 +355,7 @@
       width: 50px;
       height: 50px;
       border: 1px solid white;
+      margin-bottom: 30px;
     }
 
     .gamers-table {
@@ -425,11 +426,9 @@
     #game-center-screen {
       position: fixed;
       /* or absolute */
-      top: 50%;
-      left: 50%;
       width: 200px;
       height: 200px;
-      margin: -50px 0 0 -100px;
+
       animation: rotating 1s linear infinite;
     }
 
@@ -579,6 +578,9 @@
   var CURRENT_GAMERS = [];
   var CURRENT_GAMERS_SCORE = {};
   var SCORE_TO_WIN = 10;
+  var MAX_PLAYERS = 40;
+  var MAX_ROUNDS = 30;
+  var CURRENT_ROUND_NUM = 0;
   var gameTimerId = null;
   var allowAddNewPlayers = true;
   var gameStarted = false;
@@ -1306,7 +1308,6 @@
     const senderMarker = globalMarkers[senderId];
     const senderLon = senderMarker.getCoordinates()[0];
     const senderLat = senderMarker.getCoordinates()[1];
-
 
     const mapCenter = map.getCenter();
 
@@ -2145,19 +2146,24 @@
   function finishGame(winnerId) {
     centerSrickerDiv.innerHTML = `<div></div>`;
     gameFinished = true;
-    timerName.innerHTML = "У нас есть победитель!!!";
+
     hideTimer();
     setTimeout(restartGame, 10000);
 
-    var acronym = "";
-    const avaUrl = globalProfiles[winnerId].logo;
-    const name = globalProfiles[winnerId].name;
-    const backgroundImage = getBackgroundImageForAva(avaUrl);
+    if (winnerId) {
+      timerName.innerHTML = "У нас есть победитель!!!";
+      var acronym = "";
+      const avaUrl = globalProfiles[winnerId].logo;
+      const name = globalProfiles[winnerId].name;
+      const backgroundImage = getBackgroundImageForAva(avaUrl);
 
-    if (backgroundImage === null) {
-      acronym = getAcronymFromName(name);
+      if (backgroundImage === null) {
+        acronym = getAcronymFromName(name);
+      }
+      gameElement.innerHTML = `<div class="gamer-ava ava ava-only-text winner" style="${backgroundImage}">${acronym}</div>`;
+    } else {
+      timerName.innerHTML = "У несколько победителей!!!";
     }
-    gameElement.innerHTML = `<div class="gamer-ava ava ava-only-text winner" style="${backgroundImage}">${acronym}</div>`;
   }
 
   function startTimer(seconds, callback) {
@@ -2197,10 +2203,14 @@
   }
 
   function waitMoreGamers(currentCountGamers) {
-    const seconds = currentCountGamers == 1 ? 60 : 15;
-    startTimer(seconds, function () {
-      return processFinishWaitMoreGamesTimer(currentCountGamers);
-    });
+    if (CURRENT_GAMERS.length < MAX_PLAYERS) {
+      const seconds = currentCountGamers == 1 ? 60 : 15;
+      startTimer(seconds, function () {
+        return processFinishWaitMoreGamesTimer(currentCountGamers);
+      });
+    } else {
+      processFinishWaitMoreGamesTimer(currentCountGamers);
+    }
   }
 
   function processFinishWaitMoreGamesTimer(currentCountGamers) {
@@ -2224,15 +2234,23 @@
 
   function playRound() {
     if (!gameFinished && gameStarted) {
-      currentRoundWinner = null;
-      currentSticker = getRandomSticker();
-      timerName.innerHTML = "Лови его!"; // "рандомные тексты";
-      if (DEBUG) {
-        console.log("round", currentSticker);
+      if (CURRENT_ROUND_NUM < MAX_ROUNDS) {
+        CURRENT_ROUND_NUM = CURRENT_ROUND_NUM + 1;
+        currentRoundWinner = null;
+        currentSticker = getRandomSticker();
+        timerName.innerHTML = "Лови его!"; // "рандомные тексты";
+        if (DEBUG) {
+          console.log("round", currentSticker);
+        }
+        const emogiClass = "emogi-" + currentSticker;
+        centerSrickerDiv.innerHTML = `<div class="${emogiClass} game-center-screen-sticker"></div>`;
+        centerSrickerDiv.style.marginLeft = getRandomLeftForSticker() + "px";
+        centerSrickerDiv.style.marginTop = getRandomTopForSticker() + "px";
+
+        startTimer(3, playRound);
+      } else {
+        finishGame();
       }
-      const emogiClass = "emogi-" + currentSticker;
-      centerSrickerDiv.innerHTML = `<div class="${emogiClass} game-center-screen-sticker"></div>`;
-      startTimer(3, playRound);
     } else {
       centerSrickerDiv.innerHTML = `<div></div>`;
     }
@@ -2253,6 +2271,7 @@
     currentRoundWinner = null;
     gameFinished = false;
     gameStarted = false;
+    CURRENT_ROUND_NUM = 0;
     centerSrickerDiv.innerHTML = `<div></div>`;
   }
 
@@ -2261,7 +2280,69 @@
     return SUPPORTED_EMOJI[stickerN];
   }
 
-  startScene2fest();
+  // var testMessageSticker1 = {
+  //   senderId: "debf959572c14aba8a5147678bf831aa",
+  //   stickerRecord: {
+  //     sticker: {
+  //       stickerId: "fire",
+  //       count: 1
+  //     }
+  //   }
+  // };
+  // var testMessageSticker2 = {
+  //   senderId: "debf959572c14aba8a5147678bf831aa",
+  //   stickerRecord: {
+  //     sticker: {
+  //       stickerId: "poop",
+  //       count: 1
+  //     }
+  //   }
+  // };
+  // var testMessageSticker3 = {
+  //   senderId: "debf959572c14aba8a5147678bf831aa",
+  //   stickerRecord: {
+  //     sticker: {
+  //       stickerId: "greenheart",
+  //       count: 1
+  //     }
+  //   }
+  // };
+  // var testMessageSticker4 = {
+  //   senderId: "debf959572c14aba8a5147678bf831aa",
+  //   stickerRecord: {
+  //     sticker: {
+  //       stickerId: "snowball",
+  //       count: 1
+  //     }
+  //   }
+  // };
+
+  // function testGame() {
+  //   for (const id in globalMarkers) {
+  //     testMessageSticker1.senderId = id;
+
+  //     testMessageSticker2.senderId = id;
+  //     testMessageSticker3.senderId = id;
+  //     testMessageSticker4.senderId = id;
+  //     processStickerToMe(testMessageSticker1);
+  //     processStickerToMe(testMessageSticker2);
+  //     processStickerToMe(testMessageSticker3);
+  //     processStickerToMe(testMessageSticker3);
+  //     processStickerToMe(testMessageSticker4);
+  //   }
+  // }
+
+  // setTimeout(testGame, 3000);
+
+  // function getRandomLeftForSticker() {
+  //   const container = document.getElementById("game-container");
+  //   return Math.floor(Math.random() * container.clientWidth);
+  // }
+
+  // function getRandomTopForSticker() {
+  //   const container = document.getElementById("game-container");
+  //   return Math.floor(Math.random() * (container.clientHeight - 100));
+  // }
 
 </script>
 </body>
