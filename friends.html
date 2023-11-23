@@ -573,13 +573,12 @@
     "nav"
   ];
 
-
   // game parametrs
   var LOG_LAST_STICKERS_TO_ME = false;
   var LAST_STICKERS_BY_USERS = {};
   var CURRENT_GAMERS = [];
   var CURRENT_GAMERS_SCORE = {};
-  var SCORE_TO_WIN = 3;
+  var SCORE_TO_WIN = 10;
   var gameTimerId = null;
   var allowAddNewPlayers = true;
   var gameStarted = false;
@@ -1307,6 +1306,7 @@
     const senderMarker = globalMarkers[senderId];
     const senderLon = senderMarker.getCoordinates()[0];
     const senderLat = senderMarker.getCoordinates()[1];
+
 
     const mapCenter = map.getCenter();
 
@@ -2090,6 +2090,7 @@
         if (CURRENT_GAMERS.length > 0) {
           const timerElement = document.querySelector(".timer");
           timerElement.style.display = "flex";
+          tableContent += "<tr>";
           for (var i = 0; i < CURRENT_GAMERS.length; i++) {
             var acronym = "";
             const avaUrl = globalProfiles[CURRENT_GAMERS[i]].logo;
@@ -2099,18 +2100,15 @@
             if (backgroundImage === null) {
               acronym = getAcronymFromName(name);
             }
-            if (i % 10 == 0) {
-              if (i != 0) {
-                tableContent += "</tr>";
-              }
-              tableContent += "<tr>";
+            if (i % 10 == 0 && i != 0) {
+              tableContent += "</tr>";
             }
             tableContent += "<td>";
             tableContent += `<div class="gamer">
                            <div class="gamer-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>
                            <div class="gamer-score" id="gamer-score-${id}">0</div>
                          <div>`;
-            tableContent += "</tr>";
+            tableContent += "</td>";
           }
           tableContent += "</tr>";
         }
@@ -2263,6 +2261,7 @@
     return SUPPORTED_EMOJI[stickerN];
   }
 
+  startScene2fest();
 
 </script>
 </body>
