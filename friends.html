@@ -2107,7 +2107,7 @@
             tableContent += "<td>";
             tableContent += `<div class="gamer">
                            <div class="gamer-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>
-                           <div class="gamer-score" id="gamer-score-${id}">0</div>
+                           <div class="gamer-score" id="gamer-score-${CURRENT_GAMERS[i]}">0</div>
                          <div>`;
             tableContent += "</td>";
           }
@@ -2132,8 +2132,8 @@
           console.log("round winner", currentRoundWinner);
         }
         CURRENT_GAMERS_SCORE[id] = CURRENT_GAMERS_SCORE[id] + 1;
-        gamerScore = document.getElementById("gamer-score-" + id);
-        gamerScore.innerHTML = CURRENT_GAMERS_SCORE[id];
+        const gamerScore = document.getElementById("gamer-score-" + id);
+        gamerScore.innerText = CURRENT_GAMERS_SCORE[id];
         if (SCORE_TO_WIN == CURRENT_GAMERS_SCORE[id]) {
           finishGame(id);
         }
@@ -2150,6 +2150,23 @@
     hideTimer();
     setTimeout(restartGame, 10000);
 
+    var winners = [];
+    if (!winnerId) {
+      var maxScore = 0;
+      for (const id in CURRENT_GAMERS_SCORE) {
+        if (CURRENT_GAMERS_SCORE[id] == maxScore) {
+          winners.push(id);
+        } else if (CURRENT_GAMERS_SCORE[id] > maxScore) {
+          winners = [];
+          maxScore = CURRENT_GAMERS_SCORE[id];
+          winners.push(id);
+        }
+      }
+    }
+
+    if (winners.length == 1) {
+      winnerId = winners[0];
+    }
     if (winnerId) {
       timerName.innerHTML = "У нас есть победитель!!!";
       var acronym = "";
@@ -2163,8 +2180,13 @@
       gameElement.innerHTML = `<div class="gamer-ava ava ava-only-text winner" style="${backgroundImage}">${acronym}</div>`;
     } else {
       timerName.innerHTML = "У несколько победителей!!!";
+      for (var i = 0; i < winners.length; i++) {
+        const gamerScore = document.getElementById("gamer-score-" + winners[i]);
+        gamerScore.style.backgroundColor = "#F99D33";
+      }
     }
   }
+
 
   function startTimer(seconds, callback) {
     if (DEBUG) {
@@ -2204,7 +2226,7 @@
 
   function waitMoreGamers(currentCountGamers) {
     if (CURRENT_GAMERS.length < MAX_PLAYERS) {
-      const seconds = currentCountGamers == 1 ? 60 : 15;
+      const seconds = currentCountGamers == 1 ? 5 : 3;
       startTimer(seconds, function () {
         return processFinishWaitMoreGamesTimer(currentCountGamers);
       });
@@ -2215,8 +2237,7 @@
 
   function processFinishWaitMoreGamesTimer(currentCountGamers) {
     allowAddNewPlayers = false;
-    if (currentCountGamers <= 1) {
-      // todo <= 1
+    if (currentCountGamers <= 0) {
       timerName.innerHTML = "Недостаточно игроков, собираем игру заново!";
       hideTimer();
       setTimeout(restartGame, 2000);
@@ -2280,69 +2301,74 @@
     return SUPPORTED_EMOJI[stickerN];
   }
 
-  // var testMessageSticker1 = {
-  //   senderId: "debf959572c14aba8a5147678bf831aa",
-  //   stickerRecord: {
-  //     sticker: {
-  //       stickerId: "fire",
-  //       count: 1
-  //     }
-  //   }
-  // };
-  // var testMessageSticker2 = {
-  //   senderId: "debf959572c14aba8a5147678bf831aa",
-  //   stickerRecord: {
-  //     sticker: {
-  //       stickerId: "poop",
-  //       count: 1
-  //     }
-  //   }
-  // };
-  // var testMessageSticker3 = {
-  //   senderId: "debf959572c14aba8a5147678bf831aa",
-  //   stickerRecord: {
-  //     sticker: {
-  //       stickerId: "greenheart",
-  //       count: 1
-  //     }
-  //   }
-  // };
-  // var testMessageSticker4 = {
-  //   senderId: "debf959572c14aba8a5147678bf831aa",
-  //   stickerRecord: {
-  //     sticker: {
-  //       stickerId: "snowball",
-  //       count: 1
-  //     }
-  //   }
-  // };
+  function getRandomLeftForSticker() {
+    const container = document.getElementById("game-container");
+    return Math.floor(Math.random() * container.clientWidth);
+  }
 
-  // function testGame() {
-  //   for (const id in globalMarkers) {
-  //     testMessageSticker1.senderId = id;
+  function getRandomTopForSticker() {
+    const container = document.getElementById("game-container");
+    return Math.floor(Math.random() * (container.clientHeight - 100));
+  }
 
-  //     testMessageSticker2.senderId = id;
-  //     testMessageSticker3.senderId = id;
-  //     testMessageSticker4.senderId = id;
-  //     processStickerToMe(testMessageSticker1);
-  //     processStickerToMe(testMessageSticker2);
-  //     processStickerToMe(testMessageSticker3);
-  //     processStickerToMe(testMessageSticker3);
-  //     processStickerToMe(testMessageSticker4);
-  //   }
-  // }
+  function gameTest() {
+    startScene2fest();
+    var testMessageSticker1 = {
+      senderId: "debf959572c14aba8a5147678bf831aa",
+      stickerRecord: {
+        sticker: {
+          stickerId: "fire",
+          count: 1
+        }
+      }
+    };
+    var testMessageSticker2 = {
+      senderId: "debf959572c14aba8a5147678bf831aa",
+      stickerRecord: {
+        sticker: {
+          stickerId: "poop",
+          count: 1
+        }
+      }
+    };
+    var testMessageSticker3 = {
+      senderId: "debf959572c14aba8a5147678bf831aa",
+      stickerRecord: {
+        sticker: {
+          stickerId: "greenheart",
+          count: 1
+        }
+      }
+    };
+    var testMessageSticker4 = {
+      senderId: "debf959572c14aba8a5147678bf831aa",
+      stickerRecord: {
+        sticker: {
+          stickerId: "snowball",
+          count: 1
+        }
+      }
+    };
 
-  // setTimeout(testGame, 3000);
+    function testGame() {
+      for (const id in globalMarkers) {
+        testMessageSticker1.senderId = id;
 
-  // function getRandomLeftForSticker() {
-  //   const container = document.getElementById("game-container");
-  //   return Math.floor(Math.random() * container.clientWidth);
-  // }
+        testMessageSticker2.senderId = id;
+        testMessageSticker3.senderId = id;
+        testMessageSticker4.senderId = id;
+        processStickerToMe(testMessageSticker1);
+        processStickerToMe(testMessageSticker2);
+        processStickerToMe(testMessageSticker3);
+        processStickerToMe(testMessageSticker3);
+        processStickerToMe(testMessageSticker4);
+      }
+    }
 
-  // function getRandomTopForSticker() {
-  //   const container = document.getElementById("game-container");
-  //   return Math.floor(Math.random() * (container.clientHeight - 100));
-  // }
+    setTimeout(testGame, 3000);
+  }
+  // gameTest();
+
 
 </script>
 </body>
