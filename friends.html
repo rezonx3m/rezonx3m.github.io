@@ -1768,10 +1768,10 @@ function startScene2fest() {
   map.setPitch(50);
   map.setRotation(-170.85);
   document.getElementById("input-id").value = "2fest";
+  startGameFirstSendSticker();
   SOCKET_PATH =
     "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
   connectButtonClick();
-  startGameFirstSendSticker();
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
 }
@@ -2239,10 +2239,6 @@ function getRandomSticker() {
   const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
   return SUPPORTED_EMOJI[stickerN];
 }
-
-
-
-
 
 </script>
 </body>
