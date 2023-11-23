@@ -2198,7 +2198,7 @@
   }
 
   function waitMoreGamers(currentCountGamers) {
-    const seconds = currentCountGamers == 1 ? 5 : 3;
+    const seconds = currentCountGamers == 1 ? 60 : 15;
     //const seconds = isFirst ? 60 : 15;
     startTimer(seconds, function () {
       return processFinishWaitMoreGamesTimer(currentCountGamers);
