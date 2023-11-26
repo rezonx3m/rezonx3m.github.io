@@ -603,6 +603,8 @@
     zoomControl: false
   });
 
+  const snow = new mapglSnow.Snow(map);
+
   // фиксим рамер карты при ресайзе
   window.addEventListener("resize", () => map.invalidateSize());
 
@@ -1831,7 +1833,7 @@
     map.setPitch(28.59);
     map.setRotation(142.11);
 
-    const snow = new mapglSnow.Snow(map);
+    // const snow = new mapglSnow.Snow(map);
 
     document.getElementById("input-id").value = "port";
     SOCKET_PATH =
