@@ -301,7 +301,7 @@
 
     #game-container {
       width: 50%;
-      height: 90%;
+      /* height: 90%; */
       position: absolute;
       top: 10px;
       left: 50%;
@@ -354,7 +354,6 @@
     .gamer {
       width: 50px;
       height: 50px;
-      border: 1px solid white;
       margin-bottom: 30px;
     }
 
@@ -367,6 +366,8 @@
     .gamer-score {
       background-color: white;
       font-weight: bold;
+      border: 1px solid;
+      border-radius: 50px;
     }
 
     .timer__items {
@@ -411,16 +412,34 @@
       min-width: 22px;
     }
 
+    .timer__name {
+      margin-left: 10px;
+      text-align: center;
+      background-color: white;
+      border-radius: 100px;
+      overflow: hidden;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      border: 3px solid white;
+      white-space: nowrap;
+      min-width: 22px;
+      font-weight: bold;
+      font-size: 16px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
     .winner {
+      margin-top: 20px;
       text-align: center;
       width: 300px;
       height: 300px;
-      box-shadow: 0px 0px 4px 4px rgba(235, 87, 22, 0.8);
+      box-shadow: 0px 0px 16px 16px rgba(235, 87, 22, 0.8);
       border-radius: 300px;
       display: inline-flex;
       justify-content: center;
       align-items: center;
       font-size: 120px;
+      border: 10px solid;
     }
 
     #game-center-screen {
@@ -428,8 +447,14 @@
       /* or absolute */
       width: 200px;
       height: 200px;
+    }
 
-      animation: rotating 1s linear infinite;
+    .animate-rotating {
+      -webkit-animation: rotating 1s linear infinite;
+    }
+
+    .animate-scale {
+      -webkit-animation: sticker-game-scale 2s ease-in-out infinite;
     }
 
     @keyframes rotating {
@@ -453,6 +478,26 @@
 
     #input-follow-id-button {
       display: none;
+    }
+
+    .gamer-ava {
+      border-radius: 200px;
+      border: 2px solid;
+      margin-left: -2px;
+    }
+
+    @keyframes sticker-game-scale {
+      0% {
+        transform: scale(0.5);
+      }
+
+      50% {
+        transform: scale(1.5);
+      }
+
+      100% {
+        transform: scale(0.5);
+      }
     }
   </style>
 </head>
@@ -495,7 +540,14 @@
       </div>
     </div>
     <div id="game-container">
-      <div id="game-center-screen"></div>
+      <div id="game-center-screen">
+        <div class="animate-rotating">
+
+          <div class="animate-scale">
+            <div id=game-sticker-container></div>
+          </div>
+        </div>
+      </div>
       <div id="game-first-send-intro" onClick="restartGame()"></div>
 
       <div id="game-first-send">
@@ -521,8 +573,10 @@
   const urlParams = new URLSearchParams(window.location.search);
   const getParamDebugMarkers = urlParams.get("debug_markers");
   const getParamDebug = urlParams.get("debug");
+  const getParamDebugGame = urlParams.get("debug_game");
   const getParamUserId = urlParams.get("user_id");
   const getParamScene = urlParams.get("scene");
+  const getParamSendBounds = urlParams.get("send_bounds");
   // включаем дебак для кодпена или по параметру
   const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
   const ENABLE_DEBUG_MARKERS =
@@ -530,11 +584,12 @@
     getParamDebugMarkers === "true";
   var debugMarkers = [];
 
+  const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
   const ENABLE_AUTO_RECONNECT = true;
   const ENABLE_CLUSTERS = true;
   const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
   var OVERRIDED_ZOOM = null;
-  const DROP_MARKERS_WITH_OLD_STATE = false;
+  const DROP_MARKERS_WITH_OLD_STATE = true;
 
   // маркера в кластерах (для быстрой чистки)
   var clusterMarkers = {};
@@ -577,7 +632,7 @@
   var LAST_STICKERS_BY_USERS = {};
   var CURRENT_GAMERS = [];
   var CURRENT_GAMERS_SCORE = {};
-  var SCORE_TO_WIN = 10;
+  var SCORE_TO_WIN = 10; // @todo return 10
   var MAX_PLAYERS = 40;
   var MAX_ROUNDS = 30;
   var CURRENT_ROUND_NUM = 0;
@@ -602,8 +657,6 @@
     lowZoomMaxPitch: 45,
     zoomControl: false
   });
-
-  const snow = new mapglSnow.Snow(map);
 
   // фиксим рамер карты при ресайзе
   window.addEventListener("resize", () => map.invalidateSize());
@@ -869,7 +922,7 @@
       DROP_MARKERS_WITH_OLD_STATE &&
       Date.now() + serverTimestampShift - lastSeen > stoppedLivenessTimeout
     ) {
-      removeMarker(id);
+      hideMarker(id); // обратно раскрываются в moveMarker и в декластеризации
       return;
     }
 
@@ -993,7 +1046,7 @@
     if (DEBUG) {
       console.log("addOrReplaceMarker", id);
     }
-    removeMarker(id);
+    // removeMarker(id);
 
     const markerClass =
       isMoving && !isInit // маркер из инита всегда рисуем стоячим
@@ -1003,12 +1056,21 @@
 
     const acronym = getAcronymFromName(name);
 
-    const htmlMarker = new mapgl.HtmlMarker(map, {
-      coordinates: [lon, lat],
-      interactive: DEBUG,
-      html: getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth)
-    });
-    htmlMarker.id = id;
+    var htmlMarker = null;
+
+    const content = getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth);
+    if (globalMarkers.hasOwnProperty(id)) {
+      htmlMarker = globalMarkers[id];
+    } else {
+      htmlMarker = new mapgl.HtmlMarker(map, {
+        coordinates: [lon, lat],
+        interactive: DEBUG,
+        html: getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth)
+      });
+      htmlMarker.id = id;
+    }
+
+    htmlMarker.setContent(content);
 
     if (markerClass === FIRE_MARKER_CONTAINER) {
       htmlMarker.setAnchor([58, 43]);
@@ -1133,7 +1195,7 @@
       console.log("moveMarker", id);
     }
 
-    //showMarker(id);
+    showMarker(id);
 
     const mapLon = marker.getCoordinates()[0];
     const mapLat = marker.getCoordinates()[1];
@@ -1259,7 +1321,7 @@
   map.on("move", () => { });
 
   function sendBounds(ws) {
-    if (ws && ws.readyState == 1) {
+    if (ws && ws.readyState == 1 && ENABLE_SEND_BOUNDS) {
       const bounds = map.getBounds();
 
       const message = {
@@ -1293,6 +1355,11 @@
     const stickerId = payload.stickerRecord.sticker.stickerId;
     const stickersCount = payload.stickerRecord.sticker.count;
     const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+    if (htmlMarker === null) {
+      console.log("can't find globalMarker for markerId", senderId);
+      return;
+    }
+
     if (DEBUG && LOG_LAST_STICKERS_TO_ME) {
       console.log(senderId, stickerId);
     }
@@ -1307,6 +1374,10 @@
     //  startCoordinates = globalStates
     //const senderLon = globalStates[senderId]["lon"];
     //const senderLat = globalStates[senderId]["lat"];
+
+    if (!globalMarkers.hasOwnProperty(senderId)) {
+      return null;
+    }
     const senderMarker = globalMarkers[senderId];
     const senderLon = senderMarker.getCoordinates()[0];
     const senderLat = senderMarker.getCoordinates()[1];
@@ -1338,6 +1409,9 @@
     const stickerId = payload.stickerRecord.sticker.stickerId;
     const stickersCount = payload.stickerRecord.sticker.count;
     const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+    if (htmlMarker === null) {
+      console.log("can't find globalMarker for markerId", senderId);
+    }
     const coordinates = htmlMarker.getCoordinates();
     const nextLon = globalStates[recipientId]["lon"];
     const nextLat = globalStates[recipientId]["lat"];
@@ -1828,12 +1902,12 @@
 
     currentScene = "port";
     //OVERRIDED_ZOOM = 100;
-    map.setCenter([30.2423, 59.9235]);
-    map.setZoom(18.2);
-    map.setPitch(28.59);
+    map.setCenter([30.242201, 59.923987]);
+    map.setZoom(18.71);
+    map.setPitch(20.1);
     map.setRotation(142.11);
 
-    // const snow = new mapglSnow.Snow(map);
+    const snow = new mapglSnow.Snow(map);
 
     document.getElementById("input-id").value = "port";
     SOCKET_PATH =
@@ -2056,8 +2130,9 @@
   const timerName = document.getElementById("timer__name");
   const gameElement = document.getElementById("game");
   const secondsDiv = document.querySelector(".timer__seconds");
-  const centerSrickerDiv = document.getElementById("game-center-screen");
-  timerName.innerHTML = "Ожидаем игроков";
+  const centerGameDiv = document.getElementById("game-center-screen");
+  const centerSrickerDiv = document.getElementById("game-sticker-container");
+  timerName.innerHTML = "Ожидаем игроков...";
 
   function logStickerByUser(id, sticker) {
     if (allowAddNewPlayers) {
@@ -2093,6 +2168,7 @@
         if (CURRENT_GAMERS.length > 0) {
           const timerElement = document.querySelector(".timer");
           timerElement.style.display = "flex";
+
           tableContent += "<tr>";
           for (var i = 0; i < CURRENT_GAMERS.length; i++) {
             var acronym = "";
@@ -2105,6 +2181,8 @@
             }
             if (i % 10 == 0 && i != 0) {
               tableContent += "</tr>";
+              tableContent += '</table class="gamers-table">';
+              tableContent += '<table class="gamers-table">';
             }
             tableContent += "<td>";
             tableContent += `<div class="gamer">
@@ -2150,7 +2228,8 @@
     gameFinished = true;
 
     hideTimer();
-    setTimeout(restartGame, 10000);
+    //setTimeout(restartGame, 10000); //@todo return after debug
+    setTimeout(restartGame, 1000000);
 
     var winners = [];
     if (!winnerId) {
@@ -2189,7 +2268,6 @@
     }
   }
 
-
   function startTimer(seconds, callback) {
     if (DEBUG) {
       console.log("start timer with callback", seconds, callback);
@@ -2214,8 +2292,8 @@
     }
 
     showTimer();
-    countdownTimer();
-    gameTimerId = setInterval(countdownTimer, 100);
+    //countdownTimer();
+    gameTimerId = setInterval(countdownTimer, 40); // 25fps
   }
 
   function showTimer() {
@@ -2228,7 +2306,7 @@
 
   function waitMoreGamers(currentCountGamers) {
     if (CURRENT_GAMERS.length < MAX_PLAYERS) {
-      const seconds = currentCountGamers == 1 ? 60 : 15;
+      const seconds = currentCountGamers == 1 ? 60 : 15; //@todo 60 15
       startTimer(seconds, function () {
         return processFinishWaitMoreGamesTimer(currentCountGamers);
       });
@@ -2239,7 +2317,7 @@
 
   function processFinishWaitMoreGamesTimer(currentCountGamers) {
     allowAddNewPlayers = false;
-    if (currentCountGamers <= 0) {
+    if (currentCountGamers <= (getParamDebugGame === "true" ? 0 : 1)) {
       timerName.innerHTML = "Недостаточно игроков, собираем игру заново!";
       hideTimer();
       setTimeout(restartGame, 2000);
@@ -2267,8 +2345,9 @@
         }
         const emogiClass = "emogi-" + currentSticker;
         centerSrickerDiv.innerHTML = `<div class="${emogiClass} game-center-screen-sticker"></div>`;
-        centerSrickerDiv.style.marginLeft = getRandomLeftForSticker() + "px";
-        centerSrickerDiv.style.marginTop = getRandomTopForSticker() + "px";
+
+        centerGameDiv.style.marginLeft = getRandomLeftForSticker() + "px";
+        centerGameDiv.style.marginTop = getRandomTopForSticker() + "px";
 
         startTimer(3, playRound);
       } else {
@@ -2352,7 +2431,7 @@
       }
     };
 
-    function testGame() {
+    function addBots() {
       for (const id in globalMarkers) {
         testMessageSticker1.senderId = id;
 
@@ -2367,10 +2446,8 @@
       }
     }
 
-    setTimeout(testGame, 3000);
+    setTimeout(addBots, 8000);
   }
-  // gameTest();
-
 
 </script>
 </body>
