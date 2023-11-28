@@ -1256,12 +1256,21 @@
       // position in segment
       const ratio = (dt - curr.t) / (next.t - curr.t);
 
-      // get current pos via lienar interpolation
-      const pos = lerp(curr.coordinates, next.coordinates, ratio);
-      marker.setCoordinates(pos);
-
-      // wait next animation frame
-      await new Promise((resolve) => requestAnimationFrame(resolve));
+      if (isFinite(ratio)) {
+        // get current pos via lienar interpolation
+        const pos = lerp(curr.coordinates, next.coordinates, ratio);
+        if (pos[0] >= 180 || pos[0] <= -180 || pos[1] >= 90 || pos[1] <= -90) {
+          if (DEBUG) {
+            console.log("wrong track", track);
+            console.log("wrong pos", pos);
+            console.log("wrong ratio", ratio);
+          }
+        } else {
+          marker.setCoordinates(pos);
+          // wait next animation frame
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+        }
+      }
 
       // iterate segments if needed
       if (dt > next.t) {
@@ -1411,7 +1420,6 @@
     const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
     if (htmlMarker === null) {
       console.log("can't find globalMarker for markerId", senderId);
-      return;
     }
     const coordinates = htmlMarker.getCoordinates();
     const nextLon = globalStates[recipientId]["lon"];
@@ -2449,6 +2457,12 @@
 
     setTimeout(addBots, 8000);
   }
+  //
+
+  //
+
+  //startScene2fest();
+
 
 </script>
 </body>
