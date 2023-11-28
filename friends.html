@@ -1422,6 +1422,7 @@ function processStickerFromTo(payload) {
   const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
   if (htmlMarker === null) {
     console.log("can't find globalMarker for markerId", senderId);
+    return;
   }
   const coordinates = htmlMarker.getCoordinates();
   const nextLon = globalStates[recipientId]["lon"];
