@@ -570,7 +570,7 @@
 </body>
 
 <script type="text/javascript">
- const urlParams = new URLSearchParams(window.location.search);
+const urlParams = new URLSearchParams(window.location.search);
 const getParamDebugMarkers = urlParams.get("debug_markers");
 const getParamDebug = urlParams.get("debug");
 const getParamDebugGame = urlParams.get("debug_game");
@@ -1917,6 +1917,11 @@ function startScenePort() {
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
+
+  document.getElementById("connect-status").disabled = false;
+  document.getElementById("connect-status").onclick = function () {
+    showSceneNewFriendAnimation();
+  };
 }
 
 function showSceneNewFriendAnimation() {
@@ -1926,14 +1931,13 @@ function showSceneNewFriendAnimation() {
     setTimeout(function () {
       element.style.display = "none";
     }, 10000);
-    
+
     portSendNewFriend();
   }
 }
 
 function showScenePushButtonAnimation() {
   if (currentScene === "port") {
-    
     let element = document.getElementById("popup");
     element.style.display = "block";
     setTimeout(function () {
@@ -1943,7 +1947,6 @@ function showScenePushButtonAnimation() {
 }
 
 function portSendNewFriend() {}
-
 function portReceivePing() {}
 function portSendPushButton() {
   showScenePushButtonAnimation();
@@ -2482,9 +2485,7 @@ function gameTest() {
 }
 //
 
-//
 
-//startScene2fest();
 
 
 
