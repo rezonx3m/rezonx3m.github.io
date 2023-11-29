@@ -1952,14 +1952,15 @@ function showScenePushButtonAnimation() {
 }
 
 function portSendNewFriend() {
-  console.log("send new friend received from TD");
+  showScenePushButtonAnimation();
+  window.electronAPI.addNewFriend();
+  console.log("send new friend action to TD");
 }
 function portReceivePing() {
   console.log("ping received from TD");
 }
 function portSendPushButton() {
-  window.electronAPI.addNewFriend();
-  showScenePushButtonAnimation();
+  console.log("send push button from TD");
 }
 
 // ------------------------------------ tests ------------------------------- //
