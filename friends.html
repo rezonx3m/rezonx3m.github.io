@@ -2043,10 +2043,10 @@
     setInterval(portSendPing, 1000);
     setInterval(portSendShowStub, 1000);
 
+    showScenePushButtonAnimation;
+
     document.onkeypress = function (e) {
       e = e || window.event;
-      console.log(e.keyCode);
-      // use e.keyCode
       switch (e.keyCode) {
         case 49:
           perfTest();
@@ -2766,6 +2766,7 @@
     dataURL.replace("data:", "").replace(/^.+,/, "");
 
   //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
+
 
 </script>
 </body>
