@@ -4,13 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR.js"></script>
   <link rel="stylesheet" href="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.css">
   <script defer src="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.js"></script>
-  
+
+
   <script src="https://unpkg.com/mapgl-snow"></script>
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 
   <style>
     html,
@@ -220,41 +224,38 @@
     }
 
     /* fade in out */
+    /* todo удалить нахрен, так как теперь лотти /*
+.popup-qr-class {
+  display: none;
+  position: absolute;
+  top: 0px;
+  height: 100%;
+  left: 10%;
+  right: 10%;
 
-    .popup-qr-class {
-      display: none;
-      position: absolute;
-      top: 0px;
-      height: 100%;
-      left: 10%;
-      right: 10%;
+  background-image: url("https://rezonx3m.github.io/friends/static/QR.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  animation: popup-scale 32s ease-in-out infinite;
+}
 
-      background-image: url("https://rezonx3m.github.io/friends/static/QR.png");
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center center;
-      animation: popup-scale 32s ease-in-out infinite;
-    }
+@keyframes popup-scale {
+  0% {
+    transform: scale(0);
+  }
+  2% {
+    transform: scale(1);
+  }
+  98% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
 
-    @keyframes popup-scale {
-      0% {
-        transform: scale(0);
-      }
-
-      2% {
-        transform: scale(1);
-      }
-
-      98% {
-        transform: scale(1);
-      }
-
-      100% {
-        transform: scale(0);
-      }
-    }
-
-    /* sliders */
+/* sliders */
 
     .itcss_item_text {
       display: flex;
@@ -509,8 +510,7 @@
     }
 
     #qr-promo {
-      display: none;
-      border: 5px solid;
+      display: block;
       position: absolute;
       top: 50%;
       padding: 10px;
@@ -611,593 +611,595 @@
 </body>
 
 <script type="text/javascript">
-const urlParams = new URLSearchParams(window.location.search);
-const getParamDebugMarkers = urlParams.get("debug_markers");
-const getParamDebug = urlParams.get("debug");
-const getParamDebugGame = urlParams.get("debug_game");
-const getParamUserId = urlParams.get("user_id");
-const getParamScene = urlParams.get("scene");
-const getParamSendBounds = urlParams.get("send_bounds");
-const getParamHideStatus = urlParams.get("hide_status");
-// включаем дебак для кодпена или по параметру
-const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
-const ENABLE_DEBUG_MARKERS =
-  (false && window.location.host == "cdpn.io") ||
-  getParamDebugMarkers === "true";
-var debugMarkers = [];
+  const urlParams = new URLSearchParams(window.location.search);
+  const getParamDebugMarkers = urlParams.get("debug_markers");
+  const getParamDebug = urlParams.get("debug");
+  const getParamDebugGame = urlParams.get("debug_game");
+  const getParamUserId = urlParams.get("user_id");
+  const getParamScene = urlParams.get("scene");
+  const getParamSendBounds = urlParams.get("send_bounds");
+  const getParamHideStatus = urlParams.get("hide_status");
+  // включаем дебак для кодпена или по параметру
+  const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
+  const ENABLE_DEBUG_MARKERS =
+    (false && window.location.host == "cdpn.io") ||
+    getParamDebugMarkers === "true";
+  var debugMarkers = [];
 
-const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
-const ENABLE_AUTO_RECONNECT = true;
-var ENABLE_CLUSTERS = false;
-var ENABLE_STICKERS = false;
-const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
-var OVERRIDED_ZOOM = null;
-const DROP_MARKERS_WITH_OLD_STATE = true;
+  const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
+  const ENABLE_AUTO_RECONNECT = true;
+  var ENABLE_CLUSTERS = false;
+  var ENABLE_STICKERS = false;
+  const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
+  var OVERRIDED_ZOOM = null;
+  const DROP_MARKERS_WITH_OLD_STATE = true;
 
-// маркера в кластерах (для быстрой чистки)
-var clusterMarkers = {};
-// идентификаторы юрезов в кластерах, для скрытия и восстановления основных маркеров @todo обощить с маркерами
-var idsUsersInClusters = {};
+  // маркера в кластерах (для быстрой чистки)
+  var clusterMarkers = {};
+  // идентификаторы юрезов в кластерах, для скрытия и восстановления основных маркеров @todo обощить с маркерами
+  var idsUsersInClusters = {};
 
-var currentScene = null;
+  var currentScene = null;
 
-// техническая переменная, в начале должна быть false
-var needReconnect = false;
-var reconnectTimerId = null;
-// таймер для пинг мессажа
-var connectTimerId = null;
+  // техническая переменная, в начале должна быть false
+  var needReconnect = false;
+  var reconnectTimerId = null;
+  // таймер для пинг мессажа
+  var connectTimerId = null;
 
-// техническая переменная, в начале должна быть true
-var isConnected = false;
+  // техническая переменная, в начале должна быть true
+  var isConnected = false;
 
-// используем таймауты с бека или же свои
-// @todo сделать таймер по обновлению маркеров раз в минуту
-const ENABLE_TIMEOUTS_FROM_BACKEND = false;
-var movingLivenessTimeout = 120000;
-var stoppedLivenessTimeout = 1000 * 60 * 60 * 24;
-// поправка на серверное вренмя
-var serverTimestampShift = 0;
+  // используем таймауты с бека или же свои
+  // @todo сделать таймер по обновлению маркеров раз в минуту
+  const ENABLE_TIMEOUTS_FROM_BACKEND = false;
+  var movingLivenessTimeout = 120000;
+  var stoppedLivenessTimeout = 1000 * 60 * 60 * 24;
+  // поправка на серверное вренмя
+  var serverTimestampShift = 0;
 
-if (getParamHideStatus == "true") {
-  document.getElementById("connect-status").style.display = "none";
-}
-
-// список поддерживаемых эмодзи, при расширенни добавить css
-const SUPPORTED_EMOJI = [
-  "fire",
-  "greenheart",
-  "snowball",
-  "poop",
-  "wavinghand",
-  "angry",
-  "eyes",
-  "party",
-  "go",
-  "nav"
-];
-
-// scenes params
-
-var LAST_PUSH_BUTTON_TS = null;
-const POPUP_QR_ANIMATION_TIME = 32000;
-
-// game params
-var LOG_LAST_STICKERS_TO_ME = false;
-var LAST_STICKERS_BY_USERS = {};
-var CURRENT_GAMERS = [];
-var CURRENT_GAMERS_SCORE = {};
-var SCORE_TO_WIN = 10; // @todo return 10
-var MAX_PLAYERS = 40;
-var MAX_ROUNDS = 30;
-var CURRENT_ROUND_NUM = 0;
-var gameTimerId = null;
-var allowAddNewPlayers = true;
-var gameStarted = false;
-var currentSticker = null;
-var currentRoundWinner = null;
-var gameFinished = false;
-//////////////////
-
-const map = new mapgl.Map("container", {
-  center: [82.963483, 55.039882],
-  zoom: 12,
-  key: "2a5f353b-5172-411f-b1a2-8ea58b3f290c",
-  style: "0ef2bf0f-abf0-401d-ae21-d28753fbbea9",
-  floorsEnabled: false,
-  minZoom: 2,
-  maxZoom: 20,
-  minPitch: 0,
-  maxPitch: 70,
-  lowZoomMaxPitch: 45,
-  zoomControl: false
-});
-
-// фиксим рамер карты при ресайзе
-window.addEventListener("resize", () => map.invalidateSize());
-
-// глобальный стейт @todo обобщить
-var globalProfiles = {};
-var globalMarkers = {};
-var globalStates = {};
-
-var globalWS = null;
-// поправочный коэффциент на вращение карты, чтобы огонь и аватарки были правильно повернуты
-var globalMapRotation = 0;
-const maxDebugMarkersLenght = 1000;
-
-var SOCKET_PATH =
-  "wss://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/:id/ws?get-friends-stickers=true";
-
-const FIRE_MARKER_CONTAINER = "fire-marker-container";
-const BASIC_MARKER_CONTAINER = "basic-marker-container";
-const STATE_MOVING = "moving";
-const STATE_STOPPED = "stopped";
-
-const BASE_ANIMATION_TIME = 0.2;
-const BASE_SPEED = 1;
-
-if (DEBUG) {
-  hideVisibilityTestButtons(false);
-}
-
-if (getParamUserId !== null) {
-  document.getElementById("input-id").value = getParamUserId;
-  connectButtonClick();
-}
-
-// скрытие кнопок дле тестов
-function hideVisibilityTestButtons(hide) {
-  const button = document.getElementById("test-buttons");
-  if (hide) {
-    button.style.display = "none";
-  } else {
-    button.style.display = "block";
+  if (getParamHideStatus == "true") {
+    document.getElementById("connect-status").style.display = "none";
   }
-}
 
-// управления контролами и статусом коннекта
-function setConnectionState(state) {
-  const button = document.getElementById("connect-button");
-  const status = document.getElementById("connect-status");
-  const input = document.getElementById("input-id");
-  status.innerText = state;
-  switch (state) {
-    case "connected":
-      status.style.backgroundColor = "#9cf19c";
-      input.disabled = true;
-      button.innerText = "disconnect";
-      isConnected = true;
-      break;
-    case "reconnecting":
-      status.style.backgroundColor = "#fc8016";
-      isConnected = false;
-      break;
-    case "connecting":
-      status.style.backgroundColor = "#839bff";
-      isConnected = false;
-      break;
-    case "disconnected":
-      status.style.backgroundColor = "#ff8f8f";
-      button.innerText = "connect";
-      input.disabled = false;
-      isConnected = false;
-      break;
+  // список поддерживаемых эмодзи, при расширенни добавить css
+  const SUPPORTED_EMOJI = [
+    "fire",
+    "greenheart",
+    "snowball",
+    "poop",
+    "wavinghand",
+    "angry",
+    "eyes",
+    "party",
+    "go",
+    "nav"
+  ];
+
+  // scenes params
+
+  var LAST_PUSH_BUTTON_TS = null;
+  const POPUP_QR_ANIMATION_TIME = 32000;
+  const playerQR = document.getElementById("lottie-player-qr");
+  playerQR.load(lottieQR);
+
+  // game params
+  var LOG_LAST_STICKERS_TO_ME = false;
+  var LAST_STICKERS_BY_USERS = {};
+  var CURRENT_GAMERS = [];
+  var CURRENT_GAMERS_SCORE = {};
+  var SCORE_TO_WIN = 10; // @todo return 10
+  var MAX_PLAYERS = 40;
+  var MAX_ROUNDS = 30;
+  var CURRENT_ROUND_NUM = 0;
+  var gameTimerId = null;
+  var allowAddNewPlayers = true;
+  var gameStarted = false;
+  var currentSticker = null;
+  var currentRoundWinner = null;
+  var gameFinished = false;
+  //////////////////
+
+  const map = new mapgl.Map("container", {
+    center: [82.963483, 55.039882],
+    zoom: 12,
+    key: "2a5f353b-5172-411f-b1a2-8ea58b3f290c",
+    style: "0ef2bf0f-abf0-401d-ae21-d28753fbbea9",
+    floorsEnabled: false,
+    minZoom: 2,
+    maxZoom: 20,
+    minPitch: 0,
+    maxPitch: 70,
+    lowZoomMaxPitch: 45,
+    zoomControl: false
+  });
+
+  // фиксим рамер карты при ресайзе
+  window.addEventListener("resize", () => map.invalidateSize());
+
+  // глобальный стейт @todo обобщить
+  var globalProfiles = {};
+  var globalMarkers = {};
+  var globalStates = {};
+
+  var globalWS = null;
+  // поправочный коэффциент на вращение карты, чтобы огонь и аватарки были правильно повернуты
+  var globalMapRotation = 0;
+  const maxDebugMarkersLenght = 1000;
+
+  var SOCKET_PATH =
+    "wss://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/:id/ws?get-friends-stickers=true";
+
+  const FIRE_MARKER_CONTAINER = "fire-marker-container";
+  const BASIC_MARKER_CONTAINER = "basic-marker-container";
+  const STATE_MOVING = "moving";
+  const STATE_STOPPED = "stopped";
+
+  const BASE_ANIMATION_TIME = 0.2;
+  const BASE_SPEED = 1;
+
+  if (DEBUG) {
+    hideVisibilityTestButtons(false);
   }
-}
 
-// нажатие в кнопку коннекта
-function connectButtonClick() {
-  const userId = document.getElementById("input-id").value;
-  if (userId.length > 0) {
-    if (!isConnected) {
-      hideVisibilityTestButtons(true);
-      setConnectionState("connecting");
-      globalWS = initSocket(document.getElementById("input-id").value);
+  if (getParamUserId !== null) {
+    document.getElementById("input-id").value = getParamUserId;
+    connectButtonClick();
+  }
+
+  // скрытие кнопок дле тестов
+  function hideVisibilityTestButtons(hide) {
+    const button = document.getElementById("test-buttons");
+    if (hide) {
+      button.style.display = "none";
     } else {
-      if (globalWS) {
-        needReconnect = false;
-        globalWS.close();
-      }
-      setConnectionState("disconnected");
+      button.style.display = "block";
     }
   }
-}
 
-// уничтожение всех данных
-function clearAll() {
-  globalProfiles = {};
-  for (const id in globalMarkers) {
-    removeMarker(id);
-  }
-
-  debugMarkers.forEach((element) => element.destroy());
-
-  globalMarkers = {};
-  globalStates = {};
-}
-
-// инициализация соккета
-function initSocket(id) {
-  const wssUrlPattern = SOCKET_PATH;
-  const wssUrl = wssUrlPattern.replace(":id", id);
-  const ws = new WebSocket(wssUrl);
-
-  clearInterval(reconnectTimerId);
-
-  ws.onopen = function () {
-    // чистимся от греха подальше, так как в коннекте прилетит инит
-    clearAll();
-    // отправка баундов, чтобы слежение было во вьюпорте
-    sendBounds(ws);
-    // при открытие соккета сообщаем, что его нужно реконнектить
-    needReconnect = true;
-    // циклически отправляем пинг, чтобы брайзер понял, что коннект сдох на случай проблем
-    connectTimerId = setInterval(() => {
-      ws.send('{"type":"ping-from-web-ui","payload":{}}');
-    }, 1000);
-    setConnectionState("connected");
-  };
-
-  ws.onclose = function () {
-    console.log("ws closed");
-    // стираем старый интервал
-    clearInterval(connectTimerId);
-    // шедулим новый интервал для реконнекта
-    reconnectTimerId = setInterval(() => {
-      if (needReconnect && ENABLE_AUTO_RECONNECT) {
-        setConnectionState("reconnecting");
-        globalWS = initSocket(id);
-      }
-    }, 5000);
-  };
-
-  ws.onerror = function (e) {
-    console.log("ws error");
-    console.log(e);
-    ws.close();
-  };
-
-  ws.onmessage = function (msgevent) {
-    const msg = JSON.parse(msgevent.data);
-    processMessage(msg);
-  };
-
-  return ws;
-}
-
-// обработка входящих
-function processMessage(msg) {
-  switch (msg.type) {
-    case "initialState":
-      if (DEBUG) {
-        console.log("init", msg);
-      }
-      processInitState(msg.payload);
-      break;
-
-    case "friendState":
-      processState(msg.payload);
-      break;
-
-    case "friendRemoved":
-      removeProfile(msg.payload);
-      break;
-
-    case "profile":
-      addProfile(msg.payload);
-      break;
-
-    case "stickersInitialState":
-      break;
-
-    case "stickerReceived":
-      if (ENABLE_STICKERS) {
-        if (DEBUG) {
-          console.log("new sticker message", msg.payload);
-        }
-        if (
-          msg.payload.hasOwnProperty("recipientId") &&
-          msg.payload.recipientId !== null
-        ) {
-          processStickerFromTo(msg.payload);
-        } else {
-          processStickerToMe(msg.payload);
-        }
-      }
-
-      break;
-
-    default:
-      console.log("unsupported type", msg.type, msg.payload);
-      break;
-  }
-}
-
-function processInitState(payload) {
-  if (DEBUG) {
-    console.log("markerSettings", payload.markerSettings);
-  }
-  if (ENABLE_TIMEOUTS_FROM_BACKEND) {
-    movingLivenessTimeout = payload.markerSettings.movingLivenessTimeout;
-    stoppedLivenessTimeout = payload.markerSettings.stoppedLivenessTimeout;
-  }
-  // поправка на серверное время
-  serverTimestampShift = Date.now() - payload.serverTime;
-
-  payload.profiles.forEach((profile) => {
-    addProfile(profile);
-  });
-  payload.states.forEach((state) => {
-    processState(state);
-  });
-}
-
-function addProfile(profile) {
-  const isItChange = globalProfiles.hasOwnProperty(profile.id);
-  const key = profile.id;
-  globalProfiles[key] = profile;
-  if (DEBUG) {
-    console.log("addProfile", key, profile);
-  }
-  if (isItChange) {
-    refreshAvaInMarker(profile.id);
-    clusteriseMarkers(true);
-  } else {
-    // showSceneNewFriendAnimation(); @todo activate after
-  }
-}
-
-function removeProfile(id) {
-  delete globalProfiles[id];
-  removeMarker(id);
-  delete globalStates[id];
-}
-
-function removeMarker(id) {
-  if (globalMarkers.hasOwnProperty(id)) {
-    if (DEBUG) {
-      console.log("removeMarker", id);
+  // управления контролами и статусом коннекта
+  function setConnectionState(state) {
+    const button = document.getElementById("connect-button");
+    const status = document.getElementById("connect-status");
+    const input = document.getElementById("input-id");
+    status.innerText = state;
+    switch (state) {
+      case "connected":
+        status.style.backgroundColor = "#9cf19c";
+        input.disabled = true;
+        button.innerText = "disconnect";
+        isConnected = true;
+        break;
+      case "reconnecting":
+        status.style.backgroundColor = "#fc8016";
+        isConnected = false;
+        break;
+      case "connecting":
+        status.style.backgroundColor = "#839bff";
+        isConnected = false;
+        break;
+      case "disconnected":
+        status.style.backgroundColor = "#ff8f8f";
+        button.innerText = "connect";
+        input.disabled = false;
+        isConnected = false;
+        break;
     }
-    globalMarkers[id].destroy();
-    delete globalMarkers[id];
-  }
-}
-
-function processState(state) {
-  const id = state.id;
-
-  if (DEBUG) {
-    console.log("processState", id, state);
   }
 
-  const lastSeen = state.lastSeen;
-  const lon = state.location.lon;
-  const lat = state.location.lat;
-  // первое вхождение на карту
-  const isInit = !globalStates.hasOwnProperty(id);
-
-  // дропаем "серые" (давно стоящие) маркера
-  // @todo почему-то при дропе маркера стали пропадать вообще
-  if (
-    DROP_MARKERS_WITH_OLD_STATE &&
-    Date.now() + serverTimestampShift - lastSeen > stoppedLivenessTimeout
-  ) {
-    hideMarker(id); // обратно раскрываются в moveMarker и в декластеризации
-    return;
-  }
-
-  const marker = isInit ? null : globalMarkers[id];
-  const lastLon = isInit ? null : globalStates[id]["lon"];
-  const lastLat = isInit ? null : globalStates[id]["lat"];
-
-  const locationSpeed = state.location.hasOwnProperty("speed")
-    ? state.location.speed
-    : BASE_SPEED;
-  const animationTime = isInit
-    ? BASE_ANIMATION_TIME
-    : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
-  const azimuth = isInit
-    ? null
-    : bearing(marker.getCoordinates()[1], marker.getCoordinates()[0], lat, lon);
-
-  if (isInit) {
-    globalStates[id] = {};
-  }
-
-  // если маркер двигался давно, делаем его стоящим
-  const isOldMovingData =
-    Date.now() + serverTimestampShift - lastSeen > movingLivenessTimeout
-      ? true
-      : false;
-  const isMoving =
-    state.movement.status == STATE_MOVING && !isOldMovingData ? true : false;
-
-  const avaUrl = globalProfiles[id].logo;
-  const name = globalProfiles[id].name;
-
-  // для дебага, чтобы проверить соответствуют ли маркера реальным позициям
-  addDebugMarker(lon, lat);
-
-  switch (true) {
-    case !isInit && !isMoving: // кейсы, когда маркер останавливается
-      if (globalStates[id]["state"] == STATE_STOPPED) {
-        // маркер остался стоять, но теоретически могла прилететь новая позиция
-        moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
+  // нажатие в кнопку коннекта
+  function connectButtonClick() {
+    const userId = document.getElementById("input-id").value;
+    if (userId.length > 0) {
+      if (!isConnected) {
+        hideVisibilityTestButtons(true);
+        setConnectionState("connecting");
+        globalWS = initSocket(document.getElementById("input-id").value);
       } else {
-        // маркер был движущимся, а стал cтоящим, поэтому заменяем
-        moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
+        if (globalWS) {
+          needReconnect = false;
+          globalWS.close();
+        }
+        setConnectionState("disconnected");
+      }
+    }
+  }
+
+  // уничтожение всех данных
+  function clearAll() {
+    globalProfiles = {};
+    for (const id in globalMarkers) {
+      removeMarker(id);
+    }
+
+    debugMarkers.forEach((element) => element.destroy());
+
+    globalMarkers = {};
+    globalStates = {};
+  }
+
+  // инициализация соккета
+  function initSocket(id) {
+    const wssUrlPattern = SOCKET_PATH;
+    const wssUrl = wssUrlPattern.replace(":id", id);
+    const ws = new WebSocket(wssUrl);
+
+    clearInterval(reconnectTimerId);
+
+    ws.onopen = function () {
+      // чистимся от греха подальше, так как в коннекте прилетит инит
+      clearAll();
+      // отправка баундов, чтобы слежение было во вьюпорте
+      sendBounds(ws);
+      // при открытие соккета сообщаем, что его нужно реконнектить
+      needReconnect = true;
+      // циклически отправляем пинг, чтобы брайзер понял, что коннект сдох на случай проблем
+      connectTimerId = setInterval(() => {
+        ws.send('{"type":"ping-from-web-ui","payload":{}}');
+      }, 1000);
+      setConnectionState("connected");
+    };
+
+    ws.onclose = function () {
+      console.log("ws closed");
+      // стираем старый интервал
+      clearInterval(connectTimerId);
+      // шедулим новый интервал для реконнекта
+      reconnectTimerId = setInterval(() => {
+        if (needReconnect && ENABLE_AUTO_RECONNECT) {
+          setConnectionState("reconnecting");
+          globalWS = initSocket(id);
+        }
+      }, 5000);
+    };
+
+    ws.onerror = function (e) {
+      console.log("ws error");
+      console.log(e);
+      ws.close();
+    };
+
+    ws.onmessage = function (msgevent) {
+      const msg = JSON.parse(msgevent.data);
+      processMessage(msg);
+    };
+
+    return ws;
+  }
+
+  // обработка входящих
+  function processMessage(msg) {
+    switch (msg.type) {
+      case "initialState":
+        if (DEBUG) {
+          console.log("init", msg);
+        }
+        processInitState(msg.payload);
+        break;
+
+      case "friendState":
+        processState(msg.payload);
+        break;
+
+      case "friendRemoved":
+        removeProfile(msg.payload);
+        break;
+
+      case "profile":
+        addProfile(msg.payload);
+        break;
+
+      case "stickersInitialState":
+        break;
+
+      case "stickerReceived":
+        if (ENABLE_STICKERS) {
+          if (DEBUG) {
+            console.log("new sticker message", msg.payload);
+          }
+          if (
+            msg.payload.hasOwnProperty("recipientId") &&
+            msg.payload.recipientId !== null
+          ) {
+            processStickerFromTo(msg.payload);
+          } else {
+            processStickerToMe(msg.payload);
+          }
+        }
+
+        break;
+
+      default:
+        console.log("unsupported type", msg.type, msg.payload);
+        break;
+    }
+  }
+
+  function processInitState(payload) {
+    if (DEBUG) {
+      console.log("markerSettings", payload.markerSettings);
+    }
+    if (ENABLE_TIMEOUTS_FROM_BACKEND) {
+      movingLivenessTimeout = payload.markerSettings.movingLivenessTimeout;
+      stoppedLivenessTimeout = payload.markerSettings.stoppedLivenessTimeout;
+    }
+    // поправка на серверное время
+    serverTimestampShift = Date.now() - payload.serverTime;
+
+    payload.profiles.forEach((profile) => {
+      addProfile(profile);
+    });
+    payload.states.forEach((state) => {
+      processState(state);
+    });
+  }
+
+  function addProfile(profile) {
+    const isItChange = globalProfiles.hasOwnProperty(profile.id);
+    const key = profile.id;
+    globalProfiles[key] = profile;
+    if (DEBUG) {
+      console.log("addProfile", key, profile);
+    }
+    if (isItChange) {
+      refreshAvaInMarker(profile.id);
+      clusteriseMarkers(true);
+    } else {
+      // showSceneNewFriendAnimation(); @todo activate after
+    }
+  }
+
+  function removeProfile(id) {
+    delete globalProfiles[id];
+    removeMarker(id);
+    delete globalStates[id];
+  }
+
+  function removeMarker(id) {
+    if (globalMarkers.hasOwnProperty(id)) {
+      if (DEBUG) {
+        console.log("removeMarker", id);
+      }
+      globalMarkers[id].destroy();
+      delete globalMarkers[id];
+    }
+  }
+
+  function processState(state) {
+    const id = state.id;
+
+    if (DEBUG) {
+      console.log("processState", id, state);
+    }
+
+    const lastSeen = state.lastSeen;
+    const lon = state.location.lon;
+    const lat = state.location.lat;
+    // первое вхождение на карту
+    const isInit = !globalStates.hasOwnProperty(id);
+
+    // дропаем "серые" (давно стоящие) маркера
+    // @todo почему-то при дропе маркера стали пропадать вообще
+    if (
+      DROP_MARKERS_WITH_OLD_STATE &&
+      Date.now() + serverTimestampShift - lastSeen > stoppedLivenessTimeout
+    ) {
+      hideMarker(id); // обратно раскрываются в moveMarker и в декластеризации
+      return;
+    }
+
+    const marker = isInit ? null : globalMarkers[id];
+    const lastLon = isInit ? null : globalStates[id]["lon"];
+    const lastLat = isInit ? null : globalStates[id]["lat"];
+
+    const locationSpeed = state.location.hasOwnProperty("speed")
+      ? state.location.speed
+      : BASE_SPEED;
+    const animationTime = isInit
+      ? BASE_ANIMATION_TIME
+      : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
+    const azimuth = isInit
+      ? null
+      : bearing(marker.getCoordinates()[1], marker.getCoordinates()[0], lat, lon);
+
+    if (isInit) {
+      globalStates[id] = {};
+    }
+
+    // если маркер двигался давно, делаем его стоящим
+    const isOldMovingData =
+      Date.now() + serverTimestampShift - lastSeen > movingLivenessTimeout
+        ? true
+        : false;
+    const isMoving =
+      state.movement.status == STATE_MOVING && !isOldMovingData ? true : false;
+
+    const avaUrl = globalProfiles[id].logo;
+    const name = globalProfiles[id].name;
+
+    // для дебага, чтобы проверить соответствуют ли маркера реальным позициям
+    addDebugMarker(lon, lat);
+
+    switch (true) {
+      case !isInit && !isMoving: // кейсы, когда маркер останавливается
+        if (globalStates[id]["state"] == STATE_STOPPED) {
+          // маркер остался стоять, но теоретически могла прилететь новая позиция
+          moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
+        } else {
+          // маркер был движущимся, а стал cтоящим, поэтому заменяем
+          moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
+          globalMarkers[id] = addOrReplaceMarker(
+            id,
+            lon,
+            lat,
+            isInit,
+            isMoving,
+            null,
+            avaUrl,
+            name
+          );
+          globalStates[id]["state"] = STATE_STOPPED;
+        }
+        break;
+      case !isInit && isMoving: // кейсы, когда маркер движется
+        if (globalStates[id]["state"] == STATE_STOPPED) {
+          // раньше стоял, начал двигаться, меняем маркер и стейт
+          // рисуем маркер сперва в предыдущей точке
+          globalMarkers[id] = addOrReplaceMarker(
+            id,
+            lastLon,
+            lastLat,
+            isInit,
+            isMoving,
+            azimuth,
+            avaUrl,
+            name
+          );
+
+          moveMarker(
+            id,
+            globalMarkers[id],
+            lastLon,
+            lastLat,
+            lon,
+            lat,
+            animationTime
+          );
+          globalStates[id]["state"] = STATE_MOVING;
+        } else {
+          rotateMarker(id, azimuth);
+          moveMarker(id, marker, lastLon, lastLat, lon, lat, animationTime);
+        }
+        break;
+      case isInit:
         globalMarkers[id] = addOrReplaceMarker(
           id,
           lon,
           lat,
           isInit,
-          isMoving,
+          false,
           null,
           avaUrl,
           name
         );
         globalStates[id]["state"] = STATE_STOPPED;
-      }
-      break;
-    case !isInit && isMoving: // кейсы, когда маркер движется
-      if (globalStates[id]["state"] == STATE_STOPPED) {
-        // раньше стоял, начал двигаться, меняем маркер и стейт
-        // рисуем маркер сперва в предыдущей точке
-        globalMarkers[id] = addOrReplaceMarker(
-          id,
-          lastLon,
-          lastLat,
-          isInit,
-          isMoving,
-          azimuth,
-          avaUrl,
-          name
-        );
-
-        moveMarker(
-          id,
-          globalMarkers[id],
-          lastLon,
-          lastLat,
-          lon,
-          lat,
-          animationTime
-        );
-        globalStates[id]["state"] = STATE_MOVING;
-      } else {
-        rotateMarker(id, azimuth);
-        moveMarker(id, marker, lastLon, lastLat, lon, lat, animationTime);
-      }
-      break;
-    case isInit:
-      globalMarkers[id] = addOrReplaceMarker(
-        id,
-        lon,
-        lat,
-        isInit,
-        false,
-        null,
-        avaUrl,
-        name
-      );
-      globalStates[id]["state"] = STATE_STOPPED;
-      break;
-    default:
-      console("hbz case");
-  }
-
-  globalStates[id]["lon"] = lon;
-  globalStates[id]["lat"] = lat;
-  globalStates[id]["azimuth"] = azimuth;
-  globalStates[id]["lastUpdate"] = Date.now();
-
-  clusteriseMarkers();
-}
-
-function stopOldMarkers() {
-  for (const id in globalStates) {
-    diffWithLastUpdate = Date.now() - globalStates[id]["lastUpdate"];
-    // тушим через минуту маркера, которые встали с огнём
-    if (
-      globalStates[id].state == STATE_MOVING &&
-      diffWithLastUpdate > 60 * 1000
-    ) {
-      const avaUrl = globalProfiles[id].logo;
-      const name = globalProfiles[id].name;
-      const acronym = getAcronymFromName(name);
-      globalMarkers[id].setContent(getHtmlForStaticMarker(id, avaUrl, acronym));
-      globalStates[id].state = STATE_STOPPED;
-      globalMarkers[id].setAnchor([18, 18]);
+        break;
+      default:
+        console("hbz case");
     }
+
+    globalStates[id]["lon"] = lon;
+    globalStates[id]["lat"] = lat;
+    globalStates[id]["azimuth"] = azimuth;
+    globalStates[id]["lastUpdate"] = Date.now();
+
+    clusteriseMarkers();
   }
-  //alert('Привет');
-}
 
-setInterval(stopOldMarkers, 1000);
-
-function addOrReplaceMarker(
-  id,
-  lon,
-  lat,
-  isInit,
-  isMoving,
-  azimuth,
-  avaUrl,
-  name
-) {
-  if (DEBUG) {
-    console.log("addOrReplaceMarker", id);
+  function stopOldMarkers() {
+    for (const id in globalStates) {
+      diffWithLastUpdate = Date.now() - globalStates[id]["lastUpdate"];
+      // тушим через минуту маркера, которые встали с огнём
+      if (
+        globalStates[id].state == STATE_MOVING &&
+        diffWithLastUpdate > 60 * 1000
+      ) {
+        const avaUrl = globalProfiles[id].logo;
+        const name = globalProfiles[id].name;
+        const acronym = getAcronymFromName(name);
+        globalMarkers[id].setContent(getHtmlForStaticMarker(id, avaUrl, acronym));
+        globalStates[id].state = STATE_STOPPED;
+        globalMarkers[id].setAnchor([18, 18]);
+      }
+    }
+    //alert('Привет');
   }
-  // removeMarker(id);
 
-  const markerClass =
-    isMoving && !isInit // маркер из инита всегда рисуем стоячим
-      ? // Math.random() < 0.5 ?
+  setInterval(stopOldMarkers, 1000);
+
+  function addOrReplaceMarker(
+    id,
+    lon,
+    lat,
+    isInit,
+    isMoving,
+    azimuth,
+    avaUrl,
+    name
+  ) {
+    if (DEBUG) {
+      console.log("addOrReplaceMarker", id);
+    }
+    // removeMarker(id);
+
+    const markerClass =
+      isMoving && !isInit // маркер из инита всегда рисуем стоячим
+        ? // Math.random() < 0.5 ?
         FIRE_MARKER_CONTAINER
-      : BASIC_MARKER_CONTAINER;
+        : BASIC_MARKER_CONTAINER;
 
-  const acronym = getAcronymFromName(name);
+    const acronym = getAcronymFromName(name);
 
-  var htmlMarker = null;
+    var htmlMarker = null;
 
-  const content = getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth);
-  if (globalMarkers.hasOwnProperty(id)) {
-    htmlMarker = globalMarkers[id];
-  } else {
-    htmlMarker = new mapgl.HtmlMarker(map, {
-      coordinates: [lon, lat],
-      interactive: DEBUG,
-      html: getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth)
-    });
-    htmlMarker.id = id;
+    const content = getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth);
+    if (globalMarkers.hasOwnProperty(id)) {
+      htmlMarker = globalMarkers[id];
+    } else {
+      htmlMarker = new mapgl.HtmlMarker(map, {
+        coordinates: [lon, lat],
+        interactive: DEBUG,
+        html: getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth)
+      });
+      htmlMarker.id = id;
+    }
+
+    htmlMarker.setContent(content);
+
+    if (markerClass === FIRE_MARKER_CONTAINER) {
+      htmlMarker.setAnchor([58, 43]);
+    } else {
+      htmlMarker.setAnchor([18, 18]);
+    }
+
+    return htmlMarker;
   }
 
-  htmlMarker.setContent(content);
-
-  if (markerClass === FIRE_MARKER_CONTAINER) {
-    htmlMarker.setAnchor([58, 43]);
-  } else {
-    htmlMarker.setAnchor([18, 18]);
+  function getBackgroundImageForAva(avaUrl, asStyle = true) {
+    return avaUrl !== null ? "background-image: url(" + avaUrl + ");" : null;
   }
 
-  return htmlMarker;
-}
-
-function getBackgroundImageForAva(avaUrl, asStyle = true) {
-  return avaUrl !== null ? "background-image: url(" + avaUrl + ");" : null;
-}
-
-function getAcronymFromName(name) {
-  return name
-    .split(/\s/)
-    .reduce((response, word) => (response += word.slice(0, 1)), "")
-    .substr(0, 2);
-}
-
-function getRotateHtmlText(azimuth) {
-  return azimuth !== null ? azimuth + "deg" : "0deg";
-}
-
-function getInvertRotateHtmlText(azimuth) {
-  return azimuth !== null ? azimuth * -1 + "deg" : "0deg";
-}
-
-function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth) {
-  var html = "";
-
-  const backgroundImage = getBackgroundImageForAva(avaUrl);
-
-  if (backgroundImage !== null) {
-    acronym = "";
+  function getAcronymFromName(name) {
+    return name
+      .split(/\s/)
+      .reduce((response, word) => (response += word.slice(0, 1)), "")
+      .substr(0, 2);
   }
 
-  const rotateText = getRotateHtmlText(azimuth);
-  const invertRotateText = getInvertRotateHtmlText(azimuth);
+  function getRotateHtmlText(azimuth) {
+    return azimuth !== null ? azimuth + "deg" : "0deg";
+  }
 
-  const textClass = acronym != "" ? "ava-only-text" : "";
+  function getInvertRotateHtmlText(azimuth) {
+    return azimuth !== null ? azimuth * -1 + "deg" : "0deg";
+  }
 
-  if (markerClass === FIRE_MARKER_CONTAINER) {
-    html = `
+  function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth) {
+    var html = "";
+
+    const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+    if (backgroundImage !== null) {
+      acronym = "";
+    }
+
+    const rotateText = getRotateHtmlText(azimuth);
+    const invertRotateText = getInvertRotateHtmlText(azimuth);
+
+    const textClass = acronym != "" ? "ava-only-text" : "";
+
+    if (markerClass === FIRE_MARKER_CONTAINER) {
+      html = `
       <div id="marker-${id}" class="${FIRE_MARKER_CONTAINER}" style="transform: rotate(${rotateText});">
         <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 84px; height: 84px;" loop autoplay>
         </dotlottie-player>
@@ -1207,22 +1209,22 @@ function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth) {
           </div>
         </div>
       </div>`;
-  } else {
-    html = getHtmlForStaticMarker(id, avaUrl, acronym);
-  }
-  return html;
-}
-
-function getHtmlForStaticMarker(id, avaUrl, acronym) {
-  const backgroundImage = getBackgroundImageForAva(avaUrl);
-
-  if (backgroundImage !== null) {
-    acronym = "";
+    } else {
+      html = getHtmlForStaticMarker(id, avaUrl, acronym);
+    }
+    return html;
   }
 
-  const textClass = acronym != "" ? "ava-only-text" : "";
+  function getHtmlForStaticMarker(id, avaUrl, acronym) {
+    const backgroundImage = getBackgroundImageForAva(avaUrl);
 
-  let html = `<div id="marker-${id}">
+    if (backgroundImage !== null) {
+      acronym = "";
+    }
+
+    const textClass = acronym != "" ? "ava-only-text" : "";
+
+    let html = `<div id="marker-${id}">
         <div class="ava-container">
           <div id="ava-${id}" style="${backgroundImage};" class="ava ${textClass}">
             ${acronym}
@@ -1230,642 +1232,642 @@ function getHtmlForStaticMarker(id, avaUrl, acronym) {
         </div>
       </div>`;
 
-  return html;
-}
+    return html;
+  }
 
-function refreshAvaInMarker(id) {
-  const div = document.getElementById("ava-" + id);
-  if (div !== null) {
-    var acronym = "";
-    const avaUrl = globalProfiles[id].logo;
-    const name = globalProfiles[id].name;
-    const backgroundImage = avaUrl !== null ? "url(" + avaUrl + ")" : null;
+  function refreshAvaInMarker(id) {
+    const div = document.getElementById("ava-" + id);
+    if (div !== null) {
+      var acronym = "";
+      const avaUrl = globalProfiles[id].logo;
+      const name = globalProfiles[id].name;
+      const backgroundImage = avaUrl !== null ? "url(" + avaUrl + ")" : null;
 
-    if (backgroundImage === null) {
-      acronym = getAcronymFromName(name);
+      if (backgroundImage === null) {
+        acronym = getAcronymFromName(name);
+      }
+      div.innerText = acronym;
+      div.style.backgroundImage = backgroundImage;
     }
-    div.innerText = acronym;
-    div.style.backgroundImage = backgroundImage;
   }
-}
 
-function addDebugMarker(lon, lat) {
-  if (ENABLE_DEBUG_MARKERS) {
-    const debugMarker = new mapgl.Marker(map, {
-      coordinates: [lon, lat]
-    });
-    if (debugMarkers.length >= maxDebugMarkersLenght) {
-      const first = debugMarkers.shift();
-      first.destroy();
+  function addDebugMarker(lon, lat) {
+    if (ENABLE_DEBUG_MARKERS) {
+      const debugMarker = new mapgl.Marker(map, {
+        coordinates: [lon, lat]
+      });
+      if (debugMarkers.length >= maxDebugMarkersLenght) {
+        const first = debugMarkers.shift();
+        first.destroy();
+      }
+      debugMarkers.push(debugMarker);
     }
-    debugMarkers.push(debugMarker);
-  }
-}
-
-function toRadians(degrees) {
-  return (degrees * Math.PI) / 180;
-}
-
-// Converts from radians to degrees.
-function toDegrees(radians) {
-  return (radians * 180) / Math.PI;
-}
-
-function bearing(startLat, startLon, destLat, destLon) {
-  startLat = toRadians(startLat);
-  startLon = toRadians(startLon);
-  destLat = toRadians(destLat);
-  destLon = toRadians(destLon);
-
-  y = Math.sin(destLon - startLon) * Math.cos(destLat);
-  x =
-    Math.cos(startLat) * Math.sin(destLat) -
-    Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLon - startLon);
-  brng = Math.atan2(y, x);
-  brng = toDegrees(brng);
-  return ((brng + 360) % 360) - 90;
-}
-
-function moveMarker(id, marker, prevLon, prevLat, nextLon, nextLat, time) {
-  if (DEBUG) {
-    console.log("moveMarker", id);
   }
 
-  showMarker(id);
-
-  const mapLon = marker.getCoordinates()[0];
-  const mapLat = marker.getCoordinates()[1];
-
-  const track = [
-    { coordinates: [mapLon, mapLat], t: 0 },
-    // { coordinates: [prevLon, prevLat], t: 0.2 },
-    { coordinates: [nextLon, nextLat], t: time }
-  ];
-
-  // делаем анимацию для значимых движений
-  if (
-    Math.abs(mapLon - nextLon) > 0.0001 ||
-    Math.abs(mapLat - nextLat) > 0.0001
-  ) {
-    moveOn(track, marker, id);
-  }
-}
-
-function rotateMarker(id, azimuth) {
-  const fixedAzimuth = azimuth + globalMapRotation;
-  const avaElement = document.getElementById(`ava-${id}`);
-  const markerElement = document.getElementById(`marker-${id}`);
-  const invertAzimut = fixedAzimuth * -1;
-  if (markerElement !== null) {
-    markerElement.style.transform = `rotate(${fixedAzimuth}deg)`;
-  }
-  if (avaElement !== null) {
-    avaElement.style.transform = `rotate(${invertAzimut}deg)`;
-  }
-}
-
-async function moveOn(track, marker, userId) {
-  // current segment index
-  let i = 0;
-
-  // startup absolute time
-  const start = performance.now();
-
-  // segment points
-  let curr = track[i],
-    next = track[i + 1];
-
-  // сохраняем рандомный номер созданной анимации, чтобы не играть те, что не актуальны
-  const animationRandomNumber = Math.random();
-  if (userId) {
-    globalStates[userId]["animationRandomNumber"] = animationRandomNumber;
+  function toRadians(degrees) {
+    return (degrees * Math.PI) / 180;
   }
 
-  while (
-    next &&
-    (userId == null ||
-      globalStates[userId]["animationRandomNumber"] == animationRandomNumber)
-  ) {
-    // time from start, ms
-    const dt = (performance.now() - start) / 1000;
+  // Converts from radians to degrees.
+  function toDegrees(radians) {
+    return (radians * 180) / Math.PI;
+  }
 
-    // position in segment
-    const ratio = (dt - curr.t) / (next.t - curr.t);
+  function bearing(startLat, startLon, destLat, destLon) {
+    startLat = toRadians(startLat);
+    startLon = toRadians(startLon);
+    destLat = toRadians(destLat);
+    destLon = toRadians(destLon);
 
-    if (isFinite(ratio)) {
-      // get current pos via lienar interpolation
-      const pos = lerp(curr.coordinates, next.coordinates, ratio);
-      if (pos[0] >= 180 || pos[0] <= -180 || pos[1] >= 90 || pos[1] <= -90) {
-        if (DEBUG) {
-          console.log("wrong track", track);
-          console.log("wrong pos", pos);
-          console.log("wrong ratio", ratio);
+    y = Math.sin(destLon - startLon) * Math.cos(destLat);
+    x =
+      Math.cos(startLat) * Math.sin(destLat) -
+      Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLon - startLon);
+    brng = Math.atan2(y, x);
+    brng = toDegrees(brng);
+    return ((brng + 360) % 360) - 90;
+  }
+
+  function moveMarker(id, marker, prevLon, prevLat, nextLon, nextLat, time) {
+    if (DEBUG) {
+      console.log("moveMarker", id);
+    }
+
+    showMarker(id);
+
+    const mapLon = marker.getCoordinates()[0];
+    const mapLat = marker.getCoordinates()[1];
+
+    const track = [
+      { coordinates: [mapLon, mapLat], t: 0 },
+      // { coordinates: [prevLon, prevLat], t: 0.2 },
+      { coordinates: [nextLon, nextLat], t: time }
+    ];
+
+    // делаем анимацию для значимых движений
+    if (
+      Math.abs(mapLon - nextLon) > 0.0001 ||
+      Math.abs(mapLat - nextLat) > 0.0001
+    ) {
+      moveOn(track, marker, id);
+    }
+  }
+
+  function rotateMarker(id, azimuth) {
+    const fixedAzimuth = azimuth + globalMapRotation;
+    const avaElement = document.getElementById(`ava-${id}`);
+    const markerElement = document.getElementById(`marker-${id}`);
+    const invertAzimut = fixedAzimuth * -1;
+    if (markerElement !== null) {
+      markerElement.style.transform = `rotate(${fixedAzimuth}deg)`;
+    }
+    if (avaElement !== null) {
+      avaElement.style.transform = `rotate(${invertAzimut}deg)`;
+    }
+  }
+
+  async function moveOn(track, marker, userId) {
+    // current segment index
+    let i = 0;
+
+    // startup absolute time
+    const start = performance.now();
+
+    // segment points
+    let curr = track[i],
+      next = track[i + 1];
+
+    // сохраняем рандомный номер созданной анимации, чтобы не играть те, что не актуальны
+    const animationRandomNumber = Math.random();
+    if (userId) {
+      globalStates[userId]["animationRandomNumber"] = animationRandomNumber;
+    }
+
+    while (
+      next &&
+      (userId == null ||
+        globalStates[userId]["animationRandomNumber"] == animationRandomNumber)
+    ) {
+      // time from start, ms
+      const dt = (performance.now() - start) / 1000;
+
+      // position in segment
+      const ratio = (dt - curr.t) / (next.t - curr.t);
+
+      if (isFinite(ratio)) {
+        // get current pos via lienar interpolation
+        const pos = lerp(curr.coordinates, next.coordinates, ratio);
+        if (pos[0] >= 180 || pos[0] <= -180 || pos[1] >= 90 || pos[1] <= -90) {
+          if (DEBUG) {
+            console.log("wrong track", track);
+            console.log("wrong pos", pos);
+            console.log("wrong ratio", ratio);
+          }
+        } else {
+          marker.setCoordinates(pos);
+          // wait next animation frame
+          await new Promise((resolve) => requestAnimationFrame(resolve));
         }
-      } else {
-        marker.setCoordinates(pos);
-        // wait next animation frame
-        await new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+
+      // iterate segments if needed
+      if (dt > next.t) {
+        i += 1;
+        curr = next;
+        next = track[i + 1];
       }
     }
-
-    // iterate segments if needed
-    if (dt > next.t) {
-      i += 1;
-      curr = next;
-      next = track[i + 1];
-    }
   }
-}
 
-function lerp(x, y, ratio) {
-  return [x[0] + (y[0] - x[0]) * ratio, x[1] + (y[1] - x[1]) * ratio];
-}
+  function lerp(x, y, ratio) {
+    return [x[0] + (y[0] - x[0]) * ratio, x[1] + (y[1] - x[1]) * ratio];
+  }
 
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radius of the earth in km
-  const dLat = toRadians(lat2 - lat1); // deg2rad below
-  const dLon = toRadians(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRadians(lat1)) *
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the earth in km
+    const dLat = toRadians(lat2 - lat1); // deg2rad below
+    const dLon = toRadians(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadians(lat1)) *
       Math.cos(toRadians(lat2)) *
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distance in km
-  return d;
-}
-
-function calculateAnimationTime(lastLat, lastLon, lat, lon, speed) {
-  const distInMeters =
-    getDistanceFromLatLonInKm(lastLat, lastLon, lat, lon) * 1000;
-  const time = distInMeters / (speed > 0 ? speed : 0.1);
-  return time * 1.1; // костыль +10%
-}
-
-function reRotateMarkers() {
-  for (const id in globalStates) {
-    if (globalStates[id]["state"] == STATE_MOVING) {
-      rotateMarker(id, globalStates[id]["azimuth"]);
-    }
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
+    return d;
   }
-}
 
-// при окончании вращения карты сохраняем поправочный коэффициент
-// шлем вьюпорт
-map.on("rotation", () => {
-  globalMapRotation = map.getRotation();
-  reRotateMarkers();
-});
+  function calculateAnimationTime(lastLat, lastLon, lat, lon, speed) {
+    const distInMeters =
+      getDistanceFromLatLonInKm(lastLat, lastLon, lat, lon) * 1000;
+    const time = distInMeters / (speed > 0 ? speed : 0.1);
+    return time * 1.1; // костыль +10%
+  }
 
-map.on("moveend", () => {
-  sendBounds(globalWS);
-  clusteriseMarkers(true);
-});
-
-map.on("move", () => {});
-
-function sendBounds(ws) {
-  if (ws && ws.readyState == 1 && ENABLE_SEND_BOUNDS) {
-    const bounds = map.getBounds();
-
-    const message = {
-      type: "viewportChanged",
-      payload: {
-        zoom:
-          OVERRIDED_ZOOM !== null ? OVERRIDED_ZOOM : Math.floor(map.getZoom()),
-        viewport: {
-          topLeft: {
-            lon: bounds.southWest[0],
-            lat: bounds.northEast[1]
-          },
-          bottomRight: {
-            lon: bounds.northEast[0],
-            lat: bounds.southWest[1]
-          }
-        }
+  function reRotateMarkers() {
+    for (const id in globalStates) {
+      if (globalStates[id]["state"] == STATE_MOVING) {
+        rotateMarker(id, globalStates[id]["azimuth"]);
       }
-    };
-
-    const jsonMessage = JSON.stringify(message);
-    ws.send(jsonMessage);
-    if (DEBUG) {
-      console.log("send bounds", jsonMessage);
     }
   }
-}
 
-function processStickerToMe(payload) {
-  const senderId = payload.senderId;
-  const stickerId = payload.stickerRecord.sticker.stickerId;
-  const stickersCount = payload.stickerRecord.sticker.count;
-  const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
-  if (htmlMarker === null) {
-    console.log("can't find globalMarker for markerId", senderId);
-    return;
-  }
-
-  if (DEBUG && LOG_LAST_STICKERS_TO_ME) {
-    console.log(senderId, stickerId);
-  }
-
-  logStickerByUser(senderId, stickerId);
-  setTimeout(function () {
-    htmlMarker.destroy();
-  }, 1000); // change time if changed animation css time
-}
-
-function spawnEmoji(senderId, stickerId, stickersCount) {
-  //  startCoordinates = globalStates
-  //const senderLon = globalStates[senderId]["lon"];
-  //const senderLat = globalStates[senderId]["lat"];
-
-  if (!globalMarkers.hasOwnProperty(senderId)) {
-    return null;
-  }
-  const senderMarker = globalMarkers[senderId];
-  const senderLon = senderMarker.getCoordinates()[0];
-  const senderLat = senderMarker.getCoordinates()[1];
-
-  const mapCenter = map.getCenter();
-
-  if (!SUPPORTED_EMOJI.includes(stickerId)) {
-    console.log("unsupported emoji", stickerId);
-    return;
-  }
-
-  const markerClass = "emogi-" + stickerId;
-
-  const htmlMarker = new mapgl.HtmlMarker(map, {
-    coordinates: [senderLon, senderLat],
-    interactive: DEBUG, // @todo false
-    html: `<div class="emoji-marker ${markerClass}"></div>`
+  // при окончании вращения карты сохраняем поправочный коэффициент
+  // шлем вьюпорт
+  map.on("rotation", () => {
+    globalMapRotation = map.getRotation();
+    reRotateMarkers();
   });
-  htmlMarker.setAnchor([10, 16]);
-  return htmlMarker;
-}
 
-function processStickerFromTo(payload) {
-  if (DEBUG) {
-    console.log("sticker from to", payload);
-  }
-  const senderId = payload.senderId;
-  const recipientId = payload.recipientId;
-  const stickerId = payload.stickerRecord.sticker.stickerId;
-  const stickersCount = payload.stickerRecord.sticker.count;
-  const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
-  if (htmlMarker === null) {
-    console.log("can't find globalMarker for markerId", senderId);
-    return;
-  }
-  const coordinates = htmlMarker.getCoordinates();
-  const nextLon = globalStates[recipientId]["lon"];
-  const nextLat = globalStates[recipientId]["lat"];
+  map.on("moveend", () => {
+    sendBounds(globalWS);
+    clusteriseMarkers(true);
+  });
 
-  moveMarker(
-    null,
-    htmlMarker,
-    coordinates[0],
-    coordinates[1],
-    nextLon,
-    nextLat,
-    1
-  );
-  setTimeout(function () {
-    htmlMarker.destroy();
-  }, 1000); // change time if changed animation css time
-}
+  map.on("move", () => { });
 
-function clusteriseMarkers(forceRedraw = false) {
-  if (ENABLE_CLUSTERS) {
-    const bounds = map.getBounds();
+  function sendBounds(ws) {
+    if (ws && ws.readyState == 1 && ENABLE_SEND_BOUNDS) {
+      const bounds = map.getBounds();
 
-    const container = document.getElementById("container");
-    const countWidthSquare = Math.floor(
-      container.clientWidth / MIN_PIXEL_INTERSECTION_FOR_CLUSTER
-    );
-    const countHeigthSquare = Math.floor(
-      container.clientHeight / MIN_PIXEL_INTERSECTION_FOR_CLUSTER
-    );
-
-    const lonStep =
-      (bounds.northEast[0] - bounds.southWest[0]) / countWidthSquare;
-    const latStep =
-      (bounds.northEast[1] - bounds.southWest[1]) / countHeigthSquare;
-
-    var markersForClusters = [];
-
-    for (const id in globalMarkers) {
-      if (globalStates[id]["state"] == STATE_STOPPED) {
-        const markersCoordinates = globalMarkers[id].getCoordinates();
-        if (
-          bounds.northEast[0] > markersCoordinates[0] &&
-          bounds.southWest[0] < markersCoordinates[0] &&
-          bounds.northEast[1] > markersCoordinates[1] &&
-          bounds.southWest[1] < markersCoordinates[1]
-        ) {
-          markersForClusters.push(globalMarkers[id]);
-        }
-      }
-    }
-
-    // тупо взял тут https://ru.stackoverflow.com/questions/524772/%D0%9A%D0%B0%D0%BA%D0%BE%D0%B9-%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D1%83%D0%B5%D1%82-%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D0%B4%D0%BB%D1%8F-%D0%BE%D0%B1%D1%8A%D0%B5%D0%B4%D0%B8%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F-%D1%82%D0%BE%D1%87%D0%B5%D0%BA-%D0%B2-%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D0%B8
-    /* псевдокласс точки */
-
-    function Point(x, y, id) {
-      this._x = x;
-      this._y = y;
-      this._id = id;
-    }
-
-    Point.prototype.getX = function () {
-      return this._x;
-    };
-
-    Point.prototype.getY = function () {
-      return this._y;
-    };
-
-    Point.prototype.getId = function () {
-      return this._id;
-    };
-
-    /* расчеты */
-    var points = new Array(); // массив точек
-
-    for (const i in markersForClusters) {
-      const markerCoordinates = markersForClusters[i].getCoordinates();
-      points.push(
-        new Point(
-          markerCoordinates[0],
-          markerCoordinates[1],
-          markersForClusters[i].id
-        )
-      );
-    }
-
-    const mX = lonStep; // максимальное растояние по X
-    const mY = latStep; // максимальное растояние по Y
-
-    /* растояние между двумя точками */
-    function calcDistance(p1, p2) {
-      return Math.sqrt(
-        Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2)
-      );
-    }
-
-    /* условия объединения */
-    function isNear(p1, p2, mX, mY) {
-      return Math.abs(p1.getX() - p2.getX()) <= mX &&
-        Math.abs(p1.getY() - p2.getY()) <= mY
-        ? true
-        : false;
-    }
-
-    /* расчет матрицы расстояний */
-    function calcMasDistances(mas) {
-      var l = mas.length;
-      var r = [];
-      for (var i1 = 0; i1 < l; i1++) {
-        r[i1] = [];
-        for (var i2 = 0; i2 < l; i2++) {
-          if (i1 == i2) {
-            r[i1][i2] = 0;
-          } else if (i1 < i2) {
-            r[i1][i2] = calcDistance(mas[i1], mas[i2]);
-          } else {
-            r[i1][i2] = r[i2][i1];
-          }
-        }
-      }
-      return r;
-    }
-
-    /* смена элементов массива местами */
-    function swap(n1, n2, mas) {
-      var x;
-      x = mas[n1];
-      mas[n1] = mas[n2];
-      mas[n2] = x;
-      return mas;
-    }
-
-    /* расчет матрицы индексов близости */
-    function calcMasIndexes(mas) {
-      var l = mas.length;
-      var r = [];
-
-      var n = [];
-      for (var i = 0; i < l; i++) {
-        n[i] = i;
-      }
-
-      for (var i = 0; i < l; i++) {
-        var ns = n.slice();
-        var ds = mas[i].slice();
-
-        for (var i1 = 0; i1 < l - 1; i1++) {
-          for (var i2 = i1 + 1; i2 < l; i2++) {
-            if (ds[i1] > ds[i2]) {
-              ns = swap(i1, i2, ns);
-              ds = swap(i1, i2, ds);
+      const message = {
+        type: "viewportChanged",
+        payload: {
+          zoom:
+            OVERRIDED_ZOOM !== null ? OVERRIDED_ZOOM : Math.floor(map.getZoom()),
+          viewport: {
+            topLeft: {
+              lon: bounds.southWest[0],
+              lat: bounds.northEast[1]
+            },
+            bottomRight: {
+              lon: bounds.northEast[0],
+              lat: bounds.southWest[1]
             }
           }
         }
-        r[i] = ns.slice();
+      };
+
+      const jsonMessage = JSON.stringify(message);
+      ws.send(jsonMessage);
+      if (DEBUG) {
+        console.log("send bounds", jsonMessage);
       }
-      return r;
+    }
+  }
+
+  function processStickerToMe(payload) {
+    const senderId = payload.senderId;
+    const stickerId = payload.stickerRecord.sticker.stickerId;
+    const stickersCount = payload.stickerRecord.sticker.count;
+    const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+    if (htmlMarker === null) {
+      console.log("can't find globalMarker for markerId", senderId);
+      return;
     }
 
-    /* существование элемента в массиве */
-    function exist(n, mas) {
-      for (var i = 0; i < mas.length; i++) {
-        if (n == mas[i]) {
-          return true;
-        }
-      }
-      return false;
+    if (DEBUG && LOG_LAST_STICKERS_TO_ME) {
+      console.log(senderId, stickerId);
     }
 
-    /* кластеризация */
-    function clastering(points, indexes, used, pn, cl) {
-      if (!used[pn]) {
-        cl[cl.length] = pn;
-        used[pn] = true;
+    logStickerByUser(senderId, stickerId);
+    setTimeout(function () {
+      htmlMarker.destroy();
+    }, 1000); // change time if changed animation css time
+  }
 
-        for (var i = 1; i < points.length; i++) {
-          var pn2 = indexes[pn][i];
+  function spawnEmoji(senderId, stickerId, stickersCount) {
+    //  startCoordinates = globalStates
+    //const senderLon = globalStates[senderId]["lon"];
+    //const senderLat = globalStates[senderId]["lat"];
 
-          if (exist(pn2, cl)) {
-            continue;
-          } // условие выхода из цикла
+    if (!globalMarkers.hasOwnProperty(senderId)) {
+      return null;
+    }
+    const senderMarker = globalMarkers[senderId];
+    const senderLon = senderMarker.getCoordinates()[0];
+    const senderLat = senderMarker.getCoordinates()[1];
 
-          if (isNear(points[pn], points[pn2], mX, mY)) {
-            clastering(points, indexes, used, pn2, cl);
-          } else {
-            break;
+    const mapCenter = map.getCenter();
+
+    if (!SUPPORTED_EMOJI.includes(stickerId)) {
+      console.log("unsupported emoji", stickerId);
+      return;
+    }
+
+    const markerClass = "emogi-" + stickerId;
+
+    const htmlMarker = new mapgl.HtmlMarker(map, {
+      coordinates: [senderLon, senderLat],
+      interactive: DEBUG, // @todo false
+      html: `<div class="emoji-marker ${markerClass}"></div>`
+    });
+    htmlMarker.setAnchor([10, 16]);
+    return htmlMarker;
+  }
+
+  function processStickerFromTo(payload) {
+    if (DEBUG) {
+      console.log("sticker from to", payload);
+    }
+    const senderId = payload.senderId;
+    const recipientId = payload.recipientId;
+    const stickerId = payload.stickerRecord.sticker.stickerId;
+    const stickersCount = payload.stickerRecord.sticker.count;
+    const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+    if (htmlMarker === null) {
+      console.log("can't find globalMarker for markerId", senderId);
+      return;
+    }
+    const coordinates = htmlMarker.getCoordinates();
+    const nextLon = globalStates[recipientId]["lon"];
+    const nextLat = globalStates[recipientId]["lat"];
+
+    moveMarker(
+      null,
+      htmlMarker,
+      coordinates[0],
+      coordinates[1],
+      nextLon,
+      nextLat,
+      1
+    );
+    setTimeout(function () {
+      htmlMarker.destroy();
+    }, 1000); // change time if changed animation css time
+  }
+
+  function clusteriseMarkers(forceRedraw = false) {
+    if (ENABLE_CLUSTERS) {
+      const bounds = map.getBounds();
+
+      const container = document.getElementById("container");
+      const countWidthSquare = Math.floor(
+        container.clientWidth / MIN_PIXEL_INTERSECTION_FOR_CLUSTER
+      );
+      const countHeigthSquare = Math.floor(
+        container.clientHeight / MIN_PIXEL_INTERSECTION_FOR_CLUSTER
+      );
+
+      const lonStep =
+        (bounds.northEast[0] - bounds.southWest[0]) / countWidthSquare;
+      const latStep =
+        (bounds.northEast[1] - bounds.southWest[1]) / countHeigthSquare;
+
+      var markersForClusters = [];
+
+      for (const id in globalMarkers) {
+        if (globalStates[id]["state"] == STATE_STOPPED) {
+          const markersCoordinates = globalMarkers[id].getCoordinates();
+          if (
+            bounds.northEast[0] > markersCoordinates[0] &&
+            bounds.southWest[0] < markersCoordinates[0] &&
+            bounds.northEast[1] > markersCoordinates[1] &&
+            bounds.southWest[1] < markersCoordinates[1]
+          ) {
+            markersForClusters.push(globalMarkers[id]);
           }
         }
       }
-    }
 
-    var distances = calcMasDistances(points); // матрица растояний
-    var indexes = calcMasIndexes(distances); // матрица индексов
+      // тупо взял тут https://ru.stackoverflow.com/questions/524772/%D0%9A%D0%B0%D0%BA%D0%BE%D0%B9-%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D1%83%D0%B5%D1%82-%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D0%B4%D0%BB%D1%8F-%D0%BE%D0%B1%D1%8A%D0%B5%D0%B4%D0%B8%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F-%D1%82%D0%BE%D1%87%D0%B5%D0%BA-%D0%B2-%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D0%B8
+      /* псевдокласс точки */
 
-    var used = []; // массив задействованных элементов
-    for (var i = 0; i < points.length; i++) {
-      used[i] = false;
-    }
-
-    var clasters = []; // матрица кластеров
-
-    /* кластеризация */
-    for (var i = 0; i < points.length; i++) {
-      var cl = [];
-      clastering(points, indexes, used, i, cl);
-      if (cl.length > 0) {
-        clasters.push(cl.slice());
+      function Point(x, y, id) {
+        this._x = x;
+        this._y = y;
+        this._id = id;
       }
-    }
 
-    // конец спизженной часьи
+      Point.prototype.getX = function () {
+        return this._x;
+      };
 
-    var finalClasters = [];
-    var finalClastersIds = [];
-    for (var i = 0; i < clasters.length; i++) {
-      if (clasters[i].length > 1) {
-        var ids = [];
-        for (var j = 0; j < clasters[i].length; j++) {
-          ids.push(points[clasters[i][j]].getId());
+      Point.prototype.getY = function () {
+        return this._y;
+      };
+
+      Point.prototype.getId = function () {
+        return this._id;
+      };
+
+      /* расчеты */
+      var points = new Array(); // массив точек
+
+      for (const i in markersForClusters) {
+        const markerCoordinates = markersForClusters[i].getCoordinates();
+        points.push(
+          new Point(
+            markerCoordinates[0],
+            markerCoordinates[1],
+            markersForClusters[i].id
+          )
+        );
+      }
+
+      const mX = lonStep; // максимальное растояние по X
+      const mY = latStep; // максимальное растояние по Y
+
+      /* растояние между двумя точками */
+      function calcDistance(p1, p2) {
+        return Math.sqrt(
+          Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2)
+        );
+      }
+
+      /* условия объединения */
+      function isNear(p1, p2, mX, mY) {
+        return Math.abs(p1.getX() - p2.getX()) <= mX &&
+          Math.abs(p1.getY() - p2.getY()) <= mY
+          ? true
+          : false;
+      }
+
+      /* расчет матрицы расстояний */
+      function calcMasDistances(mas) {
+        var l = mas.length;
+        var r = [];
+        for (var i1 = 0; i1 < l; i1++) {
+          r[i1] = [];
+          for (var i2 = 0; i2 < l; i2++) {
+            if (i1 == i2) {
+              r[i1][i2] = 0;
+            } else if (i1 < i2) {
+              r[i1][i2] = calcDistance(mas[i1], mas[i2]);
+            } else {
+              r[i1][i2] = r[i2][i1];
+            }
+          }
         }
-        finalClasters.push(ids);
-        finalClastersIds = finalClastersIds.concat(ids);
-      }
-    }
-
-    var currentclusterMarkers = {};
-    for (const i in finalClasters) {
-      const clusterId = finalClasters[i].join("-");
-
-      // приходится перерисовывать маркера, так как анимация слайдера ломается
-      // @todo, переписать слайдер, чтобы не зависил от позиции на экране
-      if (forceRedraw && clusterMarkers.hasOwnProperty(clusterId)) {
-        clusterMarkers[clusterId].destroy();
-        delete clusterMarkers[clusterId];
+        return r;
       }
 
-      if (!clusterMarkers.hasOwnProperty(clusterId)) {
-        const marker = createClusterMarker(finalClasters[i]);
-        clusterMarkers[clusterId] = marker;
+      /* смена элементов массива местами */
+      function swap(n1, n2, mas) {
+        var x;
+        x = mas[n1];
+        mas[n1] = mas[n2];
+        mas[n2] = x;
+        return mas;
       }
 
-      currentclusterMarkers[clusterId] = finalClasters[i];
-    }
+      /* расчет матрицы индексов близости */
+      function calcMasIndexes(mas) {
+        var l = mas.length;
+        var r = [];
 
-    Object.entries(clusterMarkers).forEach((entry) => {
-      const [key, value] = entry;
+        var n = [];
+        for (var i = 0; i < l; i++) {
+          n[i] = i;
+        }
 
-      if (!currentclusterMarkers.hasOwnProperty(key)) {
-        value.destroy();
-        delete clusterMarkers[key];
+        for (var i = 0; i < l; i++) {
+          var ns = n.slice();
+          var ds = mas[i].slice();
+
+          for (var i1 = 0; i1 < l - 1; i1++) {
+            for (var i2 = i1 + 1; i2 < l; i2++) {
+              if (ds[i1] > ds[i2]) {
+                ns = swap(i1, i2, ns);
+                ds = swap(i1, i2, ds);
+              }
+            }
+          }
+          r[i] = ns.slice();
+        }
+        return r;
       }
-    });
 
-    for (const i in markersForClusters) {
-      if (!finalClastersIds.includes(markersForClusters[i].id)) {
-        showMarker(markersForClusters[i].id);
+      /* существование элемента в массиве */
+      function exist(n, mas) {
+        for (var i = 0; i < mas.length; i++) {
+          if (n == mas[i]) {
+            return true;
+          }
+        }
+        return false;
       }
-    }
-  }
-}
 
-function shuffle(array) {
-  let currentIndex = array.length,
-    randomIndex;
+      /* кластеризация */
+      function clastering(points, indexes, used, pn, cl) {
+        if (!used[pn]) {
+          cl[cl.length] = pn;
+          used[pn] = true;
 
-  // While there remain elements to shuffle.
-  while (currentIndex > 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
+          for (var i = 1; i < points.length; i++) {
+            var pn2 = indexes[pn][i];
 
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex]
-    ];
-  }
+            if (exist(pn2, cl)) {
+              continue;
+            } // условие выхода из цикла
 
-  return array;
-}
+            if (isNear(points[pn], points[pn2], mX, mY)) {
+              clastering(points, indexes, used, pn2, cl);
+            } else {
+              break;
+            }
+          }
+        }
+      }
 
-function createClusterMarker(ids) {
-  const sliderId =
-    "slider-" + ids.join("-") + "-" + Math.floor(Math.random() * 1000000000);
-  // рандомим, чтобы при пересоздании кластера не повторять порядок
-  ids = shuffle(ids);
-  var sumLon = 0;
-  var sumLat = 0;
-  for (const id in ids) {
-    const coordinates = globalMarkers[ids[id]].getCoordinates();
-    sumLon += coordinates[0];
-    sumLat += coordinates[1];
-    hideMarker(ids[id]);
-  }
-  const medianLon = sumLon / ids.length;
-  const medianLat = sumLat / ids.length;
+      var distances = calcMasDistances(points); // матрица растояний
+      var indexes = calcMasIndexes(distances); // матрица индексов
 
-  const html = getHtmlForClusterMarker(ids, sliderId);
+      var used = []; // массив задействованных элементов
+      for (var i = 0; i < points.length; i++) {
+        used[i] = false;
+      }
 
-  const htmlMarker = new mapgl.HtmlMarker(map, {
-    coordinates: [medianLon, medianLat],
-    interactive: DEBUG,
-    html: html
-  });
+      var clasters = []; // матрица кластеров
 
-  htmlMarker.setAnchor([18, 18]);
+      /* кластеризация */
+      for (var i = 0; i < points.length; i++) {
+        var cl = [];
+        clastering(points, indexes, used, i, cl);
+        if (cl.length > 0) {
+          clasters.push(cl.slice());
+        }
+      }
 
-  waitForElement("#" + sliderId, 3000)
-    .then(function () {
-      new ItcSimpleSlider("#" + sliderId, {
-        loop: true,
-        autoplay: true,
-        swipe: false,
-        interval: 2000
+      // конец спизженной часьи
+
+      var finalClasters = [];
+      var finalClastersIds = [];
+      for (var i = 0; i < clasters.length; i++) {
+        if (clasters[i].length > 1) {
+          var ids = [];
+          for (var j = 0; j < clasters[i].length; j++) {
+            ids.push(points[clasters[i][j]].getId());
+          }
+          finalClasters.push(ids);
+          finalClastersIds = finalClastersIds.concat(ids);
+        }
+      }
+
+      var currentclusterMarkers = {};
+      for (const i in finalClasters) {
+        const clusterId = finalClasters[i].join("-");
+
+        // приходится перерисовывать маркера, так как анимация слайдера ломается
+        // @todo, переписать слайдер, чтобы не зависил от позиции на экране
+        if (forceRedraw && clusterMarkers.hasOwnProperty(clusterId)) {
+          clusterMarkers[clusterId].destroy();
+          delete clusterMarkers[clusterId];
+        }
+
+        if (!clusterMarkers.hasOwnProperty(clusterId)) {
+          const marker = createClusterMarker(finalClasters[i]);
+          clusterMarkers[clusterId] = marker;
+        }
+
+        currentclusterMarkers[clusterId] = finalClasters[i];
+      }
+
+      Object.entries(clusterMarkers).forEach((entry) => {
+        const [key, value] = entry;
+
+        if (!currentclusterMarkers.hasOwnProperty(key)) {
+          value.destroy();
+          delete clusterMarkers[key];
+        }
       });
-    })
-    .catch(() => {
-      console.log("Not found cluster div element");
-    });
 
-  return htmlMarker;
-}
+      for (const i in markersForClusters) {
+        if (!finalClastersIds.includes(markersForClusters[i].id)) {
+          showMarker(markersForClusters[i].id);
+        }
+      }
+    }
+  }
 
-function getHtmlForClusterMarker(ids, sliderId) {
-  var html = "";
-  var items = "";
+  function shuffle(array) {
+    let currentIndex = array.length,
+      randomIndex;
 
-  const count = ids.length;
-  const clusterCounterClass =
-    count < 100 ? "cluster-counter-small" : "cluster-counter-big";
-  for (const i in ids) {
-    var acronym = "";
-    const avaUrl = globalProfiles[ids[i]].logo;
-    const name = globalProfiles[ids[i]].name;
-    const backgroundImage = getBackgroundImageForAva(avaUrl);
+    // While there remain elements to shuffle.
+    while (currentIndex > 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
 
-    if (backgroundImage === null) {
-      acronym = getAcronymFromName(name);
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex]
+      ];
     }
 
-    const itemClass = acronym != "" ? "itcss_item_text" : "itcss_item_ava";
-    items += `
+    return array;
+  }
+
+  function createClusterMarker(ids) {
+    const sliderId =
+      "slider-" + ids.join("-") + "-" + Math.floor(Math.random() * 1000000000);
+    // рандомим, чтобы при пересоздании кластера не повторять порядок
+    ids = shuffle(ids);
+    var sumLon = 0;
+    var sumLat = 0;
+    for (const id in ids) {
+      const coordinates = globalMarkers[ids[id]].getCoordinates();
+      sumLon += coordinates[0];
+      sumLat += coordinates[1];
+      hideMarker(ids[id]);
+    }
+    const medianLon = sumLon / ids.length;
+    const medianLat = sumLat / ids.length;
+
+    const html = getHtmlForClusterMarker(ids, sliderId);
+
+    const htmlMarker = new mapgl.HtmlMarker(map, {
+      coordinates: [medianLon, medianLat],
+      interactive: DEBUG,
+      html: html
+    });
+
+    htmlMarker.setAnchor([18, 18]);
+
+    waitForElement("#" + sliderId, 3000)
+      .then(function () {
+        new ItcSimpleSlider("#" + sliderId, {
+          loop: true,
+          autoplay: true,
+          swipe: false,
+          interval: 2000
+        });
+      })
+      .catch(() => {
+        console.log("Not found cluster div element");
+      });
+
+    return htmlMarker;
+  }
+
+  function getHtmlForClusterMarker(ids, sliderId) {
+    var html = "";
+    var items = "";
+
+    const count = ids.length;
+    const clusterCounterClass =
+      count < 100 ? "cluster-counter-small" : "cluster-counter-big";
+    for (const i in ids) {
+      var acronym = "";
+      const avaUrl = globalProfiles[ids[i]].logo;
+      const name = globalProfiles[ids[i]].name;
+      const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+      if (backgroundImage === null) {
+        acronym = getAcronymFromName(name);
+      }
+
+      const itemClass = acronym != "" ? "itcss_item_text" : "itcss_item_ava";
+      items += `
       <div class="itcss__item">
         <div style="${backgroundImage}"  class="${itemClass}">${acronym}</div>
       </div>`;
-  }
+    }
 
-  html = `<div id="marker-${sliderId}" >
+    html = `<div id="marker-${sliderId}" >
            <div class="cluster-ava-container">
             <div class="ava">
               <div class="itcss" id="${sliderId}" >
@@ -1882,82 +1884,82 @@ function getHtmlForClusterMarker(ids, sliderId) {
            </div>
          </div>`;
 
-  return html;
-}
+    return html;
+  }
 
-function hideMarker(id) {
-  if (globalMarkers.hasOwnProperty(id)) {
-    const divMarker = document.getElementById("marker-" + id);
-    if (divMarker !== null) {
-      divMarker.style.display = "none";
-      idsUsersInClusters[id] = true;
-    } else {
-      if (DEBUG) {
-        console.log("hideMarker. marker not found", id);
+  function hideMarker(id) {
+    if (globalMarkers.hasOwnProperty(id)) {
+      const divMarker = document.getElementById("marker-" + id);
+      if (divMarker !== null) {
+        divMarker.style.display = "none";
+        idsUsersInClusters[id] = true;
+      } else {
+        if (DEBUG) {
+          console.log("hideMarker. marker not found", id);
+        }
       }
     }
   }
-}
 
-function showMarker(id) {
-  if (globalMarkers.hasOwnProperty(id)) {
-    const divMarker = document.getElementById("marker-" + id);
-    if (divMarker !== null) {
-      divMarker.style.display = "block";
-      delete idsUsersInClusters[id];
-    } else {
-      if (DEBUG) {
-        console.log("showMarker. marker not found", id);
-        console.log(globalMarkers[id]);
+  function showMarker(id) {
+    if (globalMarkers.hasOwnProperty(id)) {
+      const divMarker = document.getElementById("marker-" + id);
+      if (divMarker !== null) {
+        divMarker.style.display = "block";
+        delete idsUsersInClusters[id];
+      } else {
+        if (DEBUG) {
+          console.log("showMarker. marker not found", id);
+          console.log(globalMarkers[id]);
+        }
       }
     }
   }
-}
 
-function waitForElement(querySelector, timeout) {
-  return new Promise((resolve, reject) => {
-    var timer = false;
-    if (document.querySelectorAll(querySelector).length) return resolve();
-    const observer = new MutationObserver(() => {
-      if (document.querySelectorAll(querySelector).length) {
-        observer.disconnect();
-        if (timer !== false) clearTimeout(timer);
-        return resolve();
-      }
+  function waitForElement(querySelector, timeout) {
+    return new Promise((resolve, reject) => {
+      var timer = false;
+      if (document.querySelectorAll(querySelector).length) return resolve();
+      const observer = new MutationObserver(() => {
+        if (document.querySelectorAll(querySelector).length) {
+          observer.disconnect();
+          if (timer !== false) clearTimeout(timer);
+          return resolve();
+        }
+      });
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      if (timeout)
+        timer = setTimeout(() => {
+          observer.disconnect();
+          reject();
+        }, timeout);
     });
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
+  }
+
+  function mapToUser(id) {
+    goMapCenterToId(document.getElementById("input-follow-id").value);
+  }
+
+  function goMapCenterToId(id) {
+    map.setCenter(globalMarkers[id].getCoordinates());
+  }
+
+  // ------------------------------------ prewarm ------------------------------- //
+
+  function prewarm() {
+    const controlsDiv = document.getElementById("controls");
+    SUPPORTED_EMOJI.forEach((emogi) => {
+      const elemDiv = document.createElement("div");
+      elemDiv.style.cssText = "width:0px;height:0px;";
+      elemDiv.classList.add("emogi-" + emogi);
+      controlsDiv.appendChild(elemDiv);
     });
-    if (timeout)
-      timer = setTimeout(() => {
-        observer.disconnect();
-        reject();
-      }, timeout);
-  });
-}
 
-function mapToUser(id) {
-  goMapCenterToId(document.getElementById("input-follow-id").value);
-}
-
-function goMapCenterToId(id) {
-  map.setCenter(globalMarkers[id].getCoordinates());
-}
-
-// ------------------------------------ prewarm ------------------------------- //
-
-function prewarm() {
-  const controlsDiv = document.getElementById("controls");
-  SUPPORTED_EMOJI.forEach((emogi) => {
     const elemDiv = document.createElement("div");
-    elemDiv.style.cssText = "width:0px;height:0px;";
-    elemDiv.classList.add("emogi-" + emogi);
-    controlsDiv.appendChild(elemDiv);
-  });
-
-  const elemDiv = document.createElement("div");
-  elemDiv.innerHTML = `<div>
+    elemDiv.innerHTML = `<div>
         <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 0px; height: 0px;">
         </dotlottie-player>
  <!--       <dotlottie-player src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR.json" background="transparent" speed="1" style="width: 0px; height: 0px">
@@ -1967,343 +1969,350 @@ function prewarm() {
         
         
         `;
-  controlsDiv.appendChild(elemDiv);
-}
-
-prewarm();
-
-// ------------------------------------ scenes ------------------------------- //
-
-switch (getParamScene) {
-  case "2fest": {
-    startScene2fest();
-    break;
+    controlsDiv.appendChild(elemDiv);
   }
 
-  case "port": {
-    startScenePort();
-    break;
-  }
-}
+  prewarm();
 
-function startScene2fest() {
-  currentScene = "2fest";
-  //OVERRIDED_ZOOM = 100;
-  map.setCenter([82.9145, 55.0295]);
-  map.setZoom(17.5);
-  map.setPitch(50);
-  map.setRotation(-170.85);
-  document.getElementById("input-id").value = "2fest";
-  startGameFirstSendSticker();
-  SOCKET_PATH =
-    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
-  connectButtonClick();
-  document.getElementById("input-id").style.display = "none";
-  document.getElementById("connect-button").style.display = "none";
-}
+  // ------------------------------------ scenes ------------------------------- //
 
-function startScenePort() {
-  currentScene = "port";
-  OVERRIDED_ZOOM = 100;
-  map.setCenter([30.242201, 59.923987]);
-  map.setZoom(18.71);
-  map.setPitch(20.1);
-  map.setRotation(142.11);
+  switch (getParamScene) {
+    case "2fest": {
+      startScene2fest();
+      break;
+    }
 
-  const snow = new mapglSnow.Snow(map);
-
-  ENABLE_CLUSTERS = false;
-  ENABLE_STICKERS = false;
-  document.getElementById("input-id").value = "port";
-  SOCKET_PATH =
-    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
-  connectButtonClick();
-  document.getElementById("input-id").style.display = "none";
-  document.getElementById("connect-button").style.display = "none";
-
-  let status = document.getElementById("connect-status");
-  status.disabled = false;
-  status.onclick = function () {
-    showSceneNewFriendAnimation();
-  };
-
-  setInterval(portSendPing, 1000);
-  setInterval(portSendShowStub, 1000);
-
-  showScenePushButtonAnimation();
-}
-
-function showSceneNewFriendAnimation() {
-  if (currentScene === "port") {
-    portSendNewFriend();
-  }
-}
-
-function showScenePushButtonAnimation() {
-  if (DEBUG) {
-    console.log("push button");
-  }
-  if (currentScene === "port") {
-    currentTS = Date.now();
-    if (
-      LAST_PUSH_BUTTON_TS == null ||
-      currentTS - LAST_PUSH_BUTTON_TS > POPUP_QR_ANIMATION_TIME
-    ) {
-      let element = document.getElementById("popup-qr");
-      element.classList.remove("popup-qr-class");
-      void element.offsetWidth;
-      element.classList.add("popup-qr-class");
-      element.style.display = "block";
-      setTimeout(function () {
-        element.style.display = "none";
-      }, POPUP_QR_ANIMATION_TIME);
-      LAST_PUSH_BUTTON_TS = currentTS;
+    case "port": {
+      startScenePort();
+      break;
     }
   }
-}
 
-function portSendNewFriend() {
-  if (window.hasOwnProperty("electronAPI")) {
-    window.electronAPI.addNewFriend();
+  function startScene2fest() {
+    currentScene = "2fest";
+    //OVERRIDED_ZOOM = 100;
+    map.setCenter([82.9145, 55.0295]);
+    map.setZoom(17.5);
+    map.setPitch(50);
+    map.setRotation(-170.85);
+    document.getElementById("input-id").value = "2fest";
+    startGameFirstSendSticker();
+    SOCKET_PATH =
+      "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
+    connectButtonClick();
+    document.getElementById("input-id").style.display = "none";
+    document.getElementById("connect-button").style.display = "none";
   }
-  if (DEBUG) {
-    console.log("send new friend action to TD");
-  }
-}
 
-function portSendPing() {
-  let checked = document.getElementById("port-send-ping").checked;
+  function startScenePort() {
+    currentScene = "port";
+    OVERRIDED_ZOOM = 100;
+    map.setCenter([30.242201, 59.923987]);
+    map.setZoom(18.71);
+    map.setPitch(20.1);
+    map.setRotation(142.11);
 
-  if (window.hasOwnProperty("electronAPI") && checked) {
-    window.electronAPI.ping();
-  }
-  if (DEBUG) {
-    console.log("send ping to TD");
-  }
-}
+    const snow = new mapglSnow.Snow(map);
 
-function portReceivePushButton() {
-  showScenePushButtonAnimation();
-  if (DEBUG) {
-    console.log("receive push button from TD");
-  }
-}
+    ENABLE_CLUSTERS = false;
+    ENABLE_STICKERS = false;
+    document.getElementById("input-id").value = "port";
+    SOCKET_PATH =
+      "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
+    connectButtonClick();
+    document.getElementById("input-id").style.display = "none";
+    document.getElementById("connect-button").style.display = "none";
 
-function portSendShowStub() {
-  if (!isConnected) {
+    let status = document.getElementById("connect-status");
+    status.disabled = false;
+    status.onclick = function () {
+      showSceneNewFriendAnimation();
+      showScenePushButtonAnimation();
+    };
+
+    setInterval(portSendPing, 1000);
+    setInterval(portSendShowStub, 1000);
+
+    showScenePushButtonAnimation();
+  }
+
+  function showSceneNewFriendAnimation() {
+    if (currentScene === "port") {
+      portSendNewFriend();
+    }
+  }
+
+  function showScenePushButtonAnimation() {
+    if (DEBUG) {
+      console.log("push button");
+    }
+    if (currentScene === "port") {
+      currentTS = Date.now();
+      if (
+        LAST_PUSH_BUTTON_TS == null ||
+        currentTS - LAST_PUSH_BUTTON_TS > POPUP_QR_ANIMATION_TIME
+      ) {
+
+        // lottie version
+        playerQR.seek(0);
+        playerQR.play();
+
+        // css version
+        // let element = document.getElementById("popup-qr");
+        // element.classList.remove("popup-qr-class");
+        // void element.offsetWidth;
+        // element.classList.add("popup-qr-class");
+        // element.style.display = "block";
+        // setTimeout(function () {
+        //   element.style.display = "none";
+        // }, POPUP_QR_ANIMATION_TIME);
+        LAST_PUSH_BUTTON_TS = currentTS;
+      }
+    }
+  }
+
+  function portSendNewFriend() {
     if (window.hasOwnProperty("electronAPI")) {
-      window.electronAPI.showStub();
+      window.electronAPI.addNewFriend();
     }
     if (DEBUG) {
-      console.log("send show stub");
+      console.log("send new friend action to TD");
     }
   }
-}
 
-// function portSendHideStub() {
-//   if (window.hasOwnProperty("electronAPI")) {
-//     window.electronAPI.hideStub();
-//   }
-// }
+  function portSendPing() {
+    let checked = document.getElementById("port-send-ping").checked;
 
-// ------------------------------------ tests ------------------------------- //
+    if (window.hasOwnProperty("electronAPI") && checked) {
+      window.electronAPI.ping();
+    }
+    if (DEBUG) {
+      console.log("send ping to TD");
+    }
+  }
 
-function perfTest() {
-  const maxI = 100;
-  const floor = Math.floor(Math.sqrt(maxI));
-  for (i = 1; i <= maxI; i++) {
-    testProfile.id = "test-" + i;
-    testMessage.payload.id = testProfile.id;
+  function portReceivePushButton() {
+    showScenePushButtonAnimation();
+    if (DEBUG) {
+      console.log("receive push button from TD");
+    }
+  }
 
-    addProfile(testProfile);
+  function portSendShowStub() {
+    if (!isConnected) {
+      if (window.hasOwnProperty("electronAPI")) {
+        window.electronAPI.showStub();
+      }
+      if (DEBUG) {
+        console.log("send show stub");
+      }
+    }
+  }
 
-    testMessage.payload.location.lon += 0.01;
+  // function portSendHideStub() {
+  //   if (window.hasOwnProperty("electronAPI")) {
+  //     window.electronAPI.hideStub();
+  //   }
+  // }
 
-    processMessage(testMessage);
-    if (i % floor == 0) {
-      testMessage.payload.location.lat += 0.01;
-      testMessage.payload.location.lon -= 0.01 * floor;
+  // ------------------------------------ tests ------------------------------- //
+
+  function perfTest() {
+    const maxI = 100;
+    const floor = Math.floor(Math.sqrt(maxI));
+    for (i = 1; i <= maxI; i++) {
+      testProfile.id = "test-" + i;
+      testMessage.payload.id = testProfile.id;
+
+      addProfile(testProfile);
+
+      testMessage.payload.location.lon += 0.01;
+
       processMessage(testMessage);
-      testMessageStickerFromTo.senderId = "test-" + i;
-      testMessageStickerFromTo.recipientId = "test-" + (i - 9);
-      processStickerFromTo(testMessageStickerFromTo);
+      if (i % floor == 0) {
+        testMessage.payload.location.lat += 0.01;
+        testMessage.payload.location.lon -= 0.01 * floor;
+        processMessage(testMessage);
+        testMessageStickerFromTo.senderId = "test-" + i;
+        testMessageStickerFromTo.recipientId = "test-" + (i - 9);
+        processStickerFromTo(testMessageStickerFromTo);
+      }
     }
   }
-}
 
-// 45755262
-const testId1 = "abc123";
-const testId2 = "xyz789";
-const testId3 = "zzz666";
-const testId4 = "999999";
+  // 45755262
+  const testId1 = "abc123";
+  const testId2 = "xyz789";
+  const testId3 = "zzz666";
+  const testId4 = "999999";
 
-var testMessageStickerFromTo = {
-  senderId: testId1,
-  recipientId: testId2,
-  stickerRecord: {
-    sticker: {
-      stickerId: "fire",
-      count: 1
+  var testMessageStickerFromTo = {
+    senderId: testId1,
+    recipientId: testId2,
+    stickerRecord: {
+      sticker: {
+        stickerId: "fire",
+        count: 1
+      }
     }
-  }
-};
+  };
 
-var testProfile = {
-  id: testId1,
-  name: "Poop Boop",
-  logo: "https://rezonx3m.github.io/friends/static/poop.png"
-};
-
-var testProfile2 = {
-  id: testId2,
-  name: "Foo Bar",
-  logo: null
-};
-
-var testProfile3 = {
-  id: testId3,
-  name: "Zoo zoo",
-  logo: null
-};
-
-var testProfile4 = {
-  id: testId4,
-  name: "Yo Yo",
-  logo: "https://rezonx3m.github.io/friends/static/fire.png"
-};
-
-var testMessage = {
-  type: "friendState",
-  payload: {
+  var testProfile = {
     id: testId1,
-    lastSeen: 16987361519730,
-    location: {
-      lat: 55.015,
-      lon: 82.965,
-      azimuth: 206.91267,
-      speed: 160,
-      accuracy: 17.823999404907227
-    },
-    battery: {
-      level: 0.81
-    },
-    movement: {
-      status: "moving",
-      stoppedAt: 1698728448409
-    }
-  }
-};
+    name: "Poop Boop",
+    logo: "https://rezonx3m.github.io/friends/static/poop.png"
+  };
 
-var testMessage2 = {
-  type: "friendState",
-  payload: {
+  var testProfile2 = {
     id: testId2,
-    lastSeen: 16987361519730,
-    location: {
-      lat: 55.03,
-      lon: 82.99,
-      azimuth: 206.91267,
-      speed: 160,
-      accuracy: 17.823999404907227
-    },
-    battery: {
-      level: 0.81
-    },
-    movement: {
-      status: "moving",
-      stoppedAt: 1698728448409
-    }
-  }
-};
+    name: "Foo Bar",
+    logo: null
+  };
 
-var testMessage3 = {
-  type: "friendState",
-  payload: {
+  var testProfile3 = {
     id: testId3,
-    lastSeen: 16987361519730,
-    location: {
-      lat: 55.02,
-      lon: 82.97,
-      azimuth: 206.91267,
-      speed: 160,
-      accuracy: 17.823999404907227
-    },
-    battery: {
-      level: 0.81
-    },
-    movement: {
-      status: "moving",
-      stoppedAt: 1698728448409
-    }
-  }
-};
+    name: "Zoo zoo",
+    logo: null
+  };
 
-var testMessage4 = {
-  type: "friendState",
-  payload: {
+  var testProfile4 = {
     id: testId4,
-    lastSeen: 16987361519730,
-    location: {
-      lat: 55.035,
-      lon: 82.999,
-      azimuth: 206.91267,
-      speed: 160,
-      accuracy: 17.823999404907227
-    },
-    battery: {
-      level: 0.81
-    },
-    movement: {
-      status: "moving",
-      stoppedAt: 1698728448409
+    name: "Yo Yo",
+    logo: "https://rezonx3m.github.io/friends/static/fire.png"
+  };
+
+  var testMessage = {
+    type: "friendState",
+    payload: {
+      id: testId1,
+      lastSeen: 16987361519730,
+      location: {
+        lat: 55.015,
+        lon: 82.965,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "moving",
+        stoppedAt: 1698728448409
+      }
     }
+  };
+
+  var testMessage2 = {
+    type: "friendState",
+    payload: {
+      id: testId2,
+      lastSeen: 16987361519730,
+      location: {
+        lat: 55.03,
+        lon: 82.99,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "moving",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  var testMessage3 = {
+    type: "friendState",
+    payload: {
+      id: testId3,
+      lastSeen: 16987361519730,
+      location: {
+        lat: 55.02,
+        lon: 82.97,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "moving",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  var testMessage4 = {
+    type: "friendState",
+    payload: {
+      id: testId4,
+      lastSeen: 16987361519730,
+      location: {
+        lat: 55.035,
+        lon: 82.999,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "moving",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  function testMove() {
+    const multiplier1 = Math.random() > 0.5 ? 1 : -1;
+    const multiplier2 = Math.random() > 0.5 ? 1 : -1;
+    testMessage.payload.location.lon += 0.01 * multiplier1;
+    testMessage.payload.location.lat += 0.01 * multiplier2;
+    processMessage(testMessage);
   }
-};
 
-function testMove() {
-  const multiplier1 = Math.random() > 0.5 ? 1 : -1;
-  const multiplier2 = Math.random() > 0.5 ? 1 : -1;
-  testMessage.payload.location.lon += 0.01 * multiplier1;
-  testMessage.payload.location.lat += 0.01 * multiplier2;
-  processMessage(testMessage);
-}
+  function testRotate() {
+    rotateMarker(testId1, Math.random() * 360);
+  }
 
-function testRotate() {
-  rotateMarker(testId1, Math.random() * 360);
-}
+  function testRandomSticker() {
+    const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
+    testMessageStickerFromTo.stickerRecord.sticker.stickerId =
+      SUPPORTED_EMOJI[stickerN];
+    processStickerFromTo(testMessageStickerFromTo);
+  }
 
-function testRandomSticker() {
-  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
-  testMessageStickerFromTo.stickerRecord.sticker.stickerId =
-    SUPPORTED_EMOJI[stickerN];
-  processStickerFromTo(testMessageStickerFromTo);
-}
+  function testChangeAva() {
+    testProfile["name"] = "Angry Bird";
+    testProfile["logo"] = "https://rezonx3m.github.io/friends/static/angry.png";
+    addProfile(testProfile);
+  }
 
-function testChangeAva() {
-  testProfile["name"] = "Angry Bird";
-  testProfile["logo"] = "https://rezonx3m.github.io/friends/static/angry.png";
-  addProfile(testProfile);
-}
+  if (DEBUG) {
+    addProfile(testProfile);
+    addProfile(testProfile2);
+    addProfile(testProfile3);
+    addProfile(testProfile4);
+    processMessage(testMessage);
+    processMessage(testMessage2);
+    processMessage(testMessage3);
+    processMessage(testMessage4);
+  }
 
-if (DEBUG) {
-  addProfile(testProfile);
-  addProfile(testProfile2);
-  addProfile(testProfile3);
-  addProfile(testProfile4);
-  processMessage(testMessage);
-  processMessage(testMessage2);
-  processMessage(testMessage3);
-  processMessage(testMessage4);
-}
+  // ------------------------------------ games ------------------------------- //
 
-// ------------------------------------ games ------------------------------- //
-
-function startGameFirstSendSticker() {
-  LOG_LAST_STICKERS_TO_ME = true;
-  const friendName = "RND 2FEST";
-  const gameContainer = document.getElementById("game-container");
-  const intro = document.getElementById("game-first-send-intro");
-  intro.innerHTML = `
+  function startGameFirstSendSticker() {
+    LOG_LAST_STICKERS_TO_ME = true;
+    const friendName = "RND 2FEST";
+    const gameContainer = document.getElementById("game-container");
+    const intro = document.getElementById("game-first-send-intro");
+    intro.innerHTML = `
   <div>
   <div>Для подключения к игре отправьте другу ${friendName} &nbsp;
   <div class="emogi-fire game-first-send-intro-emoji"></div>
@@ -2313,424 +2322,418 @@ function startGameFirstSendSticker() {
   <div class="emogi-snowball game-first-send-intro-emoji"></div>
   </div>
   </div>`;
-  gameContainer.style.display = "block";
-}
+    gameContainer.style.display = "block";
+  }
 
-const timerName = document.getElementById("timer__name");
-const gameElement = document.getElementById("game");
-const secondsDiv = document.querySelector(".timer__seconds");
-const centerGameDiv = document.getElementById("game-center-screen");
-const centerSrickerDiv = document.getElementById("game-sticker-container");
-timerName.innerHTML = "Ожидаем игроков...";
+  const timerName = document.getElementById("timer__name");
+  const gameElement = document.getElementById("game");
+  const secondsDiv = document.querySelector(".timer__seconds");
+  const centerGameDiv = document.getElementById("game-center-screen");
+  const centerSrickerDiv = document.getElementById("game-sticker-container");
+  timerName.innerHTML = "Ожидаем игроков...";
 
-function logStickerByUser(id, sticker) {
-  if (allowAddNewPlayers) {
-    var hasNewGamer = false;
-    if (LOG_LAST_STICKERS_TO_ME) {
-      if (!LAST_STICKERS_BY_USERS.hasOwnProperty(id)) {
-        LAST_STICKERS_BY_USERS[id] = [];
-      } else if (LAST_STICKERS_BY_USERS[id].length >= 5) {
-        LAST_STICKERS_BY_USERS[id].shift();
-      }
-      LAST_STICKERS_BY_USERS[id].push(sticker);
-
-      if (DEBUG) {
-        console.log(LAST_STICKERS_BY_USERS);
-      }
-
-      if (
-        LAST_STICKERS_BY_USERS[id].length == 5 &&
-        LAST_STICKERS_BY_USERS[id][0] == "fire" &&
-        LAST_STICKERS_BY_USERS[id][1] == "poop" &&
-        LAST_STICKERS_BY_USERS[id][2] == "greenheart" &&
-        LAST_STICKERS_BY_USERS[id][3] == "greenheart" &&
-        LAST_STICKERS_BY_USERS[id][4] == "snowball"
-      ) {
-        if (!CURRENT_GAMERS.includes(id)) {
-          CURRENT_GAMERS.push(id);
-          hasNewGamer = true;
-          CURRENT_GAMERS_SCORE[id] = 0;
+  function logStickerByUser(id, sticker) {
+    if (allowAddNewPlayers) {
+      var hasNewGamer = false;
+      if (LOG_LAST_STICKERS_TO_ME) {
+        if (!LAST_STICKERS_BY_USERS.hasOwnProperty(id)) {
+          LAST_STICKERS_BY_USERS[id] = [];
+        } else if (LAST_STICKERS_BY_USERS[id].length >= 5) {
+          LAST_STICKERS_BY_USERS[id].shift();
         }
-      }
+        LAST_STICKERS_BY_USERS[id].push(sticker);
 
-      var tableContent = '<table class="gamers-table">';
-      if (CURRENT_GAMERS.length > 0) {
-        const timerElement = document.querySelector(".timer");
-        timerElement.style.display = "flex";
+        if (DEBUG) {
+          console.log(LAST_STICKERS_BY_USERS);
+        }
 
-        tableContent += "<tr>";
-        for (var i = 0; i < CURRENT_GAMERS.length; i++) {
-          var acronym = "";
-          const avaUrl = globalProfiles[CURRENT_GAMERS[i]].logo;
-          const name = globalProfiles[CURRENT_GAMERS[i]].name;
-          const backgroundImage = getBackgroundImageForAva(avaUrl);
-
-          if (backgroundImage === null) {
-            acronym = getAcronymFromName(name);
+        if (
+          LAST_STICKERS_BY_USERS[id].length == 5 &&
+          LAST_STICKERS_BY_USERS[id][0] == "fire" &&
+          LAST_STICKERS_BY_USERS[id][1] == "poop" &&
+          LAST_STICKERS_BY_USERS[id][2] == "greenheart" &&
+          LAST_STICKERS_BY_USERS[id][3] == "greenheart" &&
+          LAST_STICKERS_BY_USERS[id][4] == "snowball"
+        ) {
+          if (!CURRENT_GAMERS.includes(id)) {
+            CURRENT_GAMERS.push(id);
+            hasNewGamer = true;
+            CURRENT_GAMERS_SCORE[id] = 0;
           }
-          if (i % 10 == 0 && i != 0) {
-            tableContent += "</tr>";
-            tableContent += '</table class="gamers-table">';
-            tableContent += '<table class="gamers-table">';
-          }
-          tableContent += "<td>";
-          tableContent += `<div class="gamer">
+        }
+
+        var tableContent = '<table class="gamers-table">';
+        if (CURRENT_GAMERS.length > 0) {
+          const timerElement = document.querySelector(".timer");
+          timerElement.style.display = "flex";
+
+          tableContent += "<tr>";
+          for (var i = 0; i < CURRENT_GAMERS.length; i++) {
+            var acronym = "";
+            const avaUrl = globalProfiles[CURRENT_GAMERS[i]].logo;
+            const name = globalProfiles[CURRENT_GAMERS[i]].name;
+            const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+            if (backgroundImage === null) {
+              acronym = getAcronymFromName(name);
+            }
+            if (i % 10 == 0 && i != 0) {
+              tableContent += "</tr>";
+              tableContent += '</table class="gamers-table">';
+              tableContent += '<table class="gamers-table">';
+            }
+            tableContent += "<td>";
+            tableContent += `<div class="gamer">
                            <div class="gamer-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>
                            <div class="gamer-score" id="gamer-score-${CURRENT_GAMERS[i]}">0</div>
                          <div>`;
-          tableContent += "</td>";
+            tableContent += "</td>";
+          }
+          tableContent += "</tr>";
         }
-        tableContent += "</tr>";
+
+        if (hasNewGamer) {
+          waitMoreGamers(CURRENT_GAMERS.length);
+        }
+
+        tableContent += "</table>";
+        gameElement.innerHTML = tableContent;
+      }
+    } else if (gameStarted) {
+      if (
+        CURRENT_GAMERS.includes(id) &&
+        sticker == currentSticker &&
+        currentRoundWinner === null
+      ) {
+        currentRoundWinner = id;
+        if (DEBUG) {
+          console.log("round winner", currentRoundWinner);
+        }
+        CURRENT_GAMERS_SCORE[id] = CURRENT_GAMERS_SCORE[id] + 1;
+        const gamerScore = document.getElementById("gamer-score-" + id);
+        gamerScore.innerText = CURRENT_GAMERS_SCORE[id];
+        if (SCORE_TO_WIN == CURRENT_GAMERS_SCORE[id]) {
+          finishGame(id);
+        }
       }
 
-      if (hasNewGamer) {
-        waitMoreGamers(CURRENT_GAMERS.length);
-      }
-
-      tableContent += "</table>";
-      gameElement.innerHTML = tableContent;
-    }
-  } else if (gameStarted) {
-    if (
-      CURRENT_GAMERS.includes(id) &&
-      sticker == currentSticker &&
-      currentRoundWinner === null
-    ) {
-      currentRoundWinner = id;
-      if (DEBUG) {
-        console.log("round winner", currentRoundWinner);
-      }
-      CURRENT_GAMERS_SCORE[id] = CURRENT_GAMERS_SCORE[id] + 1;
-      const gamerScore = document.getElementById("gamer-score-" + id);
-      gamerScore.innerText = CURRENT_GAMERS_SCORE[id];
-      if (SCORE_TO_WIN == CURRENT_GAMERS_SCORE[id]) {
-        finishGame(id);
-      }
-    }
-
-    // логика игры
-  }
-}
-
-function finishGame(winnerId) {
-  centerSrickerDiv.innerHTML = `<div></div>`;
-  gameFinished = true;
-
-  hideTimer();
-  //setTimeout(restartGame, 10000); //@todo return after debug
-  setTimeout(restartGame, 10000);
-
-  var winners = [];
-  if (!winnerId) {
-    var maxScore = 0;
-    for (const id in CURRENT_GAMERS_SCORE) {
-      if (CURRENT_GAMERS_SCORE[id] == maxScore) {
-        winners.push(id);
-      } else if (CURRENT_GAMERS_SCORE[id] > maxScore) {
-        winners = [];
-        maxScore = CURRENT_GAMERS_SCORE[id];
-        winners.push(id);
-      }
+      // логика игры
     }
   }
 
-  if (winners.length == 1) {
-    winnerId = winners[0];
-  }
-  if (winnerId) {
-    timerName.innerHTML = "У нас есть победитель!!!";
-    var acronym = "";
-    const avaUrl = globalProfiles[winnerId].logo;
-    const name = globalProfiles[winnerId].name;
-    const backgroundImage = getBackgroundImageForAva(avaUrl);
+  function finishGame(winnerId) {
+    centerSrickerDiv.innerHTML = `<div></div>`;
+    gameFinished = true;
 
-    if (backgroundImage === null) {
-      acronym = getAcronymFromName(name);
-    }
-    gameElement.innerHTML = `<div class="gamer-ava ava ava-only-text winner" style="${backgroundImage}">${acronym}</div>`;
-  } else {
-    timerName.innerHTML = "У несколько победителей!!!";
-    for (var i = 0; i < winners.length; i++) {
-      const gamerScore = document.getElementById("gamer-score-" + winners[i]);
-      gamerScore.style.backgroundColor = "#F99D33";
-    }
-  }
-}
-
-function startTimer(seconds, callback) {
-  if (DEBUG) {
-    console.log("start timer with callback", seconds, callback);
-  }
-  if (gameTimerId != null) {
-    clearInterval(gameTimerId);
-  }
-  d1 = new Date();
-  d2 = new Date(d1);
-  d2.setSeconds(d1.getSeconds() + seconds);
-  function countdownTimer() {
-    const diff = d2 - new Date();
-    if (diff <= 0) {
-      clearInterval(gameTimerId);
-      if (typeof callback === "function") {
-        callback();
-      }
-    } else {
-      const seconds = Math.floor(diff / 1000);
-      secondsDiv.textContent = seconds < 10 ? "0" + seconds : seconds;
-    }
-  }
-
-  showTimer();
-  //countdownTimer();
-  gameTimerId = setInterval(countdownTimer, 40); // 25fps
-}
-
-function showTimer() {
-  secondsDiv.style.display = "block";
-}
-
-function hideTimer() {
-  secondsDiv.style.display = "none";
-}
-
-function waitMoreGamers(currentCountGamers) {
-  if (CURRENT_GAMERS.length < MAX_PLAYERS) {
-    const seconds = currentCountGamers == 1 ? 60 : 15; //@todo 60 15
-    startTimer(seconds, function () {
-      return processFinishWaitMoreGamesTimer(currentCountGamers);
-    });
-  } else {
-    processFinishWaitMoreGamesTimer(currentCountGamers);
-  }
-}
-
-function processFinishWaitMoreGamesTimer(currentCountGamers) {
-  allowAddNewPlayers = false;
-  if (currentCountGamers <= (getParamDebugGame === "true" ? 0 : 1)) {
-    timerName.innerHTML = "Недостаточно игроков, собираем игру заново!";
     hideTimer();
-    setTimeout(restartGame, 2000);
-  } else {
-    startGame();
-  }
-}
+    //setTimeout(restartGame, 10000); //@todo return after debug
+    setTimeout(restartGame, 10000);
 
-function startGame() {
-  gameStarted = true;
-  gameFinished = false;
-  timerName.innerHTML = "Готовы??? Кто-же первый отправит нужный стикер!?";
-  startTimer(5, playRound);
-}
-
-function playRound() {
-  if (!gameFinished && gameStarted) {
-    if (CURRENT_ROUND_NUM < MAX_ROUNDS) {
-      CURRENT_ROUND_NUM = CURRENT_ROUND_NUM + 1;
-      currentRoundWinner = null;
-      currentSticker = getRandomSticker();
-      timerName.innerHTML = "Лови его!"; // "рандомные тексты";
-      if (DEBUG) {
-        console.log("round", currentSticker);
+    var winners = [];
+    if (!winnerId) {
+      var maxScore = 0;
+      for (const id in CURRENT_GAMERS_SCORE) {
+        if (CURRENT_GAMERS_SCORE[id] == maxScore) {
+          winners.push(id);
+        } else if (CURRENT_GAMERS_SCORE[id] > maxScore) {
+          winners = [];
+          maxScore = CURRENT_GAMERS_SCORE[id];
+          winners.push(id);
+        }
       }
-      const emogiClass = "emogi-" + currentSticker;
-      centerSrickerDiv.innerHTML = `<div class="${emogiClass} game-center-screen-sticker"></div>`;
-
-      centerGameDiv.style.marginLeft = getRandomLeftForSticker() + "px";
-      centerGameDiv.style.marginTop = getRandomTopForSticker() + "px";
-
-      startTimer(3, playRound);
-    } else {
-      finishGame();
     }
-  } else {
+
+    if (winners.length == 1) {
+      winnerId = winners[0];
+    }
+    if (winnerId) {
+      timerName.innerHTML = "У нас есть победитель!!!";
+      var acronym = "";
+      const avaUrl = globalProfiles[winnerId].logo;
+      const name = globalProfiles[winnerId].name;
+      const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+      if (backgroundImage === null) {
+        acronym = getAcronymFromName(name);
+      }
+      gameElement.innerHTML = `<div class="gamer-ava ava ava-only-text winner" style="${backgroundImage}">${acronym}</div>`;
+    } else {
+      timerName.innerHTML = "У несколько победителей!!!";
+      for (var i = 0; i < winners.length; i++) {
+        const gamerScore = document.getElementById("gamer-score-" + winners[i]);
+        gamerScore.style.backgroundColor = "#F99D33";
+      }
+    }
+  }
+
+  function startTimer(seconds, callback) {
+    if (DEBUG) {
+      console.log("start timer with callback", seconds, callback);
+    }
+    if (gameTimerId != null) {
+      clearInterval(gameTimerId);
+    }
+    d1 = new Date();
+    d2 = new Date(d1);
+    d2.setSeconds(d1.getSeconds() + seconds);
+    function countdownTimer() {
+      const diff = d2 - new Date();
+      if (diff <= 0) {
+        clearInterval(gameTimerId);
+        if (typeof callback === "function") {
+          callback();
+        }
+      } else {
+        const seconds = Math.floor(diff / 1000);
+        secondsDiv.textContent = seconds < 10 ? "0" + seconds : seconds;
+      }
+    }
+
+    showTimer();
+    //countdownTimer();
+    gameTimerId = setInterval(countdownTimer, 40); // 25fps
+  }
+
+  function showTimer() {
+    secondsDiv.style.display = "block";
+  }
+
+  function hideTimer() {
+    secondsDiv.style.display = "none";
+  }
+
+  function waitMoreGamers(currentCountGamers) {
+    if (CURRENT_GAMERS.length < MAX_PLAYERS) {
+      const seconds = currentCountGamers == 1 ? 60 : 15; //@todo 60 15
+      startTimer(seconds, function () {
+        return processFinishWaitMoreGamesTimer(currentCountGamers);
+      });
+    } else {
+      processFinishWaitMoreGamesTimer(currentCountGamers);
+    }
+  }
+
+  function processFinishWaitMoreGamesTimer(currentCountGamers) {
+    allowAddNewPlayers = false;
+    if (currentCountGamers <= (getParamDebugGame === "true" ? 0 : 1)) {
+      timerName.innerHTML = "Недостаточно игроков, собираем игру заново!";
+      hideTimer();
+      setTimeout(restartGame, 2000);
+    } else {
+      startGame();
+    }
+  }
+
+  function startGame() {
+    gameStarted = true;
+    gameFinished = false;
+    timerName.innerHTML = "Готовы??? Кто-же первый отправит нужный стикер!?";
+    startTimer(5, playRound);
+  }
+
+  function playRound() {
+    if (!gameFinished && gameStarted) {
+      if (CURRENT_ROUND_NUM < MAX_ROUNDS) {
+        CURRENT_ROUND_NUM = CURRENT_ROUND_NUM + 1;
+        currentRoundWinner = null;
+        currentSticker = getRandomSticker();
+        timerName.innerHTML = "Лови его!"; // "рандомные тексты";
+        if (DEBUG) {
+          console.log("round", currentSticker);
+        }
+        const emogiClass = "emogi-" + currentSticker;
+        centerSrickerDiv.innerHTML = `<div class="${emogiClass} game-center-screen-sticker"></div>`;
+
+        centerGameDiv.style.marginLeft = getRandomLeftForSticker() + "px";
+        centerGameDiv.style.marginTop = getRandomTopForSticker() + "px";
+
+        startTimer(3, playRound);
+      } else {
+        finishGame();
+      }
+    } else {
+      centerSrickerDiv.innerHTML = `<div></div>`;
+    }
+  }
+
+  function restartGame() {
+    if (DEBUG) {
+      console.log("restart game");
+    }
+    LAST_STICKERS_BY_USERS = {};
+    CURRENT_GAMERS = [];
+    CURRENT_GAMERS_SCORE = {};
+    timerName.innerHTML = "Ожидаем игроков";
+    allowAddNewPlayers = true;
+    gameElement.innerHTML = "";
+    hideTimer();
+    currentSticker = null;
+    currentRoundWinner = null;
+    gameFinished = false;
+    gameStarted = false;
+    CURRENT_ROUND_NUM = 0;
     centerSrickerDiv.innerHTML = `<div></div>`;
   }
-}
 
-function restartGame() {
-  if (DEBUG) {
-    console.log("restart game");
-  }
-  LAST_STICKERS_BY_USERS = {};
-  CURRENT_GAMERS = [];
-  CURRENT_GAMERS_SCORE = {};
-  timerName.innerHTML = "Ожидаем игроков";
-  allowAddNewPlayers = true;
-  gameElement.innerHTML = "";
-  hideTimer();
-  currentSticker = null;
-  currentRoundWinner = null;
-  gameFinished = false;
-  gameStarted = false;
-  CURRENT_ROUND_NUM = 0;
-  centerSrickerDiv.innerHTML = `<div></div>`;
-}
-
-function getRandomSticker() {
-  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
-  return SUPPORTED_EMOJI[stickerN];
-}
-
-function getRandomLeftForSticker() {
-  const container = document.getElementById("game-container");
-  return Math.floor(Math.random() * container.clientWidth);
-}
-
-function getRandomTopForSticker() {
-  const container = document.getElementById("game-container");
-  return Math.floor(Math.random() * (container.clientHeight - 100));
-}
-
-function gameTest() {
-  startScene2fest();
-  var testMessageSticker1 = {
-    senderId: "debf959572c14aba8a5147678bf831aa",
-    stickerRecord: {
-      sticker: {
-        stickerId: "fire",
-        count: 1
-      }
-    }
-  };
-  var testMessageSticker2 = {
-    senderId: "debf959572c14aba8a5147678bf831aa",
-    stickerRecord: {
-      sticker: {
-        stickerId: "poop",
-        count: 1
-      }
-    }
-  };
-  var testMessageSticker3 = {
-    senderId: "debf959572c14aba8a5147678bf831aa",
-    stickerRecord: {
-      sticker: {
-        stickerId: "greenheart",
-        count: 1
-      }
-    }
-  };
-  var testMessageSticker4 = {
-    senderId: "debf959572c14aba8a5147678bf831aa",
-    stickerRecord: {
-      sticker: {
-        stickerId: "snowball",
-        count: 1
-      }
-    }
-  };
-
-  function addBots() {
-    for (const id in globalMarkers) {
-      testMessageSticker1.senderId = id;
-
-      testMessageSticker2.senderId = id;
-      testMessageSticker3.senderId = id;
-      testMessageSticker4.senderId = id;
-      processStickerToMe(testMessageSticker1);
-      processStickerToMe(testMessageSticker2);
-      processStickerToMe(testMessageSticker3);
-      processStickerToMe(testMessageSticker3);
-      processStickerToMe(testMessageSticker4);
-    }
+  function getRandomSticker() {
+    const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
+    return SUPPORTED_EMOJI[stickerN];
   }
 
-  setTimeout(addBots, 8000);
-}
-
-// ------------------ cropper ------------------------------//
-
-function getRoundedCanvas(sourceCanvas) {
-  var canvas = document.createElement("canvas");
-  var context = canvas.getContext("2d");
-  var width = sourceCanvas.width;
-  var height = sourceCanvas.height;
-
-  canvas.width = width;
-  canvas.height = height;
-  context.imageSmoothingEnabled = true;
-  context.drawImage(sourceCanvas, 0, 0, width, height);
-  context.globalCompositeOperation = "destination-in";
-  context.beginPath();
-  context.arc(
-    width / 2,
-    height / 2,
-    Math.min(width, height) / 2,
-    0,
-    2 * Math.PI,
-    true
-  );
-  context.fill();
-  return canvas;
-}
-
-function cropImage(base64) {
-  var canvas = document.getElementById("canvas");
-  var ctx = canvas.getContext("2d");
-  var cw = canvas.width;
-  var ch = canvas.height;
-
-  var img = new Image();
-  img.onload = start;
-  img.src = url;
-  function start() {
-    var cw, ch;
-    cw = canvas.width = img.width;
-    ch = canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
-    ctx.globalCompositeOperation = "destination-in";
-    ctx.beginPath();
-    ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.fill();
-    const dataURL = canvas.toDataURL();
-    console.log(dataURL);
+  function getRandomLeftForSticker() {
+    const container = document.getElementById("game-container");
+    return Math.floor(Math.random() * container.clientWidth);
   }
-}
 
-function showBase64Image(base64) {
-  console.log(base64);
-}
+  function getRandomTopForSticker() {
+    const container = document.getElementById("game-container");
+    return Math.floor(Math.random() * (container.clientHeight - 100));
+  }
 
-function loadImage(url) {
-  let _img = document.getElementById("img-loader");
-  let newImg = new Image();
-  newImg.onload = function () {
-    _img.src = this.src;
-    const image = _img;
+  function gameTest() {
+    startScene2fest();
+    var testMessageSticker1 = {
+      senderId: "debf959572c14aba8a5147678bf831aa",
+      stickerRecord: {
+        sticker: {
+          stickerId: "fire",
+          count: 1
+        }
+      }
+    };
+    var testMessageSticker2 = {
+      senderId: "debf959572c14aba8a5147678bf831aa",
+      stickerRecord: {
+        sticker: {
+          stickerId: "poop",
+          count: 1
+        }
+      }
+    };
+    var testMessageSticker3 = {
+      senderId: "debf959572c14aba8a5147678bf831aa",
+      stickerRecord: {
+        sticker: {
+          stickerId: "greenheart",
+          count: 1
+        }
+      }
+    };
+    var testMessageSticker4 = {
+      senderId: "debf959572c14aba8a5147678bf831aa",
+      stickerRecord: {
+        sticker: {
+          stickerId: "snowball",
+          count: 1
+        }
+      }
+    };
 
-    // Get the remote image as a Blob with the fetch API
-    fetch(_img.src)
-      .then((res) => res.blob())
-      .then((blob) => {
-        // Read the Blob as DataURL using the FileReader API
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          console.log(reader.result);
-          // Logs data:image/jpeg;base64,wL2dvYWwgbW9yZ...
+    function addBots() {
+      for (const id in globalMarkers) {
+        testMessageSticker1.senderId = id;
 
-          // Convert to Base64 string
-          const base64 = getBase64StringFromDataURL(reader.result);
-          console.log(base64);
-          // Logs wL2dvYWwgbW9yZ...
-        };
-        reader.readAsDataURL(blob);
-      });
-    //cropImage(url);
-  };
-  newImg.src = url;
-}
-const getBase64StringFromDataURL = (dataURL) =>
-  dataURL.replace("data:", "").replace(/^.+,/, "");
+        testMessageSticker2.senderId = id;
+        testMessageSticker3.senderId = id;
+        testMessageSticker4.senderId = id;
+        processStickerToMe(testMessageSticker1);
+        processStickerToMe(testMessageSticker2);
+        processStickerToMe(testMessageSticker3);
+        processStickerToMe(testMessageSticker3);
+        processStickerToMe(testMessageSticker4);
+      }
+    }
 
-//loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
+    setTimeout(addBots, 8000);
+  }
 
-// const player = document.getElementById("lottie-player-qr");
-// player.load(lottieQR);
-// player.play();
-//setInterval(() => {player.seek(0), player.play()}, 20000);
+  // ------------------ cropper ------------------------------//
 
+  function getRoundedCanvas(sourceCanvas) {
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+    var width = sourceCanvas.width;
+    var height = sourceCanvas.height;
 
+    canvas.width = width;
+    canvas.height = height;
+    context.imageSmoothingEnabled = true;
+    context.drawImage(sourceCanvas, 0, 0, width, height);
+    context.globalCompositeOperation = "destination-in";
+    context.beginPath();
+    context.arc(
+      width / 2,
+      height / 2,
+      Math.min(width, height) / 2,
+      0,
+      2 * Math.PI,
+      true
+    );
+    context.fill();
+    return canvas;
+  }
+
+  function cropImage(base64) {
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    var cw = canvas.width;
+    var ch = canvas.height;
+
+    var img = new Image();
+    img.onload = start;
+    img.src = url;
+    function start() {
+      var cw, ch;
+      cw = canvas.width = img.width;
+      ch = canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      ctx.globalCompositeOperation = "destination-in";
+      ctx.beginPath();
+      ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.fill();
+      const dataURL = canvas.toDataURL();
+      console.log(dataURL);
+    }
+  }
+
+  function showBase64Image(base64) {
+    console.log(base64);
+  }
+
+  function loadImage(url) {
+    let _img = document.getElementById("img-loader");
+    let newImg = new Image();
+    newImg.onload = function () {
+      _img.src = this.src;
+      const image = _img;
+
+      // Get the remote image as a Blob with the fetch API
+      fetch(_img.src)
+        .then((res) => res.blob())
+        .then((blob) => {
+          // Read the Blob as DataURL using the FileReader API
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            console.log(reader.result);
+            // Logs data:image/jpeg;base64,wL2dvYWwgbW9yZ...
+
+            // Convert to Base64 string
+            const base64 = getBase64StringFromDataURL(reader.result);
+            console.log(base64);
+            // Logs wL2dvYWwgbW9yZ...
+          };
+          reader.readAsDataURL(blob);
+        });
+      //cropImage(url);
+    };
+    newImg.src = url;
+  }
+
+  const getBase64StringFromDataURL = (dataURL) =>
+    dataURL.replace("data:", "").replace(/^.+,/, "");
+
+  //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
 
 
