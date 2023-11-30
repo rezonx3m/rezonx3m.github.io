@@ -2,15 +2,15 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
-  <title>Друзья на карте</title>
 
   <link rel="stylesheet" href="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.css">
   <script defer src="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.js"></script>
+  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+
   <script src="https://unpkg.com/mapgl-snow"></script>
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
   <style>
     html,
@@ -20,6 +20,10 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+    }
+
+    * {
+      font-family: SB Sans Display;
     }
 
     #main {
@@ -217,38 +221,36 @@
 
     /* fade in out */
 
-    #popup {
+    .popup-qr-class {
+      display: none;
       position: absolute;
       top: 0px;
-      left: 0px;
-      width: 100%;
       height: 100%;
-      background-image: url("https://rezonx3m.github.io/friends/static/port-qr-code.png");
+      left: 10%;
+      right: 10%;
+
+      background-image: url("https://rezonx3m.github.io/friends/static/QR.png");
+      background-size: contain;
       background-repeat: no-repeat;
       background-position: center center;
-      -webkit-animation: fadeinout 10s linear infinite;
-      animation: fadeinout 10s linear infinite;
-      opacity: 0;
-      display: none;
+      animation: popup-scale 32s ease-in-out infinite;
     }
 
-    @-webkit-keyframes fadeinout {
-      10% {
-        opacity: 1;
+    @keyframes popup-scale {
+      0% {
+        transform: scale(0);
       }
 
-      90% {
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeinout {
-      10% {
-        opacity: 1;
+      2% {
+        transform: scale(1);
       }
 
-      90% {
-        opacity: 1;
+      98% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(0);
       }
     }
 
@@ -517,6 +519,10 @@
       right: 10%;
       transform: translateY(-50%);
     }
+
+    #img-garbage {
+      display: none;
+    }
   </style>
 </head>
 
@@ -526,7 +532,7 @@
       <div id="container"> </div>
     </div>
 
-    <div id="popup" class="elementToFadeInAndOut">
+    <div id="popup-qr" class="popup-qr-class">
     </div>
 
     <div id="controls">
@@ -558,7 +564,7 @@
       </div>
       <div id="port-controls">
         <div>
-          <input type="checkbox" id="port-send-ping" name="scales" checked />
+          <input type="checkbox" id="port-send-ping" name="port-send-ping" checked />
           <label for="port-send-ping">оптравлять пинг</label>
         </div>
       </div>
@@ -612,6 +618,7 @@
   const getParamUserId = urlParams.get("user_id");
   const getParamScene = urlParams.get("scene");
   const getParamSendBounds = urlParams.get("send_bounds");
+  const getParamHideStatus = urlParams.get("hide_status");
   // включаем дебак для кодпена или по параметру
   const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
   const ENABLE_DEBUG_MARKERS =
@@ -650,6 +657,10 @@
   var stoppedLivenessTimeout = 1000 * 60 * 60 * 24;
   // поправка на серверное вренмя
   var serverTimestampShift = 0;
+
+  if (getParamHideStatus == "true") {
+    document.getElementById("connect-status").style.display = "none";
+  }
 
   // список поддерживаемых эмодзи, при расширенни добавить css
   const SUPPORTED_EMOJI = [
@@ -754,9 +765,11 @@
         break;
       case "reconnecting":
         status.style.backgroundColor = "#fc8016";
+        isConnected = false;
         break;
       case "connecting":
         status.style.backgroundColor = "#839bff";
+        isConnected = false;
         break;
       case "disconnected":
         status.style.backgroundColor = "#ff8f8f";
@@ -925,7 +938,7 @@
       refreshAvaInMarker(profile.id);
       clusteriseMarkers(true);
     } else {
-      showSceneNewFriendAnimation();
+      // showSceneNewFriendAnimation(); @todo activate after
     }
   }
 
@@ -1986,7 +1999,7 @@
 
   function startScenePort() {
     currentScene = "port";
-    //OVERRIDED_ZOOM = 100;
+    OVERRIDED_ZOOM = 100;
     map.setCenter([30.242201, 59.923987]);
     map.setZoom(18.71);
     map.setPitch(20.1);
@@ -2003,35 +2016,47 @@
     document.getElementById("input-id").style.display = "none";
     document.getElementById("connect-button").style.display = "none";
 
-    document.getElementById("connect-status").disabled = false;
-    document.getElementById("connect-status").onclick = function () {
+    let status = document.getElementById("connect-status");
+    status.disabled = false;
+    status.onclick = function () {
       showSceneNewFriendAnimation();
     };
 
-    document.getElementById("port-controls").style.display = "block";
-
     setInterval(portSendPing, 1000);
+    setInterval(portSendShowStub, 1000);
+
+    showScenePushButtonAnimation();
   }
 
   function showSceneNewFriendAnimation() {
     if (currentScene === "port") {
-      let element = document.getElementById("popup");
-      element.style.display = "block";
-      setTimeout(function () {
-        element.style.display = "none";
-      }, 10000);
-
       portSendNewFriend();
     }
   }
 
+  var LAST_PUSH_BUTTON_TS = null;
+  const POPUP_QR_ANIMATION_TIME = 32000;
+
   function showScenePushButtonAnimation() {
+    if (DEBUG) {
+      console.log("push button");
+    }
     if (currentScene === "port") {
-      let element = document.getElementById("popup");
-      element.style.display = "block";
-      setTimeout(function () {
-        element.style.display = "none";
-      }, 10000);
+      currentTS = Date.now();
+      if (
+        LAST_PUSH_BUTTON_TS == null ||
+        currentTS - LAST_PUSH_BUTTON_TS > POPUP_QR_ANIMATION_TIME
+      ) {
+        let element = document.getElementById("popup-qr");
+        element.classList.remove("popup-qr-class");
+        void element.offsetWidth;
+        element.classList.add("popup-qr-class");
+        element.style.display = "block";
+        setTimeout(function () {
+          element.style.display = "none";
+        }, POPUP_QR_ANIMATION_TIME);
+        LAST_PUSH_BUTTON_TS = currentTS;
+      }
     }
   }
 
@@ -2039,7 +2064,9 @@
     if (window.hasOwnProperty("electronAPI")) {
       window.electronAPI.addNewFriend();
     }
-    console.log("send new friend action to TD");
+    if (DEBUG) {
+      console.log("send new friend action to TD");
+    }
   }
 
   function portSendPing() {
@@ -2048,25 +2075,34 @@
     if (window.hasOwnProperty("electronAPI") && checked) {
       window.electronAPI.ping();
     }
-    console.log("send ping to TD");
+    if (DEBUG) {
+      console.log("send ping to TD");
+    }
   }
 
   function portReceivePushButton() {
     showScenePushButtonAnimation();
-    console.log("receive push button from TD");
+    if (DEBUG) {
+      console.log("receive push button from TD");
+    }
   }
 
   function portSendShowStub() {
-    if (window.hasOwnProperty("electronAPI")) {
-      window.electronAPI.showStub();
+    if (!isConnected) {
+      if (window.hasOwnProperty("electronAPI")) {
+        window.electronAPI.showStub();
+      }
+      if (DEBUG) {
+        console.log("send show stub");
+      }
     }
   }
 
-  function portSendHideStub() {
-    if (window.hasOwnProperty("electronAPI")) {
-      window.electronAPI.hideStub();
-    }
-  }
+  // function portSendHideStub() {
+  //   if (window.hasOwnProperty("electronAPI")) {
+  //     window.electronAPI.hideStub();
+  //   }
+  // }
 
   // ------------------------------------ tests ------------------------------- //
 
@@ -2685,12 +2721,12 @@
   const getBase64StringFromDataURL = (dataURL) =>
     dataURL.replace("data:", "").replace(/^.+,/, "");
 
-  // loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
+  //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
   // const player = document.getElementById("lottie-player-qr");
   // player.load(lottieQR);
-  // setInterval(() => {player.seek(0), player.play()}, 5000);
-
+  // player.play();
+  //setInterval(() => {player.seek(0), player.play()}, 20000);
 
 
 
