@@ -50,6 +50,16 @@
       width: 100px;
     }
 
+    #connect-indi {
+      background-color: #ff8f8f;
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 10px;
+    }
+
     #test-buttons {
       display: none;
     }
@@ -532,9 +542,11 @@
       <div id="container"> </div>
     </div>
 
+    <!--
     <div id="popup-qr" class="popup-qr-class">
     </div>
-
+-->
+    <div id="connect-indi"></div>
     <div id="controls">
       <div id="div-id">
         <input id="input-id" size="10" placeholder="userid" />
@@ -761,25 +773,30 @@
   function setConnectionState(state) {
     const button = document.getElementById("connect-button");
     const status = document.getElementById("connect-status");
+    const indi = document.getElementById("connect-indi");
     const input = document.getElementById("input-id");
     status.innerText = state;
     switch (state) {
       case "connected":
         status.style.backgroundColor = "#9cf19c";
+        indi.style.backgroundColor = "#9cf19c";
         input.disabled = true;
         button.innerText = "disconnect";
         isConnected = true;
         break;
       case "reconnecting":
         status.style.backgroundColor = "#fc8016";
+        indi.style.backgroundColor = "#fc8016";
         isConnected = false;
         break;
       case "connecting":
         status.style.backgroundColor = "#839bff";
+        indi.style.backgroundColor = "#839bff";
         isConnected = false;
         break;
       case "disconnected":
         status.style.backgroundColor = "#ff8f8f";
+        indi.style.backgroundColor = "#ff8f8f";
         button.innerText = "connect";
         input.disabled = false;
         isConnected = false;
@@ -2749,7 +2766,6 @@
     dataURL.replace("data:", "").replace(/^.+,/, "");
 
   //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
-
 
 </script>
 </body>
