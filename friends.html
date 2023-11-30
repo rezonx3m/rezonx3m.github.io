@@ -570,7 +570,7 @@
 </body>
 
 <script type="text/javascript">
- const urlParams = new URLSearchParams(window.location.search);
+const urlParams = new URLSearchParams(window.location.search);
 const getParamDebugMarkers = urlParams.get("debug_markers");
 const getParamDebug = urlParams.get("debug");
 const getParamDebugGame = urlParams.get("debug_game");
@@ -599,11 +599,13 @@ var idsUsersInClusters = {};
 
 var currentScene = null;
 
+// техническая переменная, в начале должна быть false
 var needReconnect = false;
 var reconnectTimerId = null;
 // таймер для пинг мессажа
 var connectTimerId = null;
 
+// техническая переменная, в начале должна быть true
 var isConnected = false;
 
 // используем таймауты с бека или же свои
@@ -1034,9 +1036,31 @@ function processState(state) {
   globalStates[id]["lon"] = lon;
   globalStates[id]["lat"] = lat;
   globalStates[id]["azimuth"] = azimuth;
+  globalStates[id]["lastUpdate"] = Date.now();
 
   clusteriseMarkers();
 }
+
+function stopOldMarkers() {
+  for (const id in globalStates) {
+    diffWithLastUpdate = Date.now() - globalStates[id]["lastUpdate"];
+    // тушим через минуту маркера, которые встали с огнём
+    if (
+      globalStates[id].state == STATE_MOVING &&
+      diffWithLastUpdate > 60 * 1000
+    ) {
+      const avaUrl = globalProfiles[id].logo;
+      const name = globalProfiles[id].name;
+      const acronym = getAcronymFromName(name);
+      globalMarkers[id].setContent(getHtmlForStaticMarker(id, avaUrl, acronym));
+      globalStates[id].state = STATE_STOPPED;
+      globalMarkers[id].setAnchor([18, 18]);
+    }
+  }
+  //alert('Привет');
+}
+
+setInterval(stopOldMarkers, 1000);
 
 function addOrReplaceMarker(
   id,
@@ -1131,14 +1155,28 @@ function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth) {
         </div>
       </div>`;
   } else {
-    html = `<div id="marker-${id}">
+    html = getHtmlForStaticMarker(id, avaUrl, acronym);
+  }
+  return html;
+}
+
+function getHtmlForStaticMarker(id, avaUrl, acronym) {
+  const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+  if (backgroundImage !== null) {
+    acronym = "";
+  }
+
+  const textClass = acronym != "" ? "ava-only-text" : "";
+
+  let html = `<div id="marker-${id}">
         <div class="ava-container">
           <div id="ava-${id}" style="${backgroundImage};" class="ava ${textClass}">
             ${acronym}
           </div>
         </div>
       </div>`;
-  }
+
   return html;
 }
 
@@ -1868,7 +1906,14 @@ function prewarm() {
   const elemDiv = document.createElement("div");
   elemDiv.innerHTML = `<div>
         <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 0px; height: 0px;">
-        </dotlottie-player></div>`;
+        </dotlottie-player>
+ <!--       <dotlottie-player src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR.json" background="transparent" speed="1" style="width: 0px; height: 0px">
+        </dotlottie-player> -->
+        
+        </div>
+        
+        
+        `;
   controlsDiv.appendChild(elemDiv);
 }
 
@@ -1927,6 +1972,10 @@ function startScenePort() {
   document.getElementById("connect-status").onclick = function () {
     showSceneNewFriendAnimation();
   };
+  
+  document.getElementById("port-controls").style.display = "block";
+
+  setInterval(portSendPing, 1000);
 }
 
 function showSceneNewFriendAnimation() {
@@ -1952,15 +2001,36 @@ function showScenePushButtonAnimation() {
 }
 
 function portSendNewFriend() {
-  showScenePushButtonAnimation();
-  window.electronAPI.addNewFriend();
+  if (window.hasOwnProperty("electronAPI")) {
+    window.electronAPI.addNewFriend();
+  }
   console.log("send new friend action to TD");
 }
-function portReceivePing() {
-  console.log("ping received from TD");
+
+function portSendPing() {
+  let checked = document.getElementById("port-send-ping").checked; 
+  
+  if (window.hasOwnProperty("electronAPI") && checked) {
+    window.electronAPI.ping();
+  }
+  console.log("send ping to TD");
 }
-function portSendPushButton() {
-  console.log("send push button from TD");
+
+function portReceivePushButton() {
+  showScenePushButtonAnimation();
+  console.log("receive push button from TD");
+}
+
+function portSendShowStub() {
+  if (window.hasOwnProperty("electronAPI")) {
+    window.electronAPI.showStub();
+  }
+}
+
+function portSendHideStub() {
+  if (window.hasOwnProperty("electronAPI")) {
+    window.electronAPI.hideStub();
+  }
 }
 
 // ------------------------------------ tests ------------------------------- //
@@ -2494,10 +2564,98 @@ function gameTest() {
 
   setTimeout(addBots, 8000);
 }
-//
 
-//
-//startScenePort();
+// ------------------ cropper ------------------------------//
+
+function getRoundedCanvas(sourceCanvas) {
+  var canvas = document.createElement("canvas");
+  var context = canvas.getContext("2d");
+  var width = sourceCanvas.width;
+  var height = sourceCanvas.height;
+
+  canvas.width = width;
+  canvas.height = height;
+  context.imageSmoothingEnabled = true;
+  context.drawImage(sourceCanvas, 0, 0, width, height);
+  context.globalCompositeOperation = "destination-in";
+  context.beginPath();
+  context.arc(
+    width / 2,
+    height / 2,
+    Math.min(width, height) / 2,
+    0,
+    2 * Math.PI,
+    true
+  );
+  context.fill();
+  return canvas;
+}
+
+function cropImage(base64) {
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  var cw = canvas.width;
+  var ch = canvas.height;
+
+  var img = new Image();
+  img.onload = start;
+  img.src = url;
+  function start() {
+    var cw, ch;
+    cw = canvas.width = img.width;
+    ch = canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    ctx.globalCompositeOperation = "destination-in";
+    ctx.beginPath();
+    ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+    const dataURL = canvas.toDataURL();
+    console.log(dataURL);
+  }
+}
+
+function showBase64Image(base64) {
+  console.log(base64);
+}
+
+function loadImage(url) {
+  let _img = document.getElementById("img-loader");
+  let newImg = new Image();
+  newImg.onload = function () {
+    _img.src = this.src;
+    const image = _img;
+
+    // Get the remote image as a Blob with the fetch API
+    fetch(_img.src)
+      .then((res) => res.blob())
+      .then((blob) => {
+        // Read the Blob as DataURL using the FileReader API
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          console.log(reader.result);
+          // Logs data:image/jpeg;base64,wL2dvYWwgbW9yZ...
+
+          // Convert to Base64 string
+          const base64 = getBase64StringFromDataURL(reader.result);
+          console.log(base64);
+          // Logs wL2dvYWwgbW9yZ...
+        };
+        reader.readAsDataURL(blob);
+      });
+    //cropImage(url);
+  };
+  newImg.src = url;
+}
+const getBase64StringFromDataURL = (dataURL) =>
+  dataURL.replace("data:", "").replace(/^.+,/, "");
+
+// loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
+
+// const player = document.getElementById("lottie-player-qr");
+// player.load(lottieQR);
+// setInterval(() => {player.seek(0), player.play()}, 5000);
+
 
 
 
