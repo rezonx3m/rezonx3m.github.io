@@ -945,7 +945,7 @@
       refreshAvaInMarker(profile.id);
       clusteriseMarkers(true);
     } else {
-      // showSceneNewFriendAnimation(); @todo activate after
+      showSceneNewFriendAnimation();
     }
   }
 
@@ -2023,17 +2023,29 @@
     document.getElementById("input-id").style.display = "none";
     document.getElementById("connect-button").style.display = "none";
 
-    let status = document.getElementById("connect-status");
-    status.disabled = false;
-    status.onclick = function () {
-      showSceneNewFriendAnimation();
-      showScenePushButtonAnimation();
-    };
-
     setInterval(portSendPing, 1000);
     setInterval(portSendShowStub, 1000);
 
-    showScenePushButtonAnimation();
+    document.onkeypress = function (e) {
+      e = e || window.event;
+      console.log(e.keyCode);
+      // use e.keyCode
+      switch (e.keyCode) {
+        case 49:
+          perfTest();
+          break;
+
+        case 50:
+          showSceneNewFriendAnimation();
+          break;
+
+        case 51:
+          showScenePushButtonAnimation();
+          break;
+      }
+    };
+
+    //showScenePushButtonAnimation();
   }
 
   function showSceneNewFriendAnimation() {
@@ -2052,7 +2064,6 @@
         LAST_PUSH_BUTTON_TS == null ||
         currentTS - LAST_PUSH_BUTTON_TS > POPUP_QR_ANIMATION_TIME
       ) {
-
         // lottie version
         playerQR.seek(0);
         playerQR.play();
@@ -2118,6 +2129,10 @@
   // ------------------------------------ tests ------------------------------- //
 
   function perfTest() {
+    testMessage.payload.location.lat = map.getCenter()[1];
+    testMessage.payload.location.lon = map.getCenter()[0];
+    map.setZoom(11.5);
+
     const maxI = 100;
     const floor = Math.floor(Math.sqrt(maxI));
     for (i = 1; i <= maxI; i++) {
@@ -2187,8 +2202,8 @@
       id: testId1,
       lastSeen: 16987361519730,
       location: {
-        lat: 55.015,
-        lon: 82.965,
+        lat: map.getCenter()[1],
+        lon: map.getCenter()[0],
         azimuth: 206.91267,
         speed: 160,
         accuracy: 17.823999404907227
@@ -2734,7 +2749,6 @@
     dataURL.replace("data:", "").replace(/^.+,/, "");
 
   //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
-
 
 
 </script>
