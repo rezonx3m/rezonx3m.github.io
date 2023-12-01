@@ -520,7 +520,7 @@
     }
 
     #qr-promo {
-      display: block;
+      display: none;
       position: absolute;
       top: 50%;
       padding: 10px;
@@ -2040,6 +2040,8 @@
     document.getElementById("input-id").style.display = "none";
     document.getElementById("connect-button").style.display = "none";
 
+    document.getElementById("qr-promo").style.display = "block";
+
     setInterval(portSendPing, 1000);
     setInterval(portSendShowStub, 1000);
 
@@ -2766,6 +2768,7 @@
     dataURL.replace("data:", "").replace(/^.+,/, "");
 
   //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
+
 
 
 </script>
