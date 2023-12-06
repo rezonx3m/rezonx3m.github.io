@@ -2,15 +2,19 @@
 <html lang="en">
 
 <head>
-  <script src="https://rezonx3m.github.io/friends/static/JS_Installation_UI_screen_QR.js"></script>
+  <meta charset="UTF-8" />
+  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD.js"></script>
   <link rel="stylesheet" href="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.css">
   <script defer src="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.js"></script>
-  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+
 
   <script src="https://unpkg.com/mapgl-snow"></script>
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 
   <style>
     html,
@@ -20,6 +24,10 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+    }
+
+    * {
+      font-family: SB Sans Display;
     }
 
     #main {
@@ -40,6 +48,16 @@
     #connect-status {
       background-color: #ff8f8f;
       width: 100px;
+    }
+
+    #connect-indi {
+      background-color: #ff8f8f;
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 10px;
     }
 
     #test-buttons {
@@ -216,43 +234,38 @@
     }
 
     /* fade in out */
+    /* todo удалить нахрен, так как теперь лотти /*
+.popup-qr-class {
+  display: none;
+  position: absolute;
+  top: 0px;
+  height: 100%;
+  left: 10%;
+  right: 10%;
 
-    #popup {
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      width: 100%;
-      height: 100%;
-      background-image: url("https://rezonx3m.github.io/friends/static/port-qr-code.png");
-      background-repeat: no-repeat;
-      background-position: center center;
-      -webkit-animation: fadeinout 10s linear infinite;
-      animation: fadeinout 10s linear infinite;
-      opacity: 0;
-      display: none;
-    }
+  background-image: url("https://rezonx3m.github.io/friends/static/QR.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  animation: popup-scale 32s ease-in-out infinite;
+}
 
-    @-webkit-keyframes fadeinout {
-      10% {
-        opacity: 1;
-      }
+@keyframes popup-scale {
+  0% {
+    transform: scale(0);
+  }
+  2% {
+    transform: scale(1);
+  }
+  98% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
 
-      90% {
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeinout {
-      10% {
-        opacity: 1;
-      }
-
-      90% {
-        opacity: 1;
-      }
-    }
-
-    /* sliders */
+/* sliders */
 
     .itcss_item_text {
       display: flex;
@@ -508,7 +521,6 @@
 
     #qr-promo {
       display: none;
-      border: 5px solid;
       position: absolute;
       top: 50%;
       padding: 10px;
@@ -516,6 +528,10 @@
       left: 10%;
       right: 10%;
       transform: translateY(-50%);
+    }
+
+    #img-garbage {
+      display: none;
     }
   </style>
 </head>
@@ -526,9 +542,11 @@
       <div id="container"> </div>
     </div>
 
-    <div id="popup" class="elementToFadeInAndOut">
+    <!--
+    <div id="popup-qr" class="popup-qr-class">
     </div>
-
+-->
+    <div id="connect-indi"></div>
     <div id="controls">
       <div id="div-id">
         <input id="input-id" size="10" placeholder="userid" />
@@ -612,6 +630,7 @@
   const getParamUserId = urlParams.get("user_id");
   const getParamScene = urlParams.get("scene");
   const getParamSendBounds = urlParams.get("send_bounds");
+  const getParamHideStatus = urlParams.get("hide_status");
   // включаем дебак для кодпена или по параметру
   const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
   const ENABLE_DEBUG_MARKERS =
@@ -622,7 +641,7 @@
   const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
   const ENABLE_AUTO_RECONNECT = true;
   var ENABLE_CLUSTERS = false;
-  var ENABLE_STICKERS = false;
+  var ENABLE_STICKERS = true;
   const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
   var OVERRIDED_ZOOM = null;
   const DROP_MARKERS_WITH_OLD_STATE = true;
@@ -651,6 +670,10 @@
   // поправка на серверное вренмя
   var serverTimestampShift = 0;
 
+  if (getParamHideStatus == "true") {
+    document.getElementById("connect-status").style.display = "none";
+  }
+
   // список поддерживаемых эмодзи, при расширенни добавить css
   const SUPPORTED_EMOJI = [
     "fire",
@@ -665,7 +688,14 @@
     "nav"
   ];
 
-  // game parametrs
+  // scenes params
+
+  var LAST_PUSH_BUTTON_TS = null;
+  const POPUP_QR_ANIMATION_TIME = 20000;
+  const playerQR = document.getElementById("lottie-player-qr");
+  playerQR.load(lottieQR);
+
+  // game params
   var LOG_LAST_STICKERS_TO_ME = false;
   var LAST_STICKERS_BY_USERS = {};
   var CURRENT_GAMERS = [];
@@ -743,25 +773,30 @@
   function setConnectionState(state) {
     const button = document.getElementById("connect-button");
     const status = document.getElementById("connect-status");
+    const indi = document.getElementById("connect-indi");
     const input = document.getElementById("input-id");
     status.innerText = state;
     switch (state) {
       case "connected":
         status.style.backgroundColor = "#9cf19c";
+        indi.style.backgroundColor = "#9cf19c";
         input.disabled = true;
         button.innerText = "disconnect";
         isConnected = true;
         break;
       case "reconnecting":
         status.style.backgroundColor = "#fc8016";
+        indi.style.backgroundColor = "#fc8016";
         isConnected = false;
         break;
       case "connecting":
         status.style.backgroundColor = "#839bff";
+        indi.style.backgroundColor = "#839bff";
         isConnected = false;
         break;
       case "disconnected":
         status.style.backgroundColor = "#ff8f8f";
+        indi.style.backgroundColor = "#ff8f8f";
         button.innerText = "connect";
         input.disabled = false;
         isConnected = false;
@@ -1988,7 +2023,7 @@
 
   function startScenePort() {
     currentScene = "port";
-    //OVERRIDED_ZOOM = 100;
+    OVERRIDED_ZOOM = 100;
     map.setCenter([30.242201, 59.923987]);
     map.setZoom(18.71);
     map.setPitch(20.1);
@@ -2005,36 +2040,64 @@
     document.getElementById("input-id").style.display = "none";
     document.getElementById("connect-button").style.display = "none";
 
-    document.getElementById("connect-status").disabled = false;
-    document.getElementById("connect-status").onclick = function () {
-      showSceneNewFriendAnimation();
-    };
-
-    document.getElementById("port-controls").style.display = "block";
+    document.getElementById("qr-promo").style.display = "block";
 
     setInterval(portSendPing, 1000);
     setInterval(portSendShowStub, 1000);
+
+    showScenePushButtonAnimation();
+
+    document.onkeypress = function (e) {
+      e = e || window.event;
+      switch (e.keyCode) {
+        case 49:
+          perfTest();
+          break;
+
+        case 50:
+          showSceneNewFriendAnimation();
+          break;
+
+        case 51:
+          showScenePushButtonAnimation();
+          break;
+      }
+    };
+
+    //showScenePushButtonAnimation();
   }
 
   function showSceneNewFriendAnimation() {
     if (currentScene === "port") {
-      let element = document.getElementById("popup");
-      element.style.display = "block";
-      setTimeout(function () {
-        element.style.display = "none";
-      }, 10000);
-
       portSendNewFriend();
     }
   }
 
   function showScenePushButtonAnimation() {
+    if (DEBUG) {
+      console.log("push button");
+    }
     if (currentScene === "port") {
-      let element = document.getElementById("popup");
-      element.style.display = "block";
-      setTimeout(function () {
-        element.style.display = "none";
-      }, 10000);
+      currentTS = Date.now();
+      if (
+        LAST_PUSH_BUTTON_TS == null ||
+        currentTS - LAST_PUSH_BUTTON_TS > POPUP_QR_ANIMATION_TIME
+      ) {
+        // lottie version
+        playerQR.seek(0);
+        playerQR.play();
+
+        // css version
+        // let element = document.getElementById("popup-qr");
+        // element.classList.remove("popup-qr-class");
+        // void element.offsetWidth;
+        // element.classList.add("popup-qr-class");
+        // element.style.display = "block";
+        // setTimeout(function () {
+        //   element.style.display = "none";
+        // }, POPUP_QR_ANIMATION_TIME);
+        LAST_PUSH_BUTTON_TS = currentTS;
+      }
     }
   }
 
@@ -2042,7 +2105,9 @@
     if (window.hasOwnProperty("electronAPI")) {
       window.electronAPI.addNewFriend();
     }
-    console.log("send new friend action to TD");
+    if (DEBUG) {
+      console.log("send new friend action to TD");
+    }
   }
 
   function portSendPing() {
@@ -2051,12 +2116,16 @@
     if (window.hasOwnProperty("electronAPI") && checked) {
       window.electronAPI.ping();
     }
-    console.log("send ping to TD");
+    if (DEBUG) {
+      console.log("send ping to TD");
+    }
   }
 
   function portReceivePushButton() {
     showScenePushButtonAnimation();
-    console.log("receive push button from TD");
+    if (DEBUG) {
+      console.log("receive push button from TD");
+    }
   }
 
   function portSendShowStub() {
@@ -2064,7 +2133,9 @@
       if (window.hasOwnProperty("electronAPI")) {
         window.electronAPI.showStub();
       }
-      console.log("send show stub");
+      if (DEBUG) {
+        console.log("send show stub");
+      }
     }
   }
 
@@ -2077,6 +2148,10 @@
   // ------------------------------------ tests ------------------------------- //
 
   function perfTest() {
+    testMessage.payload.location.lat = map.getCenter()[1];
+    testMessage.payload.location.lon = map.getCenter()[0];
+    map.setZoom(11.5);
+
     const maxI = 100;
     const floor = Math.floor(Math.sqrt(maxI));
     for (i = 1; i <= maxI; i++) {
@@ -2146,8 +2221,8 @@
       id: testId1,
       lastSeen: 16987361519730,
       location: {
-        lat: 55.015,
-        lon: 82.965,
+        lat: map.getCenter()[1],
+        lon: map.getCenter()[0],
         azimuth: 206.91267,
         speed: 160,
         accuracy: 17.823999404907227
@@ -2688,18 +2763,11 @@
     };
     newImg.src = url;
   }
+
   const getBase64StringFromDataURL = (dataURL) =>
     dataURL.replace("data:", "").replace(/^.+,/, "");
 
-  loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
-
-  // const player = document.getElementById("lottie-player-qr");
-  // player.load(lottieQR);
-  // setInterval(() => {player.seek(0), player.play()}, 5000);
-
-
-
-
+  //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
 
 
