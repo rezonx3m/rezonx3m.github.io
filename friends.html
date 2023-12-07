@@ -641,7 +641,7 @@
   const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
   const ENABLE_AUTO_RECONNECT = true;
   var ENABLE_CLUSTERS = false;
-  var ENABLE_STICKERS = false;
+  var ENABLE_STICKERS = true;
   const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
   var OVERRIDED_ZOOM = null;
   const DROP_MARKERS_WITH_OLD_STATE = true;
@@ -1323,8 +1323,8 @@
 
     // делаем анимацию для значимых движений
     if (
-      Math.abs(mapLon - nextLon) > 0.0001 ||
-      Math.abs(mapLat - nextLat) > 0.0001
+      Math.abs(mapLon - nextLon) > 0.00001 ||
+      Math.abs(mapLat - nextLat) > 0.00001
     ) {
       moveOn(track, marker, id);
     }
@@ -2032,7 +2032,7 @@
     const snow = new mapglSnow.Snow(map);
 
     ENABLE_CLUSTERS = false;
-    ENABLE_STICKERS = false;
+    ENABLE_STICKERS = true;
     document.getElementById("input-id").value = "port";
     SOCKET_PATH =
       "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
@@ -2046,6 +2046,7 @@
     setInterval(portSendShowStub, 1000);
 
     showScenePushButtonAnimation();
+    setTimeout(addPortBots, 1000);
 
     document.onkeypress = function (e) {
       e = e || window.event;
@@ -2061,10 +2062,186 @@
         case 51:
           showScenePushButtonAnimation();
           break;
+
+        case 52:
+          document.getElementById("port-send-ping").checked = true;
+          break;
+
+        case 53:
+          document.getElementById("port-send-ping").checked = false;
+          break;
       }
     };
 
     //showScenePushButtonAnimation();
+  }
+
+  function addPortBots() {
+    const portBotId1 = "portbot1";
+    const portBotId2 = "portbot2";
+    const portBotId3 = "portbot3";
+
+    const profilePort1 = {
+      id: portBotId1,
+      name: "Алиса Кюнтиева",
+      logo: "https://rezonx3m.github.io/friends/static/bot1.JPG"
+    };
+
+    const profilePort2 = {
+      id: portBotId2,
+      name: "Какоето Имя",
+      logo: "https://rezonx3m.github.io/friends/static/bot2.JPG"
+    };
+
+    const profilePort3 = {
+      id: portBotId3,
+      name: "Еще Фамилия",
+      logo: "https://rezonx3m.github.io/friends/static/bot3.JPG"
+    };
+
+    var profileState1 = {
+      type: "friendState",
+      payload: {
+        id: portBotId1,
+        lastSeen: Date.now() * 1000,
+        location: {
+          lat: 59.924838,
+          lon: 30.240264,
+          azimuth: 206.91267,
+          speed: 1.5,
+          accuracy: 17.823999404907227
+        },
+        battery: {
+          level: 0.81
+        },
+        movement: {
+          status: "moving",
+          stoppedAt: 1698728448409
+        }
+      }
+    };
+
+    const profileState2 = {
+      type: "friendState",
+      payload: {
+        id: portBotId2,
+        lastSeen: Date.now() * 1000,
+        location: {
+          lat: 59.924661,
+          lon: 30.241195,
+          azimuth: 206.91267,
+          speed: 160,
+          accuracy: 17.823999404907227
+        },
+        battery: {
+          level: 0.81
+        },
+        movement: {
+          status: "moving",
+          stoppedAt: 1698728448409
+        }
+      }
+    };
+
+    const profileState3 = {
+      type: "friendState",
+      payload: {
+        id: portBotId3,
+        lastSeen: Date.now() * 1000,
+        location: {
+          lat: 59.923647,
+          lon: 30.241312,
+          azimuth: 206.91267,
+          speed: 160,
+          accuracy: 17.823999404907227
+        },
+        battery: {
+          level: 0.81
+        },
+        movement: {
+          status: "moving",
+          stoppedAt: 1698728448409
+        }
+      }
+    };
+    addProfile(profilePort1);
+    addProfile(profilePort2);
+    addProfile(profilePort3);
+    processMessage(profileState1);
+    processMessage(profileState2);
+    processMessage(profileState3);
+
+    bot1movements = [
+      [30.240264, 59.924838],
+      [30.240412, 59.924776],
+      [30.240554, 59.92472],
+      [30.240696, 59.924649],
+      [30.240849, 59.924607],
+      [30.240987, 59.924593],
+      [30.241109, 59.924617],
+      [30.241218, 59.92466],
+      [30.241308, 59.924716],
+      [30.24142, 59.924787],
+      [30.241538, 59.924827],
+      [30.241705, 59.924772],
+      [30.241826, 59.924713],
+      [30.241932, 59.924667],
+      [30.242072, 59.924615],
+      [30.242169, 59.924565],
+      [30.242291, 59.924518],
+      [30.24242, 59.924471],
+      [30.242553, 59.924417],
+      [30.242686, 59.924364],
+      [30.242804, 59.924317],
+      [30.242934, 59.924261],
+      [30.243033, 59.924224],
+      [30.243117, 59.924184],
+      [30.243138, 59.924116],
+      [30.243126, 59.924054],
+      [30.243036, 59.924003],
+      [30.242963, 59.923935],
+      [30.242936, 59.923845],
+      [30.242975, 59.923777],
+      [30.242931, 59.923719],
+      [30.242881, 59.923651],
+      [30.242881, 59.9236],
+      [30.242872, 59.923546],
+      [30.242998, 59.923492],
+      [30.243095, 59.923448],
+      [30.243099, 59.923385],
+      [30.243082, 59.92331],
+      [30.24304, 59.923233],
+      [30.24301, 59.923156],
+      [30.242987, 59.923085],
+      [30.243092, 59.923028],
+      [30.243232, 59.922996],
+      [30.243352, 59.922967],
+      [30.243506, 59.922936],
+      [30.243706, 59.922899],
+      [30.243852, 59.922862],
+      [30.24402, 59.922863]
+    ];
+
+    moveBot(bot1movements, true, 0, 5000);
+
+    function moveBot(path, isForwardDirection, position, animationTime) {
+      if (position == 0) {
+        isForwardDirection = true;
+      } else if (position == path.length - 1) {
+        isForwardDirection = false;
+      }
+      // console.log("position", position);
+      const nextPosition = path[position];
+      profileState1.payload.location.lat = nextPosition[1];
+      profileState1.payload.location.lon = nextPosition[0];
+      profileState1.payload.lastSeen = Date.now() * 1000;
+      processMessage(profileState1);
+
+      currentPosition = isForwardDirection ? position++ : position--;
+      setTimeout(function () {
+        moveBot(path, isForwardDirection, position, animationTime);
+      }, animationTime);
+    }
   }
 
   function showSceneNewFriendAnimation() {
@@ -2113,11 +2290,13 @@
   function portSendPing() {
     let checked = document.getElementById("port-send-ping").checked;
 
-    if (window.hasOwnProperty("electronAPI") && checked) {
-      window.electronAPI.ping();
-    }
-    if (DEBUG) {
-      console.log("send ping to TD");
+    if (checked) {
+      if (window.hasOwnProperty("electronAPI")) {
+        window.electronAPI.ping();
+      }
+      if (DEBUG) {
+        console.log("send ping to TD");
+      }
     }
   }
 
@@ -2768,6 +2947,8 @@
     dataURL.replace("data:", "").replace(/^.+,/, "");
 
   //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
+
+  // startScene2fest();
 
 
 
