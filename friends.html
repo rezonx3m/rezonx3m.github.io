@@ -6,15 +6,17 @@
   <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
 
   <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD.js"></script>
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_green_HD.js"></script>
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_red_HD.js"></script>
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_blue_HD.js"></script>
+
   <link rel="stylesheet" href="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.css">
   <script defer src="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.js"></script>
-
 
   <script src="https://unpkg.com/mapgl-snow"></script>
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-
 
   <style>
     html,
@@ -521,6 +523,13 @@
 
     #qr-promo {
       display: none;
+    }
+
+    #img-garbage {
+      display: none;
+    }
+
+    .center-lottie-player {
       position: absolute;
       top: 50%;
       padding: 10px;
@@ -528,10 +537,6 @@
       left: 10%;
       right: 10%;
       transform: translateY(-50%);
-    }
-
-    #img-garbage {
-      display: none;
     }
   </style>
 </head>
@@ -606,8 +611,19 @@
       </div>
     </div>
     <div id="qr-promo">
-      <lottie-player id="lottie-player-qr" mode="normal" style="width: 100%">
-      </lottie-player>
+      <div class="center-lottie-player">
+        <lottie-player id="lottie-player-qr" mode="normal" style="width: 100%"> </lottie-player>
+      </div>
+      <div class="center-lottie-player">
+        <lottie-player id="lottie-player-congrats-green" mode="normal" style="width: 100%"> </lottie-player>
+      </div>
+      <div class="center-lottie-player">
+        <lottie-player id="lottie-player-congrats-red" mode="normal" style="width: 100%"> </lottie-player>
+      </div>
+      <div class="center-lottie-player">
+        <lottie-player id="lottie-player-congrats-blue" mode="normal" style="width: 100%">
+        </lottie-player>
+      </div>
     </div>
     <div id="center-text-promo">
     </div>
@@ -690,11 +706,20 @@
   ];
 
   // scenes params
+  var POPUP_ANIMATION_IS_BUSY = false;
+  var POPUP_NEXT_ANIMATION = null;
+  var POPUP_CURRENT_ANIMATION = null;
+  const POPUP_QR_ANIMATION_TIME = 22000;
+  const POPUP_CONGRATS_ANIMATION_TIME = 7000;
 
-  var LAST_PUSH_BUTTON_TS = null;
-  const POPUP_QR_ANIMATION_TIME = 20000;
   const playerQR = document.getElementById("lottie-player-qr");
-  playerQR.load(lottieQR);
+  const playerCongratsBlue = document.getElementById(
+    "lottie-player-congrats-blue"
+  );
+  const playerCongratsRed = document.getElementById("lottie-player-congrats-red");
+  const playerCongratsGreen = document.getElementById(
+    "lottie-player-congrats-green"
+  );
 
   // game params
   var LOG_LAST_STICKERS_TO_ME = false;
@@ -943,16 +968,15 @@
     }
     // поправка на серверное время
     serverTimestampShift = Date.now() - payload.serverTime;
-
     payload.profiles.forEach((profile) => {
-      addProfile(profile);
+      addProfile(profile, true);
     });
     payload.states.forEach((state) => {
       processState(state);
     });
   }
 
-  function addProfile(profile) {
+  function addProfile(profile, isInit = false) {
     const isItChange = globalProfiles.hasOwnProperty(profile.id);
     const key = profile.id;
     globalProfiles[key] = profile;
@@ -962,7 +986,7 @@
     if (isItChange) {
       refreshAvaInMarker(profile.id);
       clusteriseMarkers(true);
-    } else {
+    } else if (!isInit) {
       showSceneNewFriendAnimation();
     }
   }
@@ -2032,6 +2056,12 @@
 
     const snow = new mapglSnow.Snow(map);
 
+    playerQR.load(lottieQR);
+
+    playerCongratsBlue.load(lottieCongratsBlue);
+    playerCongratsRed.load(lottieCongratsRed);
+    playerCongratsGreen.load(lottieCongratsGreen);
+
     ENABLE_CLUSTERS = false;
     ENABLE_STICKERS = true;
     document.getElementById("input-id").value = "port";
@@ -2167,9 +2197,9 @@
         }
       }
     };
-    addProfile(profilePort1);
-    addProfile(profilePort2);
-    addProfile(profilePort3);
+    addProfile(profilePort1, true);
+    addProfile(profilePort2, true);
+    addProfile(profilePort3, true);
     processMessage(profileState1);
     processMessage(profileState2);
     processMessage(profileState3);
@@ -2250,7 +2280,58 @@
   function showSceneNewFriendAnimation() {
     if (currentScene === "port") {
       portSendNewFriend();
+
+      const randomNumber = Math.floor(Math.random() * 3);
+      const isBusy = getPopupAnimationBusy();
+      if (!isBusy) {
+        switch (randomNumber) {
+          case 0:
+            playerCongratsBlue.seek(0);
+            playerCongratsBlue.play();
+            break;
+          case 1:
+            playerCongratsRed.seek(0);
+            playerCongratsRed.play();
+            break;
+          case 2:
+            playerCongratsGreen.seek(0);
+            playerCongratsGreen.play();
+            break;
+        }
+        setPopupAnimationBusy(true);
+        setPopupAnimationBusy(false, POPUP_CONGRATS_ANIMATION_TIME);
+        POPUP_CURRENT_ANIMATION = "congrats";
+      } else if (POPUP_CURRENT_ANIMATION !== "congrats") {
+        POPUP_NEXT_ANIMATION = "congrats";
+      }
     }
+  }
+
+  function setPopupAnimationBusy(status, time = null) {
+    if (time) {
+      setTimeout(function () {
+        POPUP_ANIMATION_IS_BUSY = status;
+        if (status == false) {
+          if (POPUP_NEXT_ANIMATION != null) {
+            switch (POPUP_NEXT_ANIMATION) {
+              case "qr":
+                showScenePushButtonAnimation();
+                break;
+              case "congrats":
+                showSceneNewFriendAnimation();
+                break;
+            }
+            POPUP_NEXT_ANIMATION = null;
+          }
+        }
+      }, time);
+    } else {
+      POPUP_ANIMATION_IS_BUSY = status;
+    }
+  }
+
+  function getPopupAnimationBusy() {
+    return POPUP_ANIMATION_IS_BUSY;
   }
 
   function showScenePushButtonAnimation() {
@@ -2258,11 +2339,12 @@
       console.log("push button");
     }
     if (currentScene === "port") {
-      currentTS = Date.now();
-      if (
-        LAST_PUSH_BUTTON_TS == null ||
-        currentTS - LAST_PUSH_BUTTON_TS > POPUP_QR_ANIMATION_TIME
-      ) {
+      const isBusy = getPopupAnimationBusy();
+      if (!isBusy) {
+        setPopupAnimationBusy(true);
+        setPopupAnimationBusy(false, POPUP_QR_ANIMATION_TIME);
+        POPUP_CURRENT_ANIMATION = "qr";
+
         // lottie version
         playerQR.seek(0);
         playerQR.play();
@@ -2276,7 +2358,8 @@
         // setTimeout(function () {
         //   element.style.display = "none";
         // }, POPUP_QR_ANIMATION_TIME);
-        LAST_PUSH_BUTTON_TS = currentTS;
+      } else if (POPUP_CURRENT_ANIMATION !== "qr") {
+        POPUP_NEXT_ANIMATION = "qr";
       }
     }
   }
@@ -2848,7 +2931,6 @@
     function addBots() {
       for (const id in globalMarkers) {
         testMessageSticker1.senderId = id;
-
         testMessageSticker2.senderId = id;
         testMessageSticker3.senderId = id;
         testMessageSticker4.senderId = id;
@@ -2952,6 +3034,7 @@
   //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
   // startScene2fest();
+
 
 
 </script>
