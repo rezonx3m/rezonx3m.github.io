@@ -631,6 +631,7 @@
   const getParamScene = urlParams.get("scene");
   const getParamSendBounds = urlParams.get("send_bounds");
   const getParamHideStatus = urlParams.get("hide_status");
+  const getParamHidePromoQR = urlParams.get("hide_promo");
   // включаем дебак для кодпена или по параметру
   const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
   const ENABLE_DEBUG_MARKERS =
@@ -2040,12 +2041,14 @@
     document.getElementById("input-id").style.display = "none";
     document.getElementById("connect-button").style.display = "none";
 
-    document.getElementById("qr-promo").style.display = "block";
+    if (getParamHidePromoQR !== "true") {
+      document.getElementById("qr-promo").style.display = "block";
+    }
 
     setInterval(portSendPing, 1000);
     setInterval(portSendShowStub, 1000);
 
-    showScenePushButtonAnimation();
+    //showScenePushButtonAnimation();
     setTimeout(addPortBots, 1000);
 
     document.onkeypress = function (e) {
@@ -2949,7 +2952,6 @@
   //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
   // startScene2fest();
-
 
 
 </script>
