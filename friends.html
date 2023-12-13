@@ -749,7 +749,7 @@
   const POPUP_QR_ANIMATION_TIME = 22000;
   const POPUP_CONGRATS_ANIMATION_TIME = 7000;
 
-  var PORT_SEND_SHOW_STUB = true;
+  var PORT_FORCE_SEND_SHOW_STUB = false;
 
   const playerQR = document.getElementById("lottie-player-qr");
   const playerCongratsBlue = document.getElementById(
@@ -2173,11 +2173,11 @@
           break;
 
         case 54:
-          PORT_SEND_SHOW_STUB = true;
+          PORT_FORCE_SEND_SHOW_STUB = false;
           break;
 
         case 55:
-          PORT_SEND_SHOW_STUB = false;
+          PORT_FORCE_SEND_SHOW_STUB = true;
           break;
       }
     };
@@ -2470,7 +2470,7 @@
   }
 
   function portSendShowStub() {
-    if (!isConnected || !PORT_SEND_SHOW_STUB) {
+    if (!isConnected || PORT_FORCE_SEND_SHOW_STUB) {
       if (window.hasOwnProperty("electronAPI")) {
         window.electronAPI.showStub();
       }
