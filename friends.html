@@ -749,6 +749,8 @@
   const POPUP_QR_ANIMATION_TIME = 22000;
   const POPUP_CONGRATS_ANIMATION_TIME = 7000;
 
+  var PORT_SEND_SHOW_STUB = true;
+
   const playerQR = document.getElementById("lottie-player-qr");
   const playerCongratsBlue = document.getElementById(
     "lottie-player-congrats-blue"
@@ -1027,7 +1029,7 @@
       showSceneNewFriendAnimation();
     }
 
-    if (getParamShowFriendsList === "true") {
+    if (getParamShowFriendsList === "true" || DEBUG) {
       refreshFriendsList();
     }
   }
@@ -2169,6 +2171,14 @@
         case 53:
           document.getElementById("port-send-ping").checked = false;
           break;
+
+        case 54:
+          PORT_SEND_SHOW_STUB = true;
+          break;
+
+        case 55:
+          PORT_SEND_SHOW_STUB = false;
+          break;
       }
     };
 
@@ -2460,13 +2470,15 @@
   }
 
   function portSendShowStub() {
-    if (!isConnected) {
+    if (!isConnected || !PORT_SEND_SHOW_STUB) {
       if (window.hasOwnProperty("electronAPI")) {
         window.electronAPI.showStub();
       }
       if (DEBUG) {
         console.log("send show stub");
       }
+    } else if (DEBUG) {
+      console.log("show stub not sended, because all rigth");
     }
   }
 
@@ -3100,7 +3112,6 @@
   //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
   // startScene2fest();
-
 
 
 
