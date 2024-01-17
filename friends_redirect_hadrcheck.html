@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<HTML>
+    <HEAD>
+    </HEAD>
+    <BODY>
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const hardCheckDgisFinished = urlParams.get("hard_check_dgis");
+                window.open('https://friends.2gis.ru', '_self')
+            if (hardCheckDgisFinished === "true") {
+            } else {
+                window.open('dgis://2gis.ru/user/aa32f7d725aa4d8bb330dde8e51f18ed?hard_check_dgis=true', '_self');
+                setTimeout(() => window.open('https://friends.2gis.ru', '_self'), 1000);
+            }  
+        </script>
+    </BODY>
+</HTML>
