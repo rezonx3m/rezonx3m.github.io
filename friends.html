@@ -701,7 +701,7 @@ var ENABLE_CLUSTERS = false;
 var ENABLE_STICKERS = true;
 const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
 var OVERRIDED_ZOOM = null;
-const DROP_MARKERS_WITH_OLD_STATE = getParamDebugMarkers !== "true";
+const DROP_MARKERS_WITH_OLD_STATE = getParamShowHiddenMarkers !== "true";
 
 // маркера в кластерах (для быстрой чистки)
 var clusterMarkers = {};
@@ -1090,15 +1090,11 @@ function processState(state) {
   const lat = state.location.lat;
   // первое вхождение на карту
   const isInit = !globalStates.hasOwnProperty(id);
-  
-  
-  const isOldDataMarker = DROP_MARKERS_WITH_OLD_STATE &&
-    Date.now() + serverTimestampShift - lastSeen > stoppedLivenessTimeout;
+
+  const isOldDataMarker = Date.now() + serverTimestampShift - lastSeen > stoppedLivenessTimeout;
   // дропаем "серые" (давно стоящие) маркера
   // @todo почему-то при дропе маркера стали пропадать вообще
-  if (
-    isOldDataMarker
-  ) {
+  if (isOldDataMarker && DROP_MARKERS_WITH_OLD_STATE) {
     hideMarker(id); // обратно раскрываются в moveMarker и в декластеризации
     return;
   }
@@ -1120,7 +1116,7 @@ function processState(state) {
   if (isInit) {
     globalStates[id] = {};
   }
-  
+
   // если маркер двигался давно, делаем его стоящим
   const isOldMovingData =
     Date.now() + serverTimestampShift - lastSeen > movingLivenessTimeout
@@ -1260,7 +1256,14 @@ function addOrReplaceMarker(
 
   var htmlMarker = null;
 
-  const content = getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth, isOldDataMarker);
+  const content = getHtmlForMarker(
+    id,
+    markerClass,
+    avaUrl,
+    acronym,
+    azimuth,
+    isOldDataMarker
+  );
   if (globalMarkers.hasOwnProperty(id)) {
     htmlMarker = globalMarkers[id];
   } else {
@@ -1302,7 +1305,14 @@ function getInvertRotateHtmlText(azimuth) {
   return azimuth !== null ? azimuth * -1 + "deg" : "0deg";
 }
 
-function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth, isOldDataMarker) {
+function getHtmlForMarker(
+  id,
+  markerClass,
+  avaUrl,
+  acronym,
+  azimuth,
+  isOldDataMarker
+) {
   var html = "";
 
   const backgroundImage = getBackgroundImageForAva(avaUrl);
@@ -1315,8 +1325,8 @@ function getHtmlForMarker(id, markerClass, avaUrl, acronym, azimuth, isOldDataMa
   const invertRotateText = getInvertRotateHtmlText(azimuth);
 
   const textClass = acronym != "" ? "ava-only-text" : "";
-  
-   if (markerClass === FIRE_MARKER_CONTAINER) {
+
+  if (markerClass === FIRE_MARKER_CONTAINER) {
     html = `
       <div id="marker-${id}" class="${FIRE_MARKER_CONTAINER}" style="transform: rotate(${rotateText});">
         <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 84px; height: 84px;" loop autoplay>
@@ -3122,6 +3132,7 @@ const getBase64StringFromDataURL = (dataURL) =>
 //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
 //startScenePort();
+
 
 
 
