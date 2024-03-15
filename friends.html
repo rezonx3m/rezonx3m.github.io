@@ -686,7 +686,6 @@ const getParamScene = urlParams.get("scene");
 const getParamSendBounds = urlParams.get("send_bounds");
 const getParamHideStatus = urlParams.get("hide_status");
 const getParamHidePromoQR = urlParams.get("hide_promo");
-const getParamShowHiddenMarkers = urlParams.get("show_hidden_markers");
 const getParamShowFriendsList = urlParams.get("show_friends_list");
 // включаем дебак для кодпена или по параметру
 const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
@@ -701,7 +700,7 @@ var ENABLE_CLUSTERS = false;
 var ENABLE_STICKERS = true;
 const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
 var OVERRIDED_ZOOM = null;
-const DROP_MARKERS_WITH_OLD_STATE = getParamShowHiddenMarkers !== "true";
+const DROP_MARKERS_WITH_OLD_STATE = !DEBUG;
 
 // маркера в кластерах (для быстрой чистки)
 var clusterMarkers = {};
