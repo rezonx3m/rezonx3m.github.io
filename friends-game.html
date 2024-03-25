@@ -978,6 +978,11 @@ const ENABLE_DEBUG_MARKERS =
   getParamDebugMarkers === "true";
 var debugMarkers = [];
 
+// костыль. если инит получен, а стикеры не прилетели — реконнект
+var IS_STICKERS_FETCHED_ON_CONNECT = false;
+var FORCE_RECONNECT_IF_NO_STICKERS = false;
+var ON_CONNECT_FUNCTION = () => {};
+
 const SUPER_USER_ID = "cd3f16bcdd5b4fc7a9bb02ba68e75536";
 var LAST_SUPER_USER_STICKERS = [];
 const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
@@ -1212,6 +1217,8 @@ function clearAll() {
 
   globalMarkers = {};
   globalStates = {};
+  IS_STICKERS_FETCHED_ON_CONNECT = false;
+
 }
 
 // инициализация соккета
@@ -1234,6 +1241,7 @@ function initSocket(id) {
       ws.send('{"type":"pingFromWebUi","payload":{}}');
     }, 1000);
     setConnectionState("connected");
+    ON_CONNECT_FUNCTION();
   };
 
   ws.onclose = function () {
@@ -1241,12 +1249,15 @@ function initSocket(id) {
     // стираем старый интервал
     clearInterval(connectTimerId);
     // шедулим новый интервал для реконнекта
-    reconnectTimerId = setInterval(() => {
-      if (needReconnect && ENABLE_AUTO_RECONNECT) {
-        setConnectionState("reconnecting");
-        globalWS = initSocket(id);
-      }
-    }, 5000);
+    if (needReconnect) {
+      setConnectionState("reconnecting");
+      reconnectTimerId = setInterval(() => {
+        if (ENABLE_AUTO_RECONNECT) {
+          setConnectionState("reconnecting");
+          globalWS = initSocket(id);
+        }
+      }, 3000);
+    }
   };
 
   ws.onerror = function (e) {
@@ -1271,6 +1282,12 @@ function processMessage(msg) {
         console.log("init", msg);
       }
       processInitState(msg.payload);
+
+      setTimeout(() => { 
+        if (FORCE_RECONNECT_IF_NO_STICKERS && IS_STICKERS_FETCHED_ON_CONNECT === false) {
+          globalWS.close();
+        }
+      }, 1000);
       break;
 
     case "friendState":
@@ -1286,6 +1303,7 @@ function processMessage(msg) {
       break;
 
     case "stickersInitialState":
+      IS_STICKERS_FETCHED_ON_CONNECT = true;
       if (ENABLE_MARK_STICKERS_AS_VIEWED) {
         msg.payload.friendStickersStates.forEach(
           (element) => {
@@ -2505,12 +2523,14 @@ function startScenePort() {
   ENABLE_CLUSTERS = false;
   ENABLE_STICKERS = true;
   ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
   document.getElementById("input-id").value = "port";
 
   
 
   SOCKET_PATH =
-    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
+    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true&channes=markers,stickers";
+  ON_CONNECT_FUNCTION = addPortBots;
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
@@ -3350,7 +3370,6 @@ const fadeOut = (el, timeout) => {
 
 function startGameBestTimeSticker() {
   BEST_LOG_LAST_STICKERS_TO_ME = true;
-
 
   // warmup
   document.getElementById("best-leader-board").style.display = "block";
