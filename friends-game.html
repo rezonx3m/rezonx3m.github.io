@@ -20,26 +20,16 @@
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
+  <link href="https://db.onlinewebfonts.com/c/2d130488c7306881cf236b40ea2a1020?family=SB+Sans+Display+Semibold" rel="stylesheet">
+  <link href="https://db.onlinewebfonts.com/c/b11e59642c941f222ac9b750f9024e46?family=SB+Sans+Display+Thin" rel="stylesheet">
+
+  
+
   <style>
 
     @font-face {
-      font-family: "SB Sans Display Semibold";
-      src: url("https://db.onlinewebfonts.com/t/2d130488c7306881cf236b40ea2a1020.eot");
-      src: url("https://db.onlinewebfonts.com/t/2d130488c7306881cf236b40ea2a1020.eot?#iefix")format("embedded-opentype"),
-      url("https://db.onlinewebfonts.com/t/2d130488c7306881cf236b40ea2a1020.woff2")format("woff2"),
-      url("https://db.onlinewebfonts.com/t/2d130488c7306881cf236b40ea2a1020.woff")format("woff"),
-      url("https://db.onlinewebfonts.com/t/2d130488c7306881cf236b40ea2a1020.ttf")format("truetype"),
-      url("https://db.onlinewebfonts.com/t/2d130488c7306881cf236b40ea2a1020.svg#SB Sans Display Semibold")format("svg");
-    }
-
-    @font-face {
-      font-family: "SB Sans Text Bold";
-      src: url("https://db.onlinewebfonts.com/t/83b12a31c07f085253263bbd591f5a18.eot");
-      src: url("https://db.onlinewebfonts.com/t/83b12a31c07f085253263bbd591f5a18.eot?#iefix")format("embedded-opentype"),
-      url("https://db.onlinewebfonts.com/t/83b12a31c07f085253263bbd591f5a18.woff2")format("woff2"),
-      url("https://db.onlinewebfonts.com/t/83b12a31c07f085253263bbd591f5a18.woff")format("woff"),
-      url("https://db.onlinewebfonts.com/t/83b12a31c07f085253263bbd591f5a18.ttf")format("truetype"),
-      url("https://db.onlinewebfonts.com/t/83b12a31c07f085253263bbd591f5a18.svg#SB Sans Text Bold")format("svg");
+      font-family: SB Sans Display Regular;
+      src: url("https://rezonx3m.github.io/friends/static/SBSansDisplay-Regular.otf") format("opentype");
     }
 
     html,
@@ -52,7 +42,7 @@
     }
 
     * {
-      font-family: SB Sans Display;
+      font-family: SB Sans Display Regular;
     }
 
     #main {
@@ -618,9 +608,10 @@
     }
 
     .best-leader-top-table {
+      font-family: "SB Sans Display Regular";
       padding-left : 21px;
       padding-top: 24px;
-      font-family: "SB Sans Display Semibold";
+      font-family: "Sans";
       text-align: left;
       border-spacing: 0px;
       font-size: 18px;
@@ -794,7 +785,7 @@
       right: 0;
       bottom: 0;
       left: 0;
-      background: conic-gradient(#299400 var(--angle, 0deg), transparent var(--angle, 0deg));
+      background: conic-gradient(#ffffff var(--angle, 0deg), transparent var(--angle, 0deg));
       clip-path: circle(50% at 50%);
 
     }
@@ -1319,8 +1310,16 @@ function processMessage(msg) {
         } else {
           processStickerToMe(msg.payload);
         }
+
+        if (ENABLE_MARK_STICKERS_AS_VIEWED) {
+          const friendId = msg.payload.senderId;
+          const offset = msg.payload.stickerRecord.offset;
+          sendStickersViewed(globalWS, friendId, offset);
+        }
       }
 
+      break;
+    case "stickersViewed": 
       break;
 
     default:
@@ -1920,7 +1919,7 @@ function sendBounds(ws) {
 function sendStickersViewed(ws, friendId, offset) {
   if (ws && ws.readyState == 1 && ENABLE_MARK_STICKERS_AS_VIEWED) {
     const message = {
-      type: "StickersViewed",
+      type: "stickersViewed",
       payload: {
         friendId: friendId,
         lastViewedStickerOffset: offset
@@ -1938,6 +1937,7 @@ function sendStickersViewed(ws, friendId, offset) {
 function processStickerToMe(payload) {
   const senderId = payload.senderId;
   const stickerId = payload.stickerRecord.sticker.stickerId;
+  const sendAt = payload.stickerRecord.sentAt
   const stickersCount = payload.stickerRecord.sticker.count;
   const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
   if (htmlMarker === null) {
@@ -1949,7 +1949,7 @@ function processStickerToMe(payload) {
     console.log(senderId, stickerId);
   }
 
-  logStickerByUser(senderId, stickerId);
+  logStickerByUser(senderId, stickerId, sendAt);
   setTimeout(function () {
     htmlMarker.destroy();
   }, 1000); // change time if changed animation css time
@@ -3150,7 +3150,7 @@ if (DEBUG) {
 // ------------------------------------ games ------------------------------- //
 
 
-function logStickerByUser(id, sticker) {
+function logStickerByUser(id, sticker, sendAt) {
 
   if (id == SUPER_USER_ID) {
     if (LAST_SUPER_USER_STICKERS.length >= 7) {
@@ -3190,9 +3190,9 @@ function logStickerByUser(id, sticker) {
 
     if (BEST_GAME_IN_PROGRESS && BEST_CURRENT_GAMERS.indexOf(id) !== -1) {
       if (BEST_GAME_CURRENT_STICKER == sticker) {
-        bestGameProcessCorrectSticker(id, sticker);
+        bestGameProcessCorrectSticker(id, sticker, sendAt);
       } else {
-        bestGameProcessIncorrectSticker(id);
+        // bestGameProcessIncorrectSticker(id);
       }
     }
     
@@ -3307,25 +3307,26 @@ function startGameFirstSendSticker() {
 var startBestTime = 0;
 const now = () => performance.now();
 
+
 function startBestTimer(duration) {
-  BEST_TIMER.style.display = "block";
-  var duration;
+  // BEST_TIMER.style.display = "block";
+  // var duration;
   
-  const update = () => {
-    const delta = now() - startBestTime;
-    const difference = duration - delta;
-    const percent = Math.max(0, Math.min(100, (difference / duration) * 100));
+  // const update = () => {
+  //   const delta = now() - startBestTime;
+  //   const difference = duration - delta;
+  //   const percent = Math.max(0, Math.min(100, (difference / duration) * 100));
     
-    BEST_TIMER.style.setProperty('--progress', percent);
+  //   BEST_TIMER.style.setProperty('--progress', percent);
     
-    if (difference > 0) {
-      requestAnimationFrame(update);
-    }
-  };
+  //   if (difference > 0) {
+  //     requestAnimationFrame(update);
+  //   }
+  // };
 
   startBestTime = now();
-  requestAnimationFrame(update);
-  setTimeout(() => {BEST_TIMER.style.display = "none"}, duration);
+  // requestAnimationFrame(update);
+  // setTimeout(() => {BEST_TIMER.style.display = "none"}, duration);
 };
 
 const fadeIn = (el, timeout) => {
@@ -3434,6 +3435,7 @@ function bestLaunchTimerBeforeStartGame() {
     startBestTimer(BEST_SHOW_RULES_TIMER);
     fadeIn(document.getElementById("best-game-rules"), 500)
     fadeIn(document.getElementById("best-current-game-players-list"), 500);
+    fadeOut(document.getElementById("best-game-launch-info"), 500);
     BEST_CURRENT_GAMERS_SCORES = {};
     BEST_CURRENT_GAMERS_SCORES_SUM = {};
     playerQR.seek("100%");
@@ -3442,7 +3444,6 @@ function bestLaunchTimerBeforeStartGame() {
     playerCongratsGreen.seek("100%");
     setTimeout(() => {
       fadeOut(document.getElementById("best-game-rules"), 500);
-      fadeOut(document.getElementById("best-game-launch-info"), 500);
       BEST_GAME_IN_PROGRESS = true;
       bestStartPushingStickersWithTimersAndCountResults();
     }, BEST_SHOW_RULES_TIMER);
@@ -3593,8 +3594,11 @@ function bestSetWinnerMarkerClassForId(id) {
   }
 }
 
-function bestGameProcessCorrectSticker(userId, sticker) {
-  const deltaTime = (now() - startBestTime) / 1000;
+function bestGameProcessCorrectSticker(userId, sticker, sendAt) {
+  //serverTimestampShift
+
+  const deltaTime = (now() - startBestTime - 500) / 1000;
+
   const floorDelta = Math.floor(deltaTime);
   const additionalScore = (3 - floorDelta) > 0 ? 3 - floorDelta : 0;
 
