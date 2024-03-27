@@ -971,6 +971,7 @@ const getParamHideStatus = urlParams.get("hide_status");
 const getParamHidePromoQR = urlParams.get("hide_promo");
 const getParamShowFriendsList = urlParams.get("show_friends_list");
 const getParamMarkStickersAsViewd = urlParams.get("mark_stickers_as_viewed");
+const getParamBestGameIgnorePlayerDistance = urlParams.get("best_game_ignore_player_distance");
 // включаем дебак для кодпена или по параметру
 const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
 const ENABLE_DEBUG_MARKERS =
@@ -1087,6 +1088,8 @@ var BEST_GAME_CURRENT_STICKER = null;
 var BEST_GAME_CURRENT_STICKER_MARKER = null;
 var BEST_GAME_CURRENT_ROUND = 0;
 var BEST_GAME_BEST_RESULT = 0;
+var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
+const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
 const BEST_GAME_TOTAL_ROUNDS = 20;
 const BEST_SHOW_RULES_TIMER = 15000;
 const BEST_SHOW_FINISH_IMAGE = 5000; 
@@ -1984,8 +1987,6 @@ function spawnEmoji(senderId, stickerId, stickersCount) {
   const senderMarker = globalMarkers[senderId];
   const senderLon = senderMarker.getCoordinates()[0];
   const senderLat = senderMarker.getCoordinates()[1];
-
-  const mapCenter = map.getCenter();
 
   if (!SUPPORTED_EMOJI.includes(stickerId)) {
     console.log("unsupported emoji", stickerId);
@@ -3192,8 +3193,27 @@ function logStickerByUser(id, sticker, sendAt) {
     }
   }
 
+  
+
+
   // игра на лучшее вресмя
   if (BEST_LOG_LAST_STICKERS_TO_ME) {
+
+    if (!BEST_GAME_IGNORE_PLAYER_DISTANCE) {
+      if (!globalMarkers.hasOwnProperty(id)) {
+        return;
+      }
+      const senderMarker = globalMarkers[id];
+      const senderLon = senderMarker.getCoordinates()[0];
+      const senderLat = senderMarker.getCoordinates()[1];
+      const center = map.getCenter();
+      const distance = getDistanceFromLatLonInKm(senderLat, senderLon, center[1], center[0]);
+      if (distance > BEST_GAME_MIN_DISTANCE_TO_START) {
+        return;
+      }
+
+    }
+
     if (sticker == "go") {
       if (BEST_GAME_STARTED === false) {
         BEST_GAME_STARTED = true;
