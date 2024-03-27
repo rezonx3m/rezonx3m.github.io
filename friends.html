@@ -2602,6 +2602,8 @@ function startScenePort() {
   //showScenePushButtonAnimation();
 }
 
+var PORT_BOTS_STARTED = false;
+
 function addPortBots() {
   const portBotId = "portbot";
   const portBotId1 = "portbot1";
@@ -2778,8 +2780,10 @@ function addPortBots() {
     [30.243852, 59.922862],
     [30.24402, 59.922863]
   ];
-
-  moveBot(bot1movements, true, 0, 5000);
+  if (PORT_BOTS_STARTED === false) {
+    moveBot(bot1movements, true, 0, 5000);
+    PORT_BOTS_STARTED = true;
+  }
 
   function moveBot(path, isForwardDirection, position, animationTime) {
     if (position == 0) {
