@@ -20,7 +20,18 @@
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
+  <link href="https://db.onlinewebfonts.com/c/2d130488c7306881cf236b40ea2a1020?family=SB+Sans+Display+Semibold" rel="stylesheet">
+  <link href="https://db.onlinewebfonts.com/c/b11e59642c941f222ac9b750f9024e46?family=SB+Sans+Display+Thin" rel="stylesheet">
+
+  
+
   <style>
+
+    @font-face {
+      font-family: SB Sans Display Regular;
+      src: url("https://rezonx3m.github.io/friends/static/SBSansDisplay-Regular.otf") format("opentype");
+    }
+
     html,
     body,
     #container {
@@ -31,7 +42,7 @@
     }
 
     * {
-      font-family: SB Sans Display;
+      font-family: SB Sans Display Regular;
     }
 
     #main {
@@ -574,6 +585,250 @@
       border: 3px solid;
       box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
     }
+
+
+    /* styles for best time game */
+
+    #best-leader-board {
+      min-width: 310px;
+      min-height: 110px;
+      position: absolute;
+      top: 34px;
+      left: 34px;
+      display: none;
+      border-radius: 20px;
+      background-color: white;
+    }
+
+    .best-leader-top-header {
+      font-family: "SB Sans Display Semibold";
+      padding-left: 21px;
+      padding-top: 17px;
+      font-size: 18px;
+    }
+
+    .best-leader-top-table {
+      font-family: "SB Sans Display Regular";
+      padding-left : 21px;
+      padding-top: 24px;
+      font-family: "Sans";
+      text-align: left;
+      border-spacing: 0px;
+      font-size: 18px;
+      padding-bottom: 10px;
+    }
+
+    .best-leader-table-first-column {
+      width: 44px;
+      text-align: left;
+    }
+
+    .best-leader-table-second-column {
+      width: 37px;
+      text-align: center;
+    }
+
+    .best-leader-table-third-column {
+      width: 172px;
+      text-align: left;
+    }
+
+    .winner-leader-board-ava-container {
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+      border-radius: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      background-size: cover;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .leader-board-ava-container {
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0px 0px 2px 2px rgba(38, 38, 38, 0.5);
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+      border-radius: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      background-size: cover;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .winner-fired-ava-container {
+      height: 48px;
+      width: 48px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      overflow: hidden;
+      position: absolute;
+      top: 24px;
+      left: 42px;
+      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    .winner-ava-container {
+      height: 48px;
+      width: 48px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    #best-game-launch-info {
+      width: 504px;
+      height: 184px;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translate(-50%, 0px);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-launch.png");
+    }
+
+    #best-game-rules {
+      width: 1024px;
+      height: 648px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-rules.png");
+    }
+
+    #best-game-new-winner {
+      width: 1405px;
+      height: 757px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-new-winner.png");
+    }
+
+    #best-game-lose {
+      width: 1000px;
+      height: 485px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-lose.png");
+    }
+
+    #best-game-need-wait {
+      width: 574px;
+      height: 184px;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translate(-50%, 0px);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-need-wait.png");
+    }
+
+    #best-current-game-players-list {
+      display: none;
+    }
+
+
+    .best-timer {
+      --progress: 100;
+      display: none;
+      position: fixed;
+      top: 120px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 150px;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.8;
+    }
+    
+    .best-timer-progress {
+      --angle: calc(3.6deg * var(--progress, 0));
+
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: conic-gradient(#ffffff var(--angle, 0deg), transparent var(--angle, 0deg));
+      clip-path: circle(50% at 50%);
+
+    }
+
+    .best-timer-text {
+      margin: 0;
+      font-size: 2.5em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      z-index: 1;
+      text-align: center;
+      padding-top: 50px;
+    }
+
+
+    .best-emoji-marker-sticker {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 50px;
+      height: 50px;
+      min-width: 50px;
+      min-height: 50px;
+      animation: emoji-scale 3s ease-in-out;
+      -webkit-animation: emoji-scale 3s ease-in-out;
+    }
+
+    .best-emoji-marker-sticker-shot {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+    }
+      
+    
+  
+}
+
+
+
   </style>
 </head>
 
@@ -673,6 +928,34 @@
     </div>
     <div id='friends-list'>
     </div>
+
+    <!-- best time game html -->
+    <div id="best-leader-board">
+      <div class = "best-leader-top-header">Рекорсдмен на карте Друзей</div>
+      <table class = "best-leader-top-table">
+        <tr>
+          <td class = "best-leader-table-first-column" id="best-leader-table-first-column">one</td>
+          <td class = "best-leader-table-second-column" id = "best-leader-table-second-column">two</td>
+          <td class = "best-leader-table-third-column" id = "best-leader-table-third-column">three</td>
+        </tr>
+      </table>
+      <div id="best-current-game-players-list">
+        <div class = "best-leader-top-header">Игроки текущего раунда</div>
+        <div id="best-current-game-players-table-container">
+          
+        </div>
+      </div>
+    </div>
+    <div id="best-game-launch-info"></div>
+    <div id="best-game-rules"></div>
+    <div id="best-game-new-winner"></div>
+    <div id="best-game-lose"></div>
+    <div id="best-game-need-wait"></div>
+
+    <div class="best-timer">
+      <div class="best-timer-progress"></div>
+      <p class="best-timer-text" id="best-timer-text"></p>
+    </div>
   </div>
 </body>
 
@@ -687,6 +970,8 @@ const getParamSendBounds = urlParams.get("send_bounds");
 const getParamHideStatus = urlParams.get("hide_status");
 const getParamHidePromoQR = urlParams.get("hide_promo");
 const getParamShowFriendsList = urlParams.get("show_friends_list");
+const getParamMarkStickersAsViewd = urlParams.get("mark_stickers_as_viewed");
+const getParamBestGameIgnorePlayerDistance = urlParams.get("best_game_ignore_player_distance");
 // включаем дебак для кодпена или по параметру
 const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
 const ENABLE_DEBUG_MARKERS =
@@ -694,10 +979,18 @@ const ENABLE_DEBUG_MARKERS =
   getParamDebugMarkers === "true";
 var debugMarkers = [];
 
+// костыль. если инит получен, а стикеры не прилетели — реконнект
+var IS_STICKERS_FETCHED_ON_CONNECT = false;
+var FORCE_RECONNECT_IF_NO_STICKERS = false;
+var ON_CONNECT_FUNCTION = () => {};
+
+const SUPER_USER_ID = "cd3f16bcdd5b4fc7a9bb02ba68e75536";
+var LAST_SUPER_USER_STICKERS = [];
 const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
 const ENABLE_AUTO_RECONNECT = true;
 var ENABLE_CLUSTERS = false;
 var ENABLE_STICKERS = true;
+var ENABLE_MARK_STICKERS_AS_VIEWED = false || getParamMarkStickersAsViewd == "true";
 const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
 var OVERRIDED_ZOOM = null;
 const DROP_MARKERS_WITH_OLD_STATE = !DEBUG;
@@ -763,21 +1056,48 @@ const playerCongratsGreen = document.getElementById(
 );
 
 // game params
-var LOG_LAST_STICKERS_TO_ME = false;
-var LAST_STICKERS_BY_USERS = {};
-var CURRENT_GAMERS = [];
-var CURRENT_GAMERS_SCORE = {};
-var SCORE_TO_WIN = 10; // @todo return 10
-var MAX_PLAYERS = 40;
-var MAX_ROUNDS = 30;
-var CURRENT_ROUND_NUM = 0;
-var gameTimerId = null;
-var allowAddNewPlayers = true;
-var gameStarted = false;
-var currentSticker = null;
-var currentRoundWinner = null;
-var gameFinished = false;
+
+// params for game who first send sticker
+
+var FIRST_LOG_LAST_STICKERS_TO_ME = false;
+var FIRST_LAST_STICKERS_BY_USERS = {};
+var FIRST_CURRENT_GAMERS = [];
+var FIRST_CURRENT_GAMERS_SCORE = {};
+var FIRST_SCORE_TO_WIN = 10; // @todo return 10
+var FIRST_MAX_PLAYERS = 40;
+var FIRST_MAX_ROUNDS = 30;
+var FIRST_CURRENT_ROUND_NUM = 0;
+var FIRST_GAME_TIMER_ID = null;
+var FIRST_ALLOW_ADD_NEW_PLAYERS = true;
+var FIRST_GAME_STARTED = false;
+var FIRST_CURRENT_STICKER = null;
+var FIRST_CURRENT_ROUTN_WINNER = null;
+var FIRST_GAME_FINISHED = false;
 //////////////////
+
+// params for game best time send sticker
+
+var BEST_LOG_LAST_STICKERS_TO_ME = false;
+var BEST_WINNER_ID = null;
+var BEST_CURRENT_GAMERS = [];
+var BEST_CURRENT_GAMERS_SCORES = {};
+var BEST_CURRENT_GAMERS_SCORES_SUM = {};
+var BEST_GAME_STARTED = false;
+var BEST_GAME_IN_PROGRESS = false;
+var BEST_GAME_CURRENT_STICKER = null;
+var BEST_GAME_CURRENT_STICKER_MARKER = null;
+var BEST_GAME_CURRENT_ROUND = 0;
+var BEST_GAME_BEST_RESULT = 0;
+var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
+const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
+const BEST_GAME_TOTAL_ROUNDS = 20;
+const BEST_SHOW_RULES_TIMER = 15000;
+const BEST_SHOW_FINISH_IMAGE = 5000; 
+const BEST_GAME_ONE_ROUND_DURATION = 3;
+const BEST_TIMER = document.querySelector('.best-timer');
+
+
+
 
 const map = new mapgl.Map("container", {
   center: [82.963483, 55.039882],
@@ -900,6 +1220,8 @@ function clearAll() {
 
   globalMarkers = {};
   globalStates = {};
+  IS_STICKERS_FETCHED_ON_CONNECT = false;
+
 }
 
 // инициализация соккета
@@ -919,9 +1241,10 @@ function initSocket(id) {
     needReconnect = true;
     // циклически отправляем пинг, чтобы брайзер понял, что коннект сдох на случай проблем
     connectTimerId = setInterval(() => {
-      ws.send('{"type":"ping-from-web-ui","payload":{}}');
+      ws.send('{"type":"pingFromWebUi","payload":{}}');
     }, 1000);
     setConnectionState("connected");
+    ON_CONNECT_FUNCTION();
   };
 
   ws.onclose = function () {
@@ -929,12 +1252,15 @@ function initSocket(id) {
     // стираем старый интервал
     clearInterval(connectTimerId);
     // шедулим новый интервал для реконнекта
-    reconnectTimerId = setInterval(() => {
-      if (needReconnect && ENABLE_AUTO_RECONNECT) {
-        setConnectionState("reconnecting");
-        globalWS = initSocket(id);
-      }
-    }, 5000);
+    if (needReconnect) {
+      setConnectionState("reconnecting");
+      reconnectTimerId = setInterval(() => {
+        if (ENABLE_AUTO_RECONNECT) {
+          setConnectionState("reconnecting");
+          globalWS = initSocket(id);
+        }
+      }, 1000);
+    }
   };
 
   ws.onerror = function (e) {
@@ -959,6 +1285,12 @@ function processMessage(msg) {
         console.log("init", msg);
       }
       processInitState(msg.payload);
+
+      setTimeout(() => { 
+        if (FORCE_RECONNECT_IF_NO_STICKERS && IS_STICKERS_FETCHED_ON_CONNECT === false) {
+          globalWS.close();
+        }
+      }, 1000);
       break;
 
     case "friendState":
@@ -974,6 +1306,16 @@ function processMessage(msg) {
       break;
 
     case "stickersInitialState":
+      IS_STICKERS_FETCHED_ON_CONNECT = true;
+      if (ENABLE_MARK_STICKERS_AS_VIEWED) {
+        msg.payload.friendStickersStates.forEach(
+          (element) => {
+            const friendId = element.friendId;
+            const offset = element.unviewedStickerRecords[element.unviewedStickerRecords.length - 1].offset;
+            sendStickersViewed(globalWS, friendId, offset);
+          }
+        );
+      }
       break;
 
     case "stickerReceived":
@@ -989,8 +1331,16 @@ function processMessage(msg) {
         } else {
           processStickerToMe(msg.payload);
         }
+
+        if (ENABLE_MARK_STICKERS_AS_VIEWED) {
+          const friendId = msg.payload.senderId;
+          const offset = msg.payload.stickerRecord.offset;
+          sendStickersViewed(globalWS, friendId, offset);
+        }
       }
 
+      break;
+    case "stickersViewed": 
       break;
 
     default:
@@ -1134,7 +1484,7 @@ function processState(state) {
     case !isInit && !isMoving: // кейсы, когда маркер останавливается
       if (globalStates[id]["state"] == STATE_STOPPED) {
         // маркер остался стоять, но теоретически могла прилететь новая позиция
-        moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
+        moveMarker(id, marker, lon, lat, BASE_ANIMATION_TIME);
       } else {
         // маркер был движущимся, а стал cтоящим, поэтому заменяем
         moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
@@ -1170,8 +1520,6 @@ function processState(state) {
         moveMarker(
           id,
           globalMarkers[id],
-          lastLon,
-          lastLat,
           lon,
           lat,
           animationTime
@@ -1179,7 +1527,7 @@ function processState(state) {
         globalStates[id]["state"] = STATE_MOVING;
       } else {
         rotateMarker(id, azimuth);
-        moveMarker(id, marker, lastLon, lastLat, lon, lat, animationTime);
+        moveMarker(id, marker, lon, lat, animationTime);
       }
       break;
     case isInit:
@@ -1204,6 +1552,11 @@ function processState(state) {
   globalStates[id]["lat"] = lat;
   globalStates[id]["azimuth"] = azimuth;
   globalStates[id]["lastUpdate"] = Date.now();
+
+  // кусок от победителя игры
+  if (BEST_WINNER_ID == id) {
+    setTimeout(() => { bestSetWinnerMarkerClassForId(id);} , 500); 
+  }
 
   clusteriseMarkers();
 }
@@ -1416,7 +1769,7 @@ function bearing(startLat, startLon, destLat, destLon) {
   return ((brng + 360) % 360) - 90;
 }
 
-function moveMarker(id, marker, prevLon, prevLat, nextLon, nextLat, time) {
+function moveMarker(id, marker, nextLon, nextLat, time) {
   if (DEBUG) {
     console.log("moveMarker", id);
   }
@@ -1428,7 +1781,6 @@ function moveMarker(id, marker, prevLon, prevLat, nextLon, nextLat, time) {
 
   const track = [
     { coordinates: [mapLon, mapLat], t: 0 },
-    // { coordinates: [prevLon, prevLat], t: 0.2 },
     { coordinates: [nextLon, nextLat], t: time }
   ];
 
@@ -1585,9 +1937,28 @@ function sendBounds(ws) {
   }
 }
 
+function sendStickersViewed(ws, friendId, offset) {
+  if (ws && ws.readyState == 1 && ENABLE_MARK_STICKERS_AS_VIEWED) {
+    const message = {
+      type: "stickersViewed",
+      payload: {
+        friendId: friendId,
+        lastViewedStickerOffset: offset
+      }
+    };
+
+    const jsonMessage = JSON.stringify(message);
+    ws.send(jsonMessage);
+    if (DEBUG) {
+      console.log("send StickersViewed", jsonMessage);
+    }
+  }
+}
+
 function processStickerToMe(payload) {
   const senderId = payload.senderId;
   const stickerId = payload.stickerRecord.sticker.stickerId;
+  const sendAt = payload.stickerRecord.sentAt
   const stickersCount = payload.stickerRecord.sticker.count;
   const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
   if (htmlMarker === null) {
@@ -1595,11 +1966,11 @@ function processStickerToMe(payload) {
     return;
   }
 
-  if (DEBUG && LOG_LAST_STICKERS_TO_ME) {
+  if (DEBUG && (FIRST_LOG_LAST_STICKERS_TO_ME || BEST_LOG_LAST_STICKERS_TO_ME)) {
     console.log(senderId, stickerId);
   }
 
-  logStickerByUser(senderId, stickerId);
+  logStickerByUser(senderId, stickerId, sendAt);
   setTimeout(function () {
     htmlMarker.destroy();
   }, 1000); // change time if changed animation css time
@@ -1617,19 +1988,23 @@ function spawnEmoji(senderId, stickerId, stickersCount) {
   const senderLon = senderMarker.getCoordinates()[0];
   const senderLat = senderMarker.getCoordinates()[1];
 
-  const mapCenter = map.getCenter();
-
   if (!SUPPORTED_EMOJI.includes(stickerId)) {
     console.log("unsupported emoji", stickerId);
     return;
   }
 
+  return createStickerMapMarker(stickerId, senderLon, senderLat);
+}
+
+function createStickerMapMarker(stickerId, startLon, startLat, emogiClass = "emoji-marker", addRotation = false) {
   const markerClass = "emogi-" + stickerId;
 
+  const html = addRotation ? `<div class="animate-rotating"><div class="${emogiClass} ${markerClass}"></div></div>` : `<div class="${emogiClass} ${markerClass}"></div>`;
+
   const htmlMarker = new mapgl.HtmlMarker(map, {
-    coordinates: [senderLon, senderLat],
+    coordinates: [startLon, startLat],
     interactive: DEBUG, // @todo false
-    html: `<div class="emoji-marker ${markerClass}"></div>`
+    html: html
   });
   htmlMarker.setAnchor([10, 16]);
   return htmlMarker;
@@ -1640,7 +2015,6 @@ function processStickerFromTo(payload) {
     console.log("sticker from to", payload);
   }
   const senderId = payload.senderId;
-  const recipientId = payload.recipientId;
   const stickerId = payload.stickerRecord.sticker.stickerId;
   const stickersCount = payload.stickerRecord.sticker.count;
   const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
@@ -1655,8 +2029,6 @@ function processStickerFromTo(payload) {
   moveMarker(
     null,
     htmlMarker,
-    coordinates[0],
-    coordinates[1],
     nextLon,
     nextLat,
     1
@@ -2151,10 +2523,15 @@ function startScenePort() {
 
   ENABLE_CLUSTERS = false;
   ENABLE_STICKERS = true;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
   document.getElementById("input-id").value = "port";
+
+  
+
   SOCKET_PATH =
-    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
-  connectButtonClick();
+    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true&channes=markers,stickers";
+    connectButtonClick();
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
 
@@ -2167,10 +2544,19 @@ function startScenePort() {
 
   //showScenePushButtonAnimation();
   setTimeout(addPortBots, 1000);
+  ON_CONNECT_FUNCTION = addPortBots;
+  setTimeout(startGameBestTimeSticker, 1500);
+  
 
   document.onkeypress = function (e) {
     e = e || window.event;
     switch (e.keyCode) {
+
+      case 48:
+        window.location.reload();;
+        break;
+
+
       case 49:
         perfTest();
         break;
@@ -2198,6 +2584,18 @@ function startScenePort() {
       case 55:
         PORT_FORCE_SEND_SHOW_STUB = true;
         break;
+
+      case 56:
+        processStickerToMe(testMessageStickerFromToMe2);
+        break;
+
+      case 57:
+        processStickerToMe(testMessageStickerFromToMe);
+        break;
+
+      
+
+        
     }
   };
 
@@ -2205,9 +2603,16 @@ function startScenePort() {
 }
 
 function addPortBots() {
+  const portBotId = "portbot";
   const portBotId1 = "portbot1";
   const portBotId2 = "portbot2";
   const portBotId3 = "portbot3";
+
+  const profilePort = {
+    id: portBotId,
+    name: "Севкабель Порт",
+    logo: "https://i2.photo.2gis.com/images/profile/30258560158804614_b42b.jpg"
+  };
 
   const profilePort1 = {
     id: portBotId1,
@@ -2225,6 +2630,28 @@ function addPortBots() {
     id: portBotId3,
     name: "Еще Фамилия",
     logo: "https://rezonx3m.github.io/friends/static/bot3.JPG"
+  };
+
+  const profileState = {
+    type: "friendState",
+    payload: {
+      id: portBotId,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 59.923999,
+        lon: 30.242194,
+        azimuth: 0,
+        speed: 0,
+        accuracy: 1
+      },
+      battery: {
+        level: 1
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
   };
 
   var profileState1 = {
@@ -2265,7 +2692,7 @@ function addPortBots() {
         level: 0.81
       },
       movement: {
-        status: "moving",
+        status: "stopped",
         stoppedAt: 1698728448409
       }
     }
@@ -2287,14 +2714,16 @@ function addPortBots() {
         level: 0.81
       },
       movement: {
-        status: "moving",
+        status: "stopped",
         stoppedAt: 1698728448409
       }
     }
   };
+  addProfile(profilePort, true);
   addProfile(profilePort1, true);
   addProfile(profilePort2, true);
   addProfile(profilePort3, true);
+  processMessage(profileState);
   processMessage(profileState1);
   processMessage(profileState2);
   processMessage(profileState3);
@@ -2360,6 +2789,7 @@ function addPortBots() {
     }
     // console.log("position", position);
     const nextPosition = path[position];
+
     profileState1.payload.location.lat = nextPosition[1];
     profileState1.payload.location.lon = nextPosition[0];
     profileState1.payload.lastSeen = Date.now() * 1000;
@@ -2376,28 +2806,30 @@ function showSceneNewFriendAnimation() {
   if (currentScene === "port") {
     portSendNewFriend();
 
-    const randomNumber = Math.floor(Math.random() * 3);
-    const isBusy = getPopupAnimationBusy();
-    if (!isBusy) {
-      switch (randomNumber) {
-        case 0:
-          playerCongratsBlue.seek(0);
-          playerCongratsBlue.play();
-          break;
-        case 1:
-          playerCongratsRed.seek(0);
-          playerCongratsRed.play();
-          break;
-        case 2:
-          playerCongratsGreen.seek(0);
-          playerCongratsGreen.play();
-          break;
+    if (!BEST_GAME_STARTED) {
+      const randomNumber = Math.floor(Math.random() * 3);
+      const isBusy = getPopupAnimationBusy();
+      if (!isBusy) {
+        switch (randomNumber) {
+          case 0:
+            playerCongratsBlue.seek(0);
+            playerCongratsBlue.play();
+            break;
+          case 1:
+            playerCongratsRed.seek(0);
+            playerCongratsRed.play();
+            break;
+          case 2:
+            playerCongratsGreen.seek(0);
+            playerCongratsGreen.play();
+            break;
+        }
+        setPopupAnimationBusy(true);
+        setPopupAnimationBusy(false, POPUP_CONGRATS_ANIMATION_TIME);
+        POPUP_CURRENT_ANIMATION = "congrats";
+      } else if (POPUP_CURRENT_ANIMATION !== "congrats") {
+        POPUP_NEXT_ANIMATION = "congrats";
       }
-      setPopupAnimationBusy(true);
-      setPopupAnimationBusy(false, POPUP_CONGRATS_ANIMATION_TIME);
-      POPUP_CURRENT_ANIMATION = "congrats";
-    } else if (POPUP_CURRENT_ANIMATION !== "congrats") {
-      POPUP_NEXT_ANIMATION = "congrats";
     }
   }
 }
@@ -2429,20 +2861,35 @@ function getPopupAnimationBusy() {
   return POPUP_ANIMATION_IS_BUSY;
 }
 
+var bestGameNeedWaitAlreadyBusy = false;
+
 function showScenePushButtonAnimation() {
   if (DEBUG) {
     console.log("push button");
   }
   if (currentScene === "port") {
     const isBusy = getPopupAnimationBusy();
-    if (!isBusy) {
-      setPopupAnimationBusy(true);
-      setPopupAnimationBusy(false, POPUP_QR_ANIMATION_TIME);
-      POPUP_CURRENT_ANIMATION = "qr";
 
-      // lottie version
-      playerQR.seek(0);
-      playerQR.play();
+    if (BEST_GAME_STARTED) {
+      fadeIn(document.getElementById("best-game-need-wait"), 500);
+      if (bestGameNeedWaitAlreadyBusy !== true) {
+        bestGameNeedWaitAlreadyBusy = true;
+        setTimeout(function() {
+          fadeOut(document.getElementById("best-game-need-wait"), 500);
+          bestGameNeedWaitAlreadyBusy = false;
+        }, 5000);
+      }
+    } else if (!isBusy) {
+      if (!BEST_GAME_STARTED) {
+        // lottie version
+        playerQR.seek(0);
+        playerQR.play();
+        setPopupAnimationBusy(true);
+        setPopupAnimationBusy(false, POPUP_QR_ANIMATION_TIME);
+        POPUP_CURRENT_ANIMATION = "qr";
+      } else {
+        
+      }
 
       // css version
       // let element = document.getElementById("popup-qr");
@@ -2548,6 +2995,26 @@ var testMessageStickerFromTo = {
   stickerRecord: {
     sticker: {
       stickerId: "fire",
+      count: 1
+    }
+  }
+};
+
+var testMessageStickerFromToMe = {
+  senderId: 'portbot1',
+  stickerRecord: {
+    sticker: {
+      stickerId: "go",
+      count: 1
+    }
+  }
+};
+
+var testMessageStickerFromToMe2 = {
+  senderId: 'portbot1',
+  stickerRecord: {
+    sticker: {
+      stickerId: "poop",
       count: 1
     }
   }
@@ -2703,8 +3170,164 @@ if (DEBUG) {
 
 // ------------------------------------ games ------------------------------- //
 
+
+function logStickerByUser(id, sticker, sendAt) {
+
+  if (id == SUPER_USER_ID) {
+    if (LAST_SUPER_USER_STICKERS.length >= 7) {
+        LAST_SUPER_USER_STICKERS.shift();
+    } 
+    LAST_SUPER_USER_STICKERS.push(sticker);
+
+    if (
+      LAST_SUPER_USER_STICKERS.length == 7 &&
+      LAST_SUPER_USER_STICKERS[0] == "poop" &&
+      LAST_SUPER_USER_STICKERS[1] == "poop" &&
+      LAST_SUPER_USER_STICKERS[2] == "poop" &&
+      LAST_SUPER_USER_STICKERS[3] == "go" &&
+      LAST_SUPER_USER_STICKERS[4] == "go" &&
+      LAST_SUPER_USER_STICKERS[5] == "go" &&
+      LAST_SUPER_USER_STICKERS[6] == "poop" 
+    ) {
+      window.location.reload();
+    }
+  }
+
+  
+
+
+  // игра на лучшее вресмя
+  if (BEST_LOG_LAST_STICKERS_TO_ME) {
+
+    if (!BEST_GAME_IGNORE_PLAYER_DISTANCE) {
+      if (!globalMarkers.hasOwnProperty(id)) {
+        return;
+      }
+      const senderMarker = globalMarkers[id];
+      const senderLon = senderMarker.getCoordinates()[0];
+      const senderLat = senderMarker.getCoordinates()[1];
+      const center = map.getCenter();
+      const distance = getDistanceFromLatLonInKm(senderLat, senderLon, center[1], center[0]);
+      if (distance > BEST_GAME_MIN_DISTANCE_TO_START) {
+        return;
+      }
+
+    }
+
+    if (sticker == "go") {
+      if (BEST_GAME_STARTED === false) {
+        BEST_GAME_STARTED = true;
+        bestLaunchTimerBeforeStartGame();
+      }
+
+      if (BEST_GAME_IN_PROGRESS == false && BEST_CURRENT_GAMERS.indexOf(id) === -1 && BEST_CURRENT_GAMERS.length <= 10) {
+        BEST_CURRENT_GAMERS.push(id);
+        BEST_CURRENT_GAMERS_SCORES[id] = {};
+        BEST_CURRENT_GAMERS_SCORES_SUM[id] = 0;
+        bestRerenderPlayersList();
+      }
+    }
+
+    if (BEST_GAME_IN_PROGRESS && BEST_CURRENT_GAMERS.indexOf(id) !== -1) {
+      if (BEST_GAME_CURRENT_STICKER == sticker) {
+        bestGameProcessCorrectSticker(id, sticker, sendAt);
+      } else {
+        // bestGameProcessIncorrectSticker(id);
+      }
+    }
+    
+    //BEST_GAME_CURRENT_STICKER
+
+  } else if (FIRST_ALLOW_ADD_NEW_PLAYERS) { // игра на большее количество первых
+    var hasNewGamer = false;
+    if (FIRST_LOG_LAST_STICKERS_TO_ME) {
+      if (!FIRST_LAST_STICKERS_BY_USERS.hasOwnProperty(id)) {
+        FIRST_LAST_STICKERS_BY_USERS[id] = [];
+      } else if (FIRST_LAST_STICKERS_BY_USERS[id].length >= 5) {
+        FIRST_LAST_STICKERS_BY_USERS[id].shift();
+      }
+      FIRST_LAST_STICKERS_BY_USERS[id].push(sticker);
+
+      if (DEBUG) {
+        console.log(FIRST_LAST_STICKERS_BY_USERS);
+      }
+
+      if (
+        FIRST_LAST_STICKERS_BY_USERS[id].length == 5 &&
+        FIRST_LAST_STICKERS_BY_USERS[id][0] == "fire" &&
+        FIRST_LAST_STICKERS_BY_USERS[id][1] == "poop" &&
+        FIRST_LAST_STICKERS_BY_USERS[id][2] == "greenheart" &&
+        FIRST_LAST_STICKERS_BY_USERS[id][3] == "greenheart" &&
+        FIRST_LAST_STICKERS_BY_USERS[id][4] == "snowball"
+      ) {
+        if (!FIRST_CURRENT_GAMERS.includes(id)) {
+          FIRST_CURRENT_GAMERS.push(id);
+          hasNewGamer = true;
+          FIRST_CURRENT_GAMERS_SCORE[id] = 0;
+        }
+      }
+
+      var tableContent = '<table class="gamers-table">';
+      if (FIRST_CURRENT_GAMERS.length > 0) {
+        const timerElement = document.querySelector(".timer");
+        timerElement.style.display = "flex";
+
+        tableContent += "<tr>";
+        for (var i = 0; i < FIRST_CURRENT_GAMERS.length; i++) {
+          var acronym = "";
+          const avaUrl = globalProfiles[FIRST_CURRENT_GAMERS[i]].logo;
+          const name = globalProfiles[FIRST_CURRENT_GAMERS[i]].name;
+          const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+          if (backgroundImage === null) {
+            acronym = getAcronymFromName(name);
+          }
+          if (i % 10 == 0 && i != 0) {
+            tableContent += "</tr>";
+            tableContent += '</table class="gamers-table">';
+            tableContent += '<table class="gamers-table">';
+          }
+          tableContent += "<td>";
+          tableContent += `<div class="gamer">
+                           <div class="gamer-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>
+                           <div class="gamer-score" id="gamer-score-${FIRST_CURRENT_GAMERS[i]}">0</div>
+                         <div>`;
+          tableContent += "</td>";
+        }
+        tableContent += "</tr>";
+      }
+
+      if (hasNewGamer) {
+        waitMoreGamers(FIRST_CURRENT_GAMERS.length);
+      }
+
+      tableContent += "</table>";
+      gameElement.innerHTML = tableContent;
+    }
+  } else if (FIRST_GAME_STARTED) {
+    if (
+      FIRST_CURRENT_GAMERS.includes(id) &&
+      sticker == FIRST_CURRENT_STICKER &&
+      FIRST_CURRENT_ROUTN_WINNER === null
+    ) {
+      FIRST_CURRENT_ROUTN_WINNER = id;
+      if (DEBUG) {
+        console.log("round winner", FIRST_CURRENT_ROUTN_WINNER);
+      }
+      FIRST_CURRENT_GAMERS_SCORE[id] = FIRST_CURRENT_GAMERS_SCORE[id] + 1;
+      const gamerScore = document.getElementById("gamer-score-" + id);
+      gamerScore.innerText = FIRST_CURRENT_GAMERS_SCORE[id];
+      if (FIRST_SCORE_TO_WIN == FIRST_CURRENT_GAMERS_SCORE[id]) {
+        finishGame(id);
+      }
+    }
+
+    // логика игры
+  }
+}
+
 function startGameFirstSendSticker() {
-  LOG_LAST_STICKERS_TO_ME = true;
+  FIRST_LOG_LAST_STICKERS_TO_ME = true;
   const friendName = "RND 2FEST";
   const gameContainer = document.getElementById("game-container");
   const intro = document.getElementById("game-first-send-intro");
@@ -2721,6 +3344,338 @@ function startGameFirstSendSticker() {
   gameContainer.style.display = "block";
 }
 
+var startBestTime = 0;
+const now = () => performance.now();
+
+
+function startBestTimer(duration) {
+  // BEST_TIMER.style.display = "block";
+  // var duration;
+  
+  // const update = () => {
+  //   const delta = now() - startBestTime;
+  //   const difference = duration - delta;
+  //   const percent = Math.max(0, Math.min(100, (difference / duration) * 100));
+    
+  //   BEST_TIMER.style.setProperty('--progress', percent);
+    
+  //   if (difference > 0) {
+  //     requestAnimationFrame(update);
+  //   }
+  // };
+
+  startBestTime = now();
+  // requestAnimationFrame(update);
+  // setTimeout(() => {BEST_TIMER.style.display = "none"}, duration);
+};
+
+const fadeIn = (el, timeout) => {
+  el.style.opacity = 0;
+  el.style.display = 'block';
+  el.style.transition = `opacity ${timeout}ms`;
+  setTimeout(() => {
+    el.style.opacity = 1;
+  }, 10);
+};
+
+const fadeOut = (el, timeout) => {
+  el.style.opacity = 1;
+  el.style.transition = `opacity ${timeout}ms`;
+  el.style.opacity = 0;
+
+  setTimeout(() => {
+    el.style.display = 'none';
+  }, timeout);
+};
+
+function startGameBestTimeSticker() {
+  BEST_LOG_LAST_STICKERS_TO_ME = true;
+
+  // warmup
+  document.getElementById("best-leader-board").style.display = "block";
+  document.getElementById("best-game-launch-info").style.display = "block";
+  document.getElementById("best-game-rules").style.display = "block";
+  document.getElementById("best-game-rules").style.opacity = "0";
+  document.getElementById("best-game-lose").style.display = "block";
+  document.getElementById("best-game-lose").style.opacity = "0";
+  document.getElementById("best-game-new-winner").style.display = "block";
+  document.getElementById("best-game-new-winner").style.opacity = "0";
+  document.getElementById("best-game-need-wait").style.display = "block";
+  document.getElementById("best-game-need-wait").style.opacity = "0";
+
+  setTimeout(function() {
+    document.getElementById("best-game-rules").style.display = "none";
+    document.getElementById("best-game-lose").style.display = "none";
+    document.getElementById("best-game-new-winner").style.display = "none";
+    document.getElementById("best-game-rules").style.opacity = "1";
+    document.getElementById("best-game-lose").style.opacity = "1";
+    document.getElementById("best-game-new-winner").style.opacity = "1";
+    document.getElementById("best-game-need-wait").style.display = "none";
+  document.getElementById("best-game-need-wait").style.opacity = "1";
+  }, 100);
+  bestSetNewLeader("portbot1", getRandom(10, 30)); // @todo restore to 10-30
+}
+
+function bestSetNewLeader(id, score) {
+  if (BEST_WINNER_ID != id) {
+    BEST_WINNER_ID = id;
+    bestSetWinnerMarkerClassForId(id); 
+  }
+
+  BEST_GAME_BEST_RESULT = score;
+
+  const name = globalProfiles[id].name;
+  const firstLeaderColumn = document.getElementById("best-leader-table-first-column");
+  const secondLeaderColumn = document.getElementById("best-leader-table-second-column");
+  const thirdLeaderColumn = document.getElementById("best-leader-table-third-column");
+  
+  firstLeaderColumn.innerHTML = bestGetFirstColumnById(id, true);
+  secondLeaderColumn.innerHTML = score; 
+  thirdLeaderColumn.innerHTML = `<div>${name}</div>`              
+}
+
+function getRandom(min, max, integer = true) {
+  return integer ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min) + min;
+}
+
+function bestGetFirstColumnById(id, isLeader = false) {
+  var acronym = "";
+  const avaUrl = globalProfiles[id].logo;
+
+  const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+  if (backgroundImage === null) {
+    acronym = getAcronymFromName(name);
+  }
+
+  const classAva = isLeader ? "winner-leader-board-ava-container" : "leader-board-ava-container";
+  return `<div class="friend"><div class="${classAva}" style="${backgroundImage}">${acronym}</div></div>`;
+
+}
+
+function bestRerenderPlayersList() {
+
+  var HTML = `<table class = "best-leader-top-table" id = "best-current-game-players-table">`;
+  for (i = 0; i < BEST_CURRENT_GAMERS.length; i++) {
+    const name = globalProfiles[BEST_CURRENT_GAMERS[i]].name
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(BEST_CURRENT_GAMERS[i])}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${BEST_CURRENT_GAMERS_SCORES_SUM[BEST_CURRENT_GAMERS[i]]}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${name}</td>`;
+    HTML += `</tr>`;
+  }
+  HTML += `</table>`;
+  document.getElementById("best-current-game-players-table-container").innerHTML = HTML;
+
+}
+
+
+function bestLaunchTimerBeforeStartGame() {
+    startBestTimer(BEST_SHOW_RULES_TIMER);
+    fadeIn(document.getElementById("best-game-rules"), 500)
+    fadeIn(document.getElementById("best-current-game-players-list"), 500);
+    fadeOut(document.getElementById("best-game-launch-info"), 500);
+    BEST_CURRENT_GAMERS_SCORES = {};
+    BEST_CURRENT_GAMERS_SCORES_SUM = {};
+    playerQR.seek("100%");
+    playerCongratsBlue.seek("100%");
+    playerCongratsRed.seek("100%");
+    playerCongratsGreen.seek("100%");
+    setTimeout(() => {
+      fadeOut(document.getElementById("best-game-rules"), 500);
+      BEST_GAME_IN_PROGRESS = true;
+      bestStartPushingStickersWithTimersAndCountResults();
+    }, BEST_SHOW_RULES_TIMER);
+}
+
+
+function bestStartPushingStickersWithTimersAndCountResults() {
+  bestSpawnRandomSticker();
+}
+
+function bestSpawnRandomSticker() {
+
+  const duration = BEST_GAME_ONE_ROUND_DURATION;
+  const randomSticker = getRandomSticker();
+  BEST_GAME_CURRENT_STICKER = randomSticker;
+  BEST_GAME_CURRENT_ROUND++;
+
+  const bounds = map.getBounds();
+  const center = map.getCenter();
+
+  const container = document.getElementById("container");
+  
+  const htmlMarker = createStickerMapMarker(randomSticker, center[0], center[1], "best-emoji-marker-sticker", true)
+
+  var randomPoint = null;
+  switch (getRandom(0,3)) {
+    case 0:
+      randomPoint = map.unproject([0, getRandom(0, container.clientHeight)]);
+      break;
+    case 1: 
+      randomPoint = map.unproject([container.clientWidth, getRandom(0, container.clientHeight)]);
+      break;
+    case 2: 
+      randomPoint = map.unproject([getRandom(0, container.clientWidth), 0]);
+      break;
+    case 3: 
+      randomPoint = map.unproject([getRandom(0, container.clientWidth), container.clientHeight]);
+      break;
+  }
+
+  moveMarker(
+    null,
+    htmlMarker,
+    randomPoint[0],
+    randomPoint[1],
+    duration
+  );
+
+  BEST_GAME_CURRENT_STICKER_MARKER = htmlMarker;
+
+  const firstPartText = BEST_GAME_CURRENT_ROUND < 10 && BEST_GAME_TOTAL_ROUNDS > 10 ? '&nbsp&nbsp' : '';
+
+  document.getElementById("best-timer-text").innerHTML = firstPartText + BEST_GAME_CURRENT_ROUND + ' / ' + BEST_GAME_TOTAL_ROUNDS;
+  startBestTimer(duration * 1000);
+
+  if (BEST_GAME_CURRENT_ROUND < BEST_GAME_TOTAL_ROUNDS) {
+    setTimeout(function () {
+      htmlMarker.destroy();
+      bestSpawnRandomSticker();
+    }, duration * 1000); // change time if changed animation css time
+  } else {
+    setTimeout(function () {
+      htmlMarker.destroy();
+      bestFinishGame();
+    }, duration * 1000); // change time if changed animation css time
+  }
+}
+
+function bestFinishGame() {
+  var maxResult = 0;
+  var currentWinner = null;
+  for (const userId in BEST_CURRENT_GAMERS_SCORES_SUM) {
+    if (BEST_CURRENT_GAMERS_SCORES_SUM[userId] > maxResult) {
+      currentWinner = userId;
+      maxResult = BEST_CURRENT_GAMERS_SCORES_SUM[userId];
+    }
+  }
+
+  if (maxResult >= BEST_GAME_BEST_RESULT) {
+    bestSetNewLeader(currentWinner, maxResult);
+    fadeIn(document.getElementById("best-game-new-winner"), 500);
+  } else {
+    fadeIn(document.getElementById("best-game-lose"), 500);
+  }
+
+
+  setTimeout(() => {
+    fadeOut(document.getElementById("best-game-new-winner"), 500);
+    fadeOut(document.getElementById("best-game-lose"), 500);
+    BEST_CURRENT_GAMERS = [];
+    BEST_CURRENT_GAMERS_SCORES = {};
+    BEST_CURRENT_GAMERS_SCORES_SUM = {};
+    BEST_GAME_STARTED = false;
+    BEST_GAME_IN_PROGRESS = false;
+    BEST_GAME_CURRENT_STICKER = null;
+    BEST_GAME_CURRENT_STICKER_MARKER = null;
+    BEST_GAME_CURRENT_ROUND = 0;
+    document.getElementById("best-timer-text").innerHTML = "";
+    fadeIn(document.getElementById("best-game-launch-info"), 500);
+    fadeOut(document.getElementById("best-current-game-players-list"), 500);
+  }, BEST_SHOW_FINISH_IMAGE);
+
+}
+
+
+function bestSetWinnerMarkerClassForId(id) {
+
+  const elemetsFiredWinners = document.getElementsByClassName("winner-fired-ava-container");
+  for (var i = 0; i < elemetsFiredWinners.length; i++) {
+    if (elemetsFiredWinners.item(i).classList.contains("winner-fired-ava-container")) {
+      elemetsFiredWinners.item(i).classList.add("fired-ava-container");
+      elemetsFiredWinners.item(i).classList.remove("winner-fired-ava-container");
+    }
+  }
+
+  const elemetsWinners = document.getElementsByClassName("winner-ava-container");
+  for (var i = 0; i < elemetsWinners.length; i++) {
+    if (elemetsWinners.item(i).classList.contains("winner-ava-container")) {
+      elemetsWinners.item(i).classList.add("ava-container");
+      elemetsWinners.item(i).classList.remove("winner-ava-container");
+    }
+  }
+
+  if (globalMarkers.hasOwnProperty(id)) {
+    const divMarker = document.getElementById("marker-" + id);
+    if (divMarker !== null) {
+      const markerFiredElement = divMarker.getElementsByClassName("fired-ava-container");
+      if (markerFiredElement.length > 0) {
+        if (markerFiredElement[0].classList.contains("fired-ava-container")) {
+          markerFiredElement[0].classList.add("winner-fired-ava-container");
+          markerFiredElement[0].classList.remove("fired-ava-container");
+        }
+      }
+
+      const markerAvaElement = divMarker.getElementsByClassName("ava-container");
+      if (markerAvaElement.length > 0) {
+        if (markerAvaElement[0].classList.contains("ava-container")) {
+          markerAvaElement[0].classList.add("winner-ava-container");
+          markerAvaElement[0].classList.remove("ava-container");
+        }
+      }    
+    } else {
+      if (DEBUG) {
+        console.log("bestSetWinnerMarkerClassForId. marker not found", id);
+        console.log(globalMarkers[id]);
+      }
+    }
+  }
+}
+
+function bestGameProcessCorrectSticker(userId, sticker, sendAt) {
+  //serverTimestampShift
+
+  const deltaTime = (now() - startBestTime - 500) / 1000;
+
+  const floorDelta = Math.floor(deltaTime);
+  const additionalScore = (3 - floorDelta) > 0 ? 3 - floorDelta : 0;
+
+  if (!BEST_CURRENT_GAMERS_SCORES[userId].hasOwnProperty(BEST_GAME_CURRENT_ROUND)) {
+    BEST_CURRENT_GAMERS_SCORES[userId][BEST_GAME_CURRENT_ROUND] = additionalScore;
+    BEST_CURRENT_GAMERS_SCORES_SUM[userId] += additionalScore;
+  } 
+
+  bestRerenderPlayersList();
+
+  const senderMarker = globalMarkers[userId];
+  const senderLon = senderMarker.getCoordinates()[0];
+  const senderLat = senderMarker.getCoordinates()[1];
+  const htmlMarker = createStickerMapMarker(sticker, senderLon, senderLat, "best-emoji-marker-sticker-shot")
+  const duration = 200;
+  moveMarker(
+    null,
+    htmlMarker,
+    BEST_GAME_CURRENT_STICKER_MARKER.getCoordinates()[0],
+    BEST_GAME_CURRENT_STICKER_MARKER.getCoordinates()[1],
+    duration / 1000
+  );
+
+  setTimeout(function () {
+      htmlMarker.destroy();
+  }, duration);
+}
+
+function bestGameProcessIncorrectSticker(userId) {
+  if (BEST_CURRENT_GAMERS_SCORES_SUM[userId] > 0) {
+    BEST_CURRENT_GAMERS_SCORES_SUM[userId] -= 1;
+    bestRerenderPlayersList();
+  }
+}
+
+
+//--------------------------------------------------------//
+
 const timerName = document.getElementById("timer__name");
 const gameElement = document.getElementById("game");
 const secondsDiv = document.querySelector(".timer__seconds");
@@ -2728,98 +3683,9 @@ const centerGameDiv = document.getElementById("game-center-screen");
 const centerSrickerDiv = document.getElementById("game-sticker-container");
 timerName.innerHTML = "Ожидаем игроков...";
 
-function logStickerByUser(id, sticker) {
-  if (allowAddNewPlayers) {
-    var hasNewGamer = false;
-    if (LOG_LAST_STICKERS_TO_ME) {
-      if (!LAST_STICKERS_BY_USERS.hasOwnProperty(id)) {
-        LAST_STICKERS_BY_USERS[id] = [];
-      } else if (LAST_STICKERS_BY_USERS[id].length >= 5) {
-        LAST_STICKERS_BY_USERS[id].shift();
-      }
-      LAST_STICKERS_BY_USERS[id].push(sticker);
-
-      if (DEBUG) {
-        console.log(LAST_STICKERS_BY_USERS);
-      }
-
-      if (
-        LAST_STICKERS_BY_USERS[id].length == 5 &&
-        LAST_STICKERS_BY_USERS[id][0] == "fire" &&
-        LAST_STICKERS_BY_USERS[id][1] == "poop" &&
-        LAST_STICKERS_BY_USERS[id][2] == "greenheart" &&
-        LAST_STICKERS_BY_USERS[id][3] == "greenheart" &&
-        LAST_STICKERS_BY_USERS[id][4] == "snowball"
-      ) {
-        if (!CURRENT_GAMERS.includes(id)) {
-          CURRENT_GAMERS.push(id);
-          hasNewGamer = true;
-          CURRENT_GAMERS_SCORE[id] = 0;
-        }
-      }
-
-      var tableContent = '<table class="gamers-table">';
-      if (CURRENT_GAMERS.length > 0) {
-        const timerElement = document.querySelector(".timer");
-        timerElement.style.display = "flex";
-
-        tableContent += "<tr>";
-        for (var i = 0; i < CURRENT_GAMERS.length; i++) {
-          var acronym = "";
-          const avaUrl = globalProfiles[CURRENT_GAMERS[i]].logo;
-          const name = globalProfiles[CURRENT_GAMERS[i]].name;
-          const backgroundImage = getBackgroundImageForAva(avaUrl);
-
-          if (backgroundImage === null) {
-            acronym = getAcronymFromName(name);
-          }
-          if (i % 10 == 0 && i != 0) {
-            tableContent += "</tr>";
-            tableContent += '</table class="gamers-table">';
-            tableContent += '<table class="gamers-table">';
-          }
-          tableContent += "<td>";
-          tableContent += `<div class="gamer">
-                           <div class="gamer-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>
-                           <div class="gamer-score" id="gamer-score-${CURRENT_GAMERS[i]}">0</div>
-                         <div>`;
-          tableContent += "</td>";
-        }
-        tableContent += "</tr>";
-      }
-
-      if (hasNewGamer) {
-        waitMoreGamers(CURRENT_GAMERS.length);
-      }
-
-      tableContent += "</table>";
-      gameElement.innerHTML = tableContent;
-    }
-  } else if (gameStarted) {
-    if (
-      CURRENT_GAMERS.includes(id) &&
-      sticker == currentSticker &&
-      currentRoundWinner === null
-    ) {
-      currentRoundWinner = id;
-      if (DEBUG) {
-        console.log("round winner", currentRoundWinner);
-      }
-      CURRENT_GAMERS_SCORE[id] = CURRENT_GAMERS_SCORE[id] + 1;
-      const gamerScore = document.getElementById("gamer-score-" + id);
-      gamerScore.innerText = CURRENT_GAMERS_SCORE[id];
-      if (SCORE_TO_WIN == CURRENT_GAMERS_SCORE[id]) {
-        finishGame(id);
-      }
-    }
-
-    // логика игры
-  }
-}
-
 function finishGame(winnerId) {
   centerSrickerDiv.innerHTML = `<div></div>`;
-  gameFinished = true;
+  FIRST_GAME_FINISHED = true;
 
   hideTimer();
   //setTimeout(restartGame, 10000); //@todo return after debug
@@ -2828,12 +3694,12 @@ function finishGame(winnerId) {
   var winners = [];
   if (!winnerId) {
     var maxScore = 0;
-    for (const id in CURRENT_GAMERS_SCORE) {
-      if (CURRENT_GAMERS_SCORE[id] == maxScore) {
+    for (const id in FIRST_CURRENT_GAMERS_SCORE) {
+      if (FIRST_CURRENT_GAMERS_SCORE[id] == maxScore) {
         winners.push(id);
-      } else if (CURRENT_GAMERS_SCORE[id] > maxScore) {
+      } else if (FIRST_CURRENT_GAMERS_SCORE[id] > maxScore) {
         winners = [];
-        maxScore = CURRENT_GAMERS_SCORE[id];
+        maxScore = FIRST_CURRENT_GAMERS_SCORE[id];
         winners.push(id);
       }
     }
@@ -2866,8 +3732,8 @@ function startTimer(seconds, callback) {
   if (DEBUG) {
     console.log("start timer with callback", seconds, callback);
   }
-  if (gameTimerId != null) {
-    clearInterval(gameTimerId);
+  if (FIRST_GAME_TIMER_ID != null) {
+    clearInterval(FIRST_GAME_TIMER_ID);
   }
   d1 = new Date();
   d2 = new Date(d1);
@@ -2875,7 +3741,7 @@ function startTimer(seconds, callback) {
   function countdownTimer() {
     const diff = d2 - new Date();
     if (diff <= 0) {
-      clearInterval(gameTimerId);
+      clearInterval(FIRST_GAME_TIMER_ID);
       if (typeof callback === "function") {
         callback();
       }
@@ -2887,7 +3753,7 @@ function startTimer(seconds, callback) {
 
   showTimer();
   //countdownTimer();
-  gameTimerId = setInterval(countdownTimer, 40); // 25fps
+  FIRST_GAME_TIMER_ID = setInterval(countdownTimer, 40); // 25fps
 }
 
 function showTimer() {
@@ -2899,7 +3765,7 @@ function hideTimer() {
 }
 
 function waitMoreGamers(currentCountGamers) {
-  if (CURRENT_GAMERS.length < MAX_PLAYERS) {
+  if (FIRST_CURRENT_GAMERS.length < FIRST_MAX_PLAYERS) {
     const seconds = currentCountGamers == 1 ? 60 : 15; //@todo 60 15
     startTimer(seconds, function () {
       return processFinishWaitMoreGamesTimer(currentCountGamers);
@@ -2910,7 +3776,7 @@ function waitMoreGamers(currentCountGamers) {
 }
 
 function processFinishWaitMoreGamesTimer(currentCountGamers) {
-  allowAddNewPlayers = false;
+  FIRST_ALLOW_ADD_NEW_PLAYERS = false;
   if (currentCountGamers <= (getParamDebugGame === "true" ? 0 : 1)) {
     timerName.innerHTML = "Недостаточно игроков, собираем игру заново!";
     hideTimer();
@@ -2921,23 +3787,23 @@ function processFinishWaitMoreGamesTimer(currentCountGamers) {
 }
 
 function startGame() {
-  gameStarted = true;
-  gameFinished = false;
+  FIRST_GAME_STARTED = true;
+  FIRST_GAME_FINISHED = false;
   timerName.innerHTML = "Готовы??? Кто-же первый отправит нужный стикер!?";
   startTimer(5, playRound);
 }
 
 function playRound() {
-  if (!gameFinished && gameStarted) {
-    if (CURRENT_ROUND_NUM < MAX_ROUNDS) {
-      CURRENT_ROUND_NUM = CURRENT_ROUND_NUM + 1;
-      currentRoundWinner = null;
-      currentSticker = getRandomSticker();
+  if (!FIRST_GAME_FINISHED && FIRST_GAME_STARTED) {
+    if (FIRST_CURRENT_ROUND_NUM < FIRST_MAX_ROUNDS) {
+      FIRST_CURRENT_ROUND_NUM = FIRST_CURRENT_ROUND_NUM + 1;
+      FIRST_CURRENT_ROUTN_WINNER = null;
+      FIRST_CURRENT_STICKER = getRandomSticker();
       timerName.innerHTML = "Лови его!"; // "рандомные тексты";
       if (DEBUG) {
-        console.log("round", currentSticker);
+        console.log("round", FIRST_CURRENT_STICKER);
       }
-      const emogiClass = "emogi-" + currentSticker;
+      const emogiClass = "emogi-" + FIRST_CURRENT_STICKER;
       centerSrickerDiv.innerHTML = `<div class="${emogiClass} game-center-screen-sticker"></div>`;
 
       centerGameDiv.style.marginLeft = getRandomLeftForSticker() + "px";
@@ -2956,18 +3822,18 @@ function restartGame() {
   if (DEBUG) {
     console.log("restart game");
   }
-  LAST_STICKERS_BY_USERS = {};
-  CURRENT_GAMERS = [];
-  CURRENT_GAMERS_SCORE = {};
+  FIRST_LAST_STICKERS_BY_USERS = {};
+  FIRST_CURRENT_GAMERS = [];
+  FIRST_CURRENT_GAMERS_SCORE = {};
   timerName.innerHTML = "Ожидаем игроков";
-  allowAddNewPlayers = true;
+  FIRST_ALLOW_ADD_NEW_PLAYERS = true;
   gameElement.innerHTML = "";
   hideTimer();
-  currentSticker = null;
-  currentRoundWinner = null;
-  gameFinished = false;
-  gameStarted = false;
-  CURRENT_ROUND_NUM = 0;
+  FIRST_CURRENT_STICKER = null;
+  FIRST_CURRENT_ROUTN_WINNER = null;
+  FIRST_GAME_FINISHED = false;
+  FIRST_GAME_STARTED = false;
+  FIRST_CURRENT_ROUND_NUM = 0;
   centerSrickerDiv.innerHTML = `<div></div>`;
 }
 
