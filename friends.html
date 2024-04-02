@@ -20,17 +20,19 @@
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
-  <link href="https://db.onlinewebfonts.com/c/2d130488c7306881cf236b40ea2a1020?family=SB+Sans+Display+Semibold" rel="stylesheet">
-  <link href="https://db.onlinewebfonts.com/c/b11e59642c941f222ac9b750f9024e46?family=SB+Sans+Display+Thin" rel="stylesheet">
-
-  
-
   <style>
 
     @font-face {
       font-family: SB Sans Display Regular;
       src: url("https://rezonx3m.github.io/friends/static/SBSansDisplay-Regular.otf") format("opentype");
     }
+
+    @font-face {
+      font-family: SB Sans Display Semibold;
+      src: url("https://rezonx3m.github.io/friends/static/SBSansDisplay-SemiBold.otf") format("opentype");
+    }
+
+    
 
     html,
     body,
@@ -1013,7 +1015,7 @@ var isConnected = false;
 
 // используем таймауты с бека или же свои
 // @todo сделать таймер по обновлению маркеров раз в минуту
-const ENABLE_TIMEOUTS_FROM_BACKEND = false;
+const ENABLE_TIMEOUTS_FROM_BACKEND = true;
 var movingLivenessTimeout = 120000;
 var stoppedLivenessTimeout = 1000 * 60 * 60 * 24;
 // поправка на серверное вренмя
@@ -1440,7 +1442,7 @@ function processState(state) {
   // первое вхождение на карту
   const isInit = !globalStates.hasOwnProperty(id);
 
-  const isOldDataMarker = Date.now() + serverTimestampShift - lastSeen > stoppedLivenessTimeout;
+  const isOldDataMarker = Date.now() - serverTimestampShift - lastSeen > stoppedLivenessTimeout;
   // дропаем "серые" (давно стоящие) маркера
   // @todo почему-то при дропе маркера стали пропадать вообще
   if (isOldDataMarker && DROP_MARKERS_WITH_OLD_STATE) {
@@ -1468,7 +1470,7 @@ function processState(state) {
 
   // если маркер двигался давно, делаем его стоящим
   const isOldMovingData =
-    Date.now() + serverTimestampShift - lastSeen > movingLivenessTimeout
+    Date.now() - serverTimestampShift - lastSeen > movingLivenessTimeout
       ? true
       : false;
   const isMoving =
@@ -4000,7 +4002,7 @@ const getBase64StringFromDataURL = (dataURL) =>
 
 //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
-//startScenePort();
+// startSceneZEM();
 
 
 
