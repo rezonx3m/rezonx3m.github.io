@@ -1457,9 +1457,13 @@ function processState(state) {
   const locationSpeed = state.location.hasOwnProperty("speed")
     ? state.location.speed
     : BASE_SPEED;
-  const animationTime = isInit
+  const tmpAnimationTime = isInit
     ? BASE_ANIMATION_TIME
     : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
+
+  // @todo рассчитывать время анимации на основе разцицы времен между точками
+  const animationTime = tmpAnimationTime > 25 ? 3 : tmpAnimationTime;
+
   const azimuth = isInit
     ? null
     : bearing(marker.getCoordinates()[1], marker.getCoordinates()[0], lat, lon);
@@ -2494,17 +2498,47 @@ switch (getParamScene) {
 function startScene2fest() {
   currentScene = "2fest";
   //OVERRIDED_ZOOM = 100;
-  map.setCenter([82.9145, 55.0295]);
+
+  map.setCenter([82.898612, 54.980413]);
   map.setZoom(17.5);
-  map.setPitch(50);
-  map.setRotation(-170.85);
+  map.setPitch(45.51);
+  map.setRotation(-43.33);
   document.getElementById("input-id").value = "2fest";
-  startGameFirstSendSticker();
+  document.getElementById("best-game-launch-info").style.backgroundImage = "url('https://rezonx3m.github.io/friends/static/best-game-launch-2fest.png')";
+  
+
   SOCKET_PATH =
     "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
+
+  ENABLE_CLUSTERS = false;
+  ENABLE_STICKERS = true;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+
+  setTimeout(startGameBestTimeSticker, 1500);
+  //startGameFirstSendSticker();
+  
+}
+
+function startSceneZEM() {
+  currentScene = "ZEM";
+  //OVERRIDED_ZOOM = 100;
+  map.setCenter([82.9145, 55.0295]);
+  //map.setZoom(17.5);
+  //map.setPitch(50);
+  //map.setRotation(-170.85);
+  document.getElementById("input-id").value = "ZEM";
+  //startGameFirstSendSticker();
+  SOCKET_PATH =
+    "wss://zem.rezon.webapi-dnd.os-n3.hw/api/1.2/user/ws?token=e3fb920baec613e73166f8c01b57b9de973536b5";
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+
 }
 
 function startScenePort() {
@@ -4002,7 +4036,7 @@ const getBase64StringFromDataURL = (dataURL) =>
 
 //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
-// startSceneZEM();
+//  startScene2fest();
 
 
 
