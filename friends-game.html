@@ -2503,12 +2503,17 @@ function startScene2fest() {
   map.setZoom(17.5);
   map.setPitch(45.51);
   map.setRotation(-43.33);
-  document.getElementById("input-id").value = "2fest";
+  //document.getElementById("input-id").value = "2fest";
   document.getElementById("best-game-launch-info").style.backgroundImage = "url('https://rezonx3m.github.io/friends/static/best-game-launch-2fest.png')";
+  
+
+  document.getElementById("input-id").value = "port";
+
   
 
   SOCKET_PATH =
     "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
+
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
