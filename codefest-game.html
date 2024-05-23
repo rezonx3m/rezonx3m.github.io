@@ -1163,8 +1163,8 @@ var BEST_GAME_CURRENT_ROUND = 0;
 var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
 const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
 const BEST_GAME_TOTAL_ROUNDS = 20; //20
-const BEST_SHOW_RULES_TIMER = 1500; //15000
-const BEST_SHOW_FINISH_IMAGE = 500; // 20000 @todo revert
+const BEST_SHOW_RULES_TIMER = 60000; //15000
+const BEST_SHOW_FINISH_IMAGE = 20000; // 20000 @todo revert
 const BEST_GAME_ONE_ROUND_DURATION = 3;
 const BEST_TIMER = document.querySelector('.best-timer');
 
@@ -3811,16 +3811,32 @@ function bestGetFirstColumnById(avaUrl, name, isLeader = false) {
 
 function bestRerenderCurrentPlayersList() {
 
-  var HTML = `<table class = "best-leader-top-table">`;
+  var objectsToSort = {};
   for (id in BEST_CURRENT_GAMERS) {
-    const name = BEST_CURRENT_GAMERS[id].name;
-    HTML += `<tr>`;
-    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(BEST_CURRENT_GAMERS[id].avaUrl, name)}</td>`;
-    HTML += `<td class = "best-leader-table-third-column">${name}</td>`;
-    HTML += `<td class = "best-leader-table-second-column">${BEST_CURRENT_GAMERS[id].scoresSum}</td>`;
-    HTML += `</tr>`;
+    objectsToSort[id] = BEST_CURRENT_GAMERS[id].scoresSum;
   }
+
+  let sortable = [];
+  for (var id in objectsToSort) {
+      sortable.push({id: id, score: objectsToSort[id]});
+  }
+
+  sortable.sort(function(a, b) {
+      return b.score - a.score;
+  });
+
+  var HTML = `<table class = "best-leader-top-table">`;
+
+  sortable.forEach((item) => {
+    const name = BEST_CURRENT_GAMERS[item.id].name;
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(BEST_CURRENT_GAMERS[item.id].avaUrl, name)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${name}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${BEST_CURRENT_GAMERS[item.id].scoresSum}</td>`;
+    HTML += `</tr>`;
+  });
   HTML += `</table>`;
+
   document.getElementById("best-current-game-players-table-container").innerHTML = HTML;
 
 }
