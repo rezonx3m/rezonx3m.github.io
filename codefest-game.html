@@ -1,0 +1,4457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD_march.js"></script>
+  <!-- <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD.js"></script> -->
+
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_green_HD.js"></script>
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_red_HD.js"></script>
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_blue_HD.js"></script>
+
+  <link rel="stylesheet" href="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.css">
+  <script defer src="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.js"></script>
+
+  <!-- <script src="https://unpkg.com/mapgl-snow"></script> -->
+  <script src="https://mapgl.2gis.com/api/js/v1"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://d-assets.2gis.ru/vendor.48c43c73384d52df9da5.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
+
+  
+
+
+<style>
+
+    @font-face {
+      font-family: SB Sans Display Regular;
+      src: url("https://rezonx3m.github.io/friends/static/SBSansDisplay-Regular.otf") format("opentype");
+    }
+
+    @font-face {
+      font-family: SB Sans Display Semibold;
+      src: url("https://rezonx3m.github.io/friends/static/SBSansDisplay-SemiBold.otf") format("opentype");
+    }
+
+    
+
+    html,
+    body,
+    #container {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    * {
+      font-family: SB Sans Display Regular;
+    }
+
+    #main {
+      padding: 0px;
+      height: 100%;
+    }
+
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+
+    #connect-button {
+      width: 100px;
+    }
+
+    #connect-status {
+      background-color: #ff8f8f;
+      width: 100px;
+    }
+
+    #connect-indi {
+      background-color: #ff8f8f;
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 10px;
+    }
+
+    #test-buttons {
+      display: none;
+    }
+
+    .test-buttons-line {
+      padding-top: 3px;
+    }
+
+    .ava {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      /* border-radius: 0px; */
+      background-size: cover;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .ava-only-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fired-ava-container {
+      height: 32px;
+      width: 32px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      overflow: hidden;
+      position: absolute;
+      top: 24px;
+      left: 42px;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    .ava-container {
+      height: 32px;
+      width: 32px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      box-shadow: 0px 0px 2px 2px rgba(38, 38, 38, 0.5);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    .cluster-ava-container {
+      height: 32px;
+      width: 32px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      box-shadow: 0px 0px 4px 4px rgba(235, 87, 22, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    .fire-marker-container {
+      transform-origin: 70% 50%;
+      transition-duration: 0.2s;
+      transition-property: transform;
+    }
+
+    @keyframes scale {
+      0% {
+        transform: scale(1);
+      }
+
+      5% {
+        transform: scale(1);
+      }
+
+      45% {
+        transform: scale(1.05);
+      }
+
+      55% {
+        transform: scale(1.05);
+      }
+
+      95% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .emoji-marker {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      min-height: 20px;
+      animation: emoji-scale 1s ease-in-out;
+      -webkit-animation: emoji-scale 1s ease-in-out;
+    }
+
+    @keyframes emoji-scale {
+      0% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+
+      70% {
+        transform: scale(5);
+        -webkit-transform: scale(5);
+      }
+
+      100% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+
+    .hidden-test-button {
+      display: none;
+    }
+
+    .emogi-fire {
+      background-image: url("https://cachizer1.2gis.com/common/8f10cf05-f9fd-467b-888b-ea9c38d48171.png?w=200&h=200");
+    }
+
+    .emogi-greenheart {
+      background-image: url("https://cachizer2.2gis.com/common/6085e54d-15f0-41c8-90c8-3257b2c1c03a.png?w=200&h=200");
+    }
+
+    .emogi-snowball {
+      background-image: url("https://cachizer1.2gis.com/common/07336686-7ecd-4f3d-afa8-925de33b6c62.png?w=200&h=200");
+    }
+
+    .emogi-poop {
+      background-image: url("https://cachizer2.2gis.com/common/ab98af20-0d27-4e4d-8555-82c0fa0fe8b8.png?w=200&h=200");
+    }
+
+    .emogi-wavinghand {
+      background-image: url("https://cachizer1.2gis.com/common/f3b8ac5d-1f67-44ff-b8c3-f6aceec3beb9.png?w=200&h=200");
+    }
+
+    .emogi-angry {
+      background-image: url("https://cachizer2.2gis.com/common/339d8ffa-735f-47c9-b557-5cf3a4f6abb1.png?w=200&h=200");
+    }
+
+    .emogi-eyes {
+      background-image: url("https://cachizer1.2gis.com/common/905959df-f128-4691-8686-dd9b11b9ce63.png?w=200&h=200");
+    }
+
+    .emogi-party {
+      background-image: url("https://cachizer3.2gis.com/common/7e392598-710c-4340-80cb-c0b3b47b6741.png?w=200&h=200");
+    }
+
+    .emogi-go {
+      background-image: url("https://cachizer3.2gis.com/common/466a8841-50d8-4b92-bea7-c280a693a25c.png?w=200&h=200");
+    }
+
+    .emogi-nav {
+      background-image: url("https://cachizer2.2gis.com/common/e213fd69-105d-441c-8fe9-426c42b39d7c.png?w=200&h=200");
+    }
+
+    .emogi-cupid {
+      background-image: url("https://cachizer1.2gis.com/common/f600e309-6d08-4ab9-a022-fc0857d6d5c1.png?w=200&h=200");
+    }
+
+    .emogi-lips {
+      background-image: url("https://cachizer3.2gis.com/common/64cb03c3-f4c9-44e8-a3b5-308785febde2.png?w=200&h=200");
+    }
+
+    .emogi-tulip {
+      background-image: url("https://cachizer1.2gis.com/common/2ffaef56-9f7d-4998-9505-2fa6a0db5a43.png?w=200&h=200");
+    }
+
+    .emogi-dyson {
+      background-image: url("https://cachizer3.2gis.com/common/a5fd7c24-0e53-4720-98a1-1120768dd4f8.png?w=200&h=200");
+    }
+
+    .emogi-koffee {
+      background-image: url("https://cachizer1.2gis.com/common/26cd2ec3-c16a-46fa-8c03-fc1a6162507f.png?w=200&h=200");
+    }
+
+    .emogi-hotdog {
+      background-image: url("https://cachizer3.2gis.com/achieves/8dc24faf-5f22-440b-b29e-4e3a5fc6a3d0.png?w=200&h=200");
+    }
+
+    .emogi-cake {
+      background-image: url("https://cachizer3.2gis.com/common/717d61dd-513c-46b4-aa42-7911cb01b7a1.png?w=200&h=200");
+    }
+
+    .emogi-kebab {
+      background-image: url("https://cachizer2.2gis.com/common/0d82a11e-9df7-44ee-abdf-713333564154.png?w=200&h=200");
+    }
+
+    /* fade in out */
+    /* todo удалить нахрен, так как теперь лотти /*
+.popup-qr-class {
+  display: none;
+  position: absolute;
+  top: 0px;
+  height: 100%;
+  left: 10%;
+  right: 10%;
+
+  background-image: url("https://rezonx3m.github.io/friends/static/QR.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  animation: popup-scale 32s ease-in-out infinite;
+}
+
+@keyframes popup-scale {
+  0% {
+    transform: scale(0);
+  }
+  2% {
+    transform: scale(1);
+  }
+  98% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+/* sliders */
+
+    .itcss_item_text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      width: 32px;
+      background-color: gray;
+    }
+
+    .itcss_item_ava {
+      height: 32px;
+      width: 32px;
+      background-size: cover;
+      background-color: gray;
+    }
+
+    .cluster-counter {
+      position: absolute;
+      left: 32px;
+      font-size: 10px;
+
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: cover;
+      background-color: gray;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 100px;
+      color: white;
+      overflow: hidden;
+      top: 26px;
+    }
+
+    .cluster-counter-small {
+      min-width: 12px;
+      min-height: 12px;
+    }
+
+    .cluster-counter-big {
+      min-width: 16px;
+      min-height: 16px;
+    }
+
+    #game-container {
+      width: 50%;
+      /* height: 90%; */
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      margin: 0 0 0 -25%;
+      text-align: center;
+      display: none;
+    }
+
+    #game-first-send-intro {
+      opacity: 1;
+      background-color: white;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 100px;
+      overflow: hidden;
+      top: 26px;
+      color: #262626;
+      overflow: hidden;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      border: 3px solid white;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    #game {
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    #game-fisrt-send {}
+
+    .global {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: auto;
+    }
+
+    .game-first-send-intro-emoji {
+      background-size: cover;
+      width: 20px;
+      height: 20px;
+      margin-bottom: -3px;
+      display: inline-block;
+    }
+
+    .gamer {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 30px;
+    }
+
+    .gamers-table {
+      margin: auto;
+      text-align: center;
+      border-collapse: collapse;
+    }
+
+    .gamer-score {
+      background-color: white;
+      font-weight: bold;
+      border: 1px solid;
+      border-radius: 50px;
+    }
+
+    .timer__items {
+      font-size: 20px;
+      width: 100%;
+      height: 100%;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .timer__item {
+      margin-left: 10px;
+      text-align: center;
+    }
+
+    .timer__item::before {
+      content: attr(data-title);
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      font-size: 14px;
+    }
+
+    .timer {
+      display: flex;
+      height: 48px;
+    }
+
+    .timer__seconds {
+      display: none;
+      background-color: white;
+      border-radius: 100px;
+      overflow: hidden;
+      color: #262626;
+      overflow: hidden;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      border: 3px solid white;
+      white-space: nowrap;
+      min-width: 22px;
+    }
+
+    .timer__name {
+      margin-left: 10px;
+      text-align: center;
+      background-color: white;
+      border-radius: 100px;
+      overflow: hidden;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      border: 3px solid white;
+      white-space: nowrap;
+      min-width: 22px;
+      font-weight: bold;
+      font-size: 16px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .winner {
+      margin-top: 20px;
+      text-align: center;
+      width: 300px;
+      height: 300px;
+      box-shadow: 0px 0px 16px 16px rgba(235, 87, 22, 0.8);
+      border-radius: 300px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 120px;
+      border: 10px solid;
+    }
+
+    #game-center-screen {
+      position: fixed;
+      /* or absolute */
+      width: 200px;
+      height: 200px;
+    }
+
+    .animate-rotating {
+      -webkit-animation: rotating 1s linear infinite;
+    }
+
+    .animate-scale {
+      -webkit-animation: sticker-game-scale 2s ease-in-out infinite;
+    }
+
+    @keyframes rotating {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .game-center-screen-sticker {
+      width: 200px;
+      height: 200px;
+    }
+
+    #input-follow-id {
+      display: none;
+    }
+
+    #input-follow-id-button {
+      display: none;
+    }
+
+    .gamer-ava {
+      border-radius: 200px;
+      border: 8px solid;
+      margin-left: -4px;
+    }
+
+    @keyframes sticker-game-scale {
+      0% {
+        transform: scale(0.5);
+      }
+
+      50% {
+        transform: scale(1.5);
+      }
+
+      100% {
+        transform: scale(0.5);
+      }
+    }
+
+    /* styles port */
+
+    #port-controls {
+      display: none;
+    }
+
+    #qr-promo {
+      display: none;
+    }
+
+    #img-garbage {
+      display: none;
+    }
+
+    .center-lottie-player {
+      position: absolute;
+      top: 50%;
+      padding: 10px;
+      margin: auto;
+      left: 10%;
+      right: 10%;
+      transform: translateY(-50%);
+    }
+
+    #friends-list {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+
+      overflow-y: auto;
+      max-height: 500px;
+      max-width: 350px;
+      width: 350px;
+      background: #eeeeee;
+    }
+
+    .friend {
+      width: 30px;
+      height: 30px;
+      margin-bottom: 12px;
+      margin-top: 7px;
+      margin-right: 10px;
+    }
+
+    .friends-table table,
+    tr,
+    td {
+      margin: auto;
+      text-align: center;
+      border-collapse: collapse;
+
+    }
+
+    .friend-ava {
+      border-radius: 200px;
+      border: 3px solid;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+    }
+
+
+    /* styles for best time game */
+
+    #best-leader-board {
+      min-width: 320px;
+      min-height: 110px;
+      position: absolute;
+      top: 34px;
+      left: 34px;
+      display: none;
+      border-radius: 20px;
+      background-color: white;
+      max-height: 95%;
+      overflow: auto;
+      overflow-y: hidden; 
+      overflow-x: hidden; 
+      opacity: 0.8;
+    }
+
+    .best-leader-top-header {
+      font-family: "SB Sans Display Semibold";
+      padding-left: 21px;
+      padding-top: 17px;
+      font-size: 18px;
+    }
+
+    .best-hr {
+      width: 89%;
+      margin: auto;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+
+    .best-leader-top-second-line {
+      font-family: "SB Sans Display Regular";
+      padding-left: 21px;
+      font-size: 14px;
+      color: #FE6125;
+    }
+
+    .best-leader-top-table {
+      font-family: "SB Sans Display Regular";
+      padding-left : 21px;
+      padding-top: 8px;
+      font-family: "Sans";
+      text-align: left;
+      border-spacing: 0px;
+      font-size: 18px;
+      padding-bottom: 10px;
+    }
+
+    .best-leader-table-first-column {
+      width: 52px;
+      text-align: left;
+    }
+
+    .best-leader-table-second-column {
+      width: 32px;
+      text-align: center;
+      font-family: SB Sans Display Semibold;
+    }
+
+    .best-leader-table-third-column {
+      width: 200px;
+      text-align: left;
+    }
+
+    .winner-leader-board-ava-container {
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+      border-radius: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      background-size: cover;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .leader-board-ava-container {
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0px 0px 2px 2px rgba(38, 38, 38, 0.5);
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+      border-radius: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      background-size: cover;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .winner-fired-ava-container {
+      height: 48px;
+      width: 48px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      overflow: hidden;
+      position: absolute;
+      top: 24px;
+      left: 42px;
+      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    .winner-ava-container {
+      height: 48px;
+      width: 48px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    #best-game-launch-info {
+      width: 504px;
+      height: 184px;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translate(-50%, 0px);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-launch.png");
+      opacity: 0.8;
+    }
+
+    #best-game-rules {
+      width: 1024px;
+      height: 648px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-rules.png");
+    }
+
+    #best-game-new-winner {
+      width: 1405px;
+      height: 757px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-new-winner.png");
+    }
+
+    #best-game-lose {
+      width: 1000px;
+      height: 485px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-lose.png");
+    }
+
+    #best-game-need-wait {
+      width: 574px;
+      height: 184px;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translate(-50%, 0px);
+      display: none;
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-need-wait.png");
+    }
+
+    #best-current-game-players-list {
+      display: none;
+    }
+
+
+    .best-timer {
+      --progress: 100;
+      display: none;
+      position: fixed;
+      top: 34px;
+      right: 34px;
+      
+      width: 150px;
+      height: 150px;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.8;
+    }
+    
+    .best-timer-progress {
+      --angle: calc(3.6deg * var(--progress, 0));
+
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: conic-gradient(#ffffff var(--angle, 0deg), transparent var(--angle, 0deg));
+      clip-path: circle(50% at 50%);
+
+    }
+
+    .best-timer-text {
+      margin: 0;
+      font-size: 2.5em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      z-index: 1;
+      text-align: center;
+      padding-top: 50px;
+    }
+
+
+    .best-emoji-marker-sticker {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 50px;
+      height: 50px;
+      min-width: 50px;
+      min-height: 50px;
+      animation: emoji-scale 3s ease-in-out;
+      -webkit-animation: emoji-scale 3s ease-in-out;
+    }
+
+    .best-emoji-marker-sticker-shot {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+    }
+      
+    
+  
+}
+
+
+
+  </style>
+</head>
+
+<body>
+  <div class="global">
+    <div id="main">
+      <div id="container"> </div>
+    </div>
+
+    <!--
+    <div id="popup-qr" class="popup-qr-class">
+    </div>
+-->
+    <div id="connect-indi"></div>
+    <div id="controls">
+      <div id="div-id">
+        <input id="input-id" size="10" placeholder="userid" />
+        <button id="connect-button" onClick="connectButtonClick();">connect</button>
+        <button disabled id="connect-status">disconnected</button>
+      </div>
+      <div class="test-buttons-line">
+        <div id="div-id-follow"> </div>
+        <input id="input-follow-id" size="10" placeholder="public-user-id" />
+
+        <button id="input-follow-id-button" onClick="mapToUser();">mapToUser</button>
+      </div>
+      <div id="test-buttons">
+        <div class="test-buttons-line">
+          <button onClick="testMove();">random move</button>
+          <button onClick="testRotate();">random rotate</button>
+          <button onClick="testRandomSticker();">send random sticker</button>
+          <button onClick="testChangeAva();">change ava</button>
+          <div class="test-buttons-line">
+            <button onClick="perfTest();">perf tests</button>
+          </div>
+          <div class="test-buttons-line">
+            <!-- <button onClick="startScene2fest();">2fest scene</button> -->
+            <button onClick="startScenePort();">port</button>
+          </div>
+        </div>
+      </div>
+      <div id="port-controls">
+        <div>
+          <input type="checkbox" id="port-send-ping" name="port-send-ping" checked />
+          <label for="port-send-ping">оптравлять пинг</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-container">
+      <div id="game-center-screen">
+        <div class="animate-rotating">
+
+          <div class="animate-scale">
+            <div id=game-sticker-container></div>
+          </div>
+        </div>
+      </div>
+      <div id="game-first-send-intro" onClick="restartGame()"></div>
+
+      <div id="game-first-send">
+      </div>
+      <div class="timer">
+        <div class="timer__items">
+          <div class="timer__item timer__name" id="timer__name"></div>
+          <div class="timer__item timer__seconds" id="timer__seconds"></div>
+        </div>
+      </div>
+
+      <div id="game">
+      </div>
+    </div>
+    <div id="qr-promo">
+      <div class="center-lottie-player">
+        <lottie-player id="lottie-player-qr" mode="normal" style="width: 100%"> </lottie-player>
+      </div>
+      <div class="center-lottie-player">
+        <lottie-player id="lottie-player-congrats-green" mode="normal" style="width: 100%"> </lottie-player>
+      </div>
+      <div class="center-lottie-player">
+        <lottie-player id="lottie-player-congrats-red" mode="normal" style="width: 100%"> </lottie-player>
+      </div>
+      <div class="center-lottie-player">
+        <lottie-player id="lottie-player-congrats-blue" mode="normal" style="width: 100%">
+        </lottie-player>
+      </div>
+    </div>
+    <div id="center-text-promo">
+    </div>
+    <div id='img-garbage'>
+      <div id='img-src'>
+        <img id='img-loader' />
+      </div>
+      <div id='img-crop-result'>
+        <canvas id="canvas" width=300 height=300></canvas>
+      </div>
+    </div>
+    <div id='friends-list'>
+    </div>
+
+    <!-- best time game html -->
+    <div id="best-leader-board">
+      <div id="best-current-game-players-previous-hour-leaders">
+        <div class = "best-leader-top-header">Лидеры предыдущего часа</div>
+        <div class = "best-leader-top-second-line">Приходи за призами</div>
+        <div id="best-current-game-players-previous-hour-leaders-container">
+        </div>
+      </div>
+      <div id="best-current-game-players-current-hour-leaders">
+        <hr class="best-hr">
+        <div class = "best-leader-top-header">Лидеры текущего часа</div>
+        <div id="best-current-game-players-current-hour-leaders-container">  
+        </div>
+      </div>
+      <div id="best-current-game-players-list">
+        <hr class="best-hr">
+        <div class = "best-leader-top-header">Лидеры текущего раунда</div>
+        <div id="best-current-game-players-table-container">  
+        </div>
+      </div>
+    </div>
+    <div id="best-game-launch-info"></div>
+    <div id="best-game-rules"></div>
+    <div id="best-game-new-winner"></div>
+    <div id="best-game-lose"></div>
+    <div id="best-game-need-wait"></div>
+
+    <div class="best-timer">
+      <div class="best-timer-progress"></div>
+      <p class="best-timer-text" id="best-timer-text"></p>
+    </div>
+  </div>
+</body>
+
+<script type="text/javascript">
+const urlParams = new URLSearchParams(window.location.search);
+const getParamDebugMarkers = urlParams.get("debug_markers");
+const getParamDebug = urlParams.get("debug");
+const getParamDebugGame = urlParams.get("debug_game");
+const getParamUserId = urlParams.get("user_id");
+const getParamScene = urlParams.get("scene");
+const getParamSendBounds = urlParams.get("send_bounds");
+const getParamHideStatus = urlParams.get("hide_status");
+const getParamHidePromoQR = urlParams.get("hide_promo");
+const getParamShowFriendsList = urlParams.get("show_friends_list");
+const getParamMarkStickersAsViewd = urlParams.get("mark_stickers_as_viewed");
+const getParamBestGameIgnorePlayerDistance = urlParams.get("best_game_ignore_player_distance");
+// включаем дебак для кодпена или по параметру
+const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
+const ENABLE_DEBUG_MARKERS =
+  (false && window.location.host == "cdpn.io") ||
+  getParamDebugMarkers === "true";
+var debugMarkers = [];
+
+// костыль. если инит получен, а стикеры не прилетели — реконнект
+var IS_STICKERS_FETCHED_ON_CONNECT = false;
+var FORCE_RECONNECT_IF_NO_STICKERS = false;
+var ON_CONNECT_FUNCTION = () => {};
+
+const SUPER_USER_ID = "cd3f16bcdd5b4fc7a9bb02ba68e75536";
+var LAST_SUPER_USER_STICKERS = [];
+const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
+const ENABLE_AUTO_RECONNECT = true;
+var ENABLE_CLUSTERS = false;
+var ENABLE_STICKERS = true;
+var ENABLE_STICKERS_TO_ME = true;
+var ENABLE_MARK_STICKERS_AS_VIEWED = false || getParamMarkStickersAsViewd == "true";
+const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
+var OVERRIDED_ZOOM = null;
+const DROP_MARKERS_WITH_OLD_STATE = !DEBUG;
+
+// маркера в кластерах (для быстрой чистки)
+var clusterMarkers = {};
+// идентификаторы юрезов в кластерах, для скрытия и восстановления основных маркеров @todo обощить с маркерами
+var idsUsersInClusters = {};
+
+var currentScene = null;
+
+// техническая переменная, в начале должна быть false
+var needReconnect = false;
+var reconnectTimerId = null;
+// таймер для пинг мессажа
+var connectTimerId = null;
+
+// техническая переменная, в начале должна быть true
+var isConnected = false;
+
+// используем таймауты с бека или же свои
+// @todo сделать таймер по обновлению маркеров раз в минуту
+const ENABLE_TIMEOUTS_FROM_BACKEND = true;
+var movingLivenessTimeout = 120000;
+var stoppedLivenessTimeout = 1000 * 60 * 60 * 24;
+// поправка на серверное вренмя
+var serverTimestampShift = 0;
+
+if (getParamHideStatus == "true") {
+  document.getElementById("connect-status").style.display = "none";
+}
+
+// список поддерживаемых эмодзи, при расширенни добавить css
+const SUPPORTED_EMOJI = [
+  "fire",
+  "greenheart",
+  "poop",
+  "wavinghand",
+  "angry",
+  "eyes",
+  "party",
+  "go",
+  "nav",
+  "cupid",
+  "lips",
+  "tulip",
+  "dyson",
+  "koffee",
+  "hotdog",
+  "cake",
+  "kebab"
+];
+
+// scenes params
+var POPUP_ANIMATION_IS_BUSY = false;
+var POPUP_NEXT_ANIMATION = null;
+var POPUP_CURRENT_ANIMATION = null;
+const POPUP_QR_ANIMATION_TIME = 22000;
+const POPUP_CONGRATS_ANIMATION_TIME = 7000;
+
+var PORT_FORCE_SEND_SHOW_STUB = false;
+
+const playerQR = document.getElementById("lottie-player-qr");
+const playerCongratsBlue = document.getElementById(
+  "lottie-player-congrats-blue"
+);
+const playerCongratsRed = document.getElementById("lottie-player-congrats-red");
+const playerCongratsGreen = document.getElementById(
+  "lottie-player-congrats-green"
+);
+
+// game params
+
+// params for game who first send sticker
+
+var FIRST_LOG_LAST_STICKERS_TO_ME = false;
+var FIRST_LAST_STICKERS_BY_USERS = {};
+var FIRST_CURRENT_GAMERS = [];
+var FIRST_CURRENT_GAMERS_SCORE = {};
+var FIRST_SCORE_TO_WIN = 10; // @todo return 10
+var FIRST_MAX_PLAYERS = 40;
+var FIRST_MAX_ROUNDS = 30;
+var FIRST_CURRENT_ROUND_NUM = 0;
+var FIRST_GAME_TIMER_ID = null;
+var FIRST_ALLOW_ADD_NEW_PLAYERS = true;
+var FIRST_GAME_STARTED = false;
+var FIRST_CURRENT_STICKER = null;
+var FIRST_CURRENT_ROUTN_WINNER = null;
+var FIRST_GAME_FINISHED = false;
+//////////////////
+
+// params for game best time send sticker
+
+var BEST_GAME_CURRENT_ID = null;
+var BEST_GAME_TIME_STARTED = null;
+var BEST_LOG_LAST_STICKERS_TO_ME = false;
+var BEST_WINNER_ID = null;
+var BEST_CURRENT_GAMERS = {};
+var BEST_GAME_STARTED = false;
+var BEST_GAME_IN_PROGRESS = false;
+var BEST_GAME_CURRENT_STICKER = null;
+var BEST_GAME_CURRENT_STICKER_MARKER = null;
+var BEST_GAME_CURRENT_ROUND = 0;
+var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
+const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
+const BEST_GAME_TOTAL_ROUNDS = 20; //20
+const BEST_SHOW_RULES_TIMER = 1500; //15000
+const BEST_SHOW_FINISH_IMAGE = 500; // 20000 @todo revert
+const BEST_GAME_ONE_ROUND_DURATION = 3;
+const BEST_TIMER = document.querySelector('.best-timer');
+
+
+
+
+const map = new mapgl.Map("container", {
+  center: [82.963483, 55.039882],
+  zoom: 12,
+  key: "2a5f353b-5172-411f-b1a2-8ea58b3f290c",
+  style: "b16cfd38-28d4-401c-a8a0-4942de84ce3a",
+  floorsEnabled: true,
+  minZoom: 2,
+  maxZoom: 20,
+  minPitch: 0,
+  maxPitch: 70,
+  lowZoomMaxPitch: 45,
+  zoomControl: false
+});
+
+map.on('floorplanshow', (e) => {
+    const length = e.floorLevels.length;
+    const { floorLevelIndex } = e.floorLevels[length - 1];
+    map.setFloorPlanLevel(e.floorPlanId, floorLevelIndex);
+});
+
+// фиксим рамер карты при ресайзе
+window.addEventListener("resize", () => map.invalidateSize());
+
+// глобальный стейт @todo обобщить
+var globalProfiles = {};
+var globalMarkers = {};
+var globalStates = {};
+
+var globalWS = null;
+// поправочный коэффциент на вращение карты, чтобы огонь и аватарки были правильно повернуты
+var globalMapRotation = 0;
+const maxDebugMarkersLenght = 1000;
+
+var SOCKET_PATH =
+  "wss://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/:id/ws?get-friends-stickers=true";
+
+const FIRE_MARKER_CONTAINER = "fire-marker-container";
+const BASIC_MARKER_CONTAINER = "basic-marker-container";
+const STATE_MOVING = "moving";
+const STATE_STOPPED = "stopped";
+
+const BASE_ANIMATION_TIME = 0.2;
+const BASE_SPEED = 1;
+
+if (DEBUG) {
+  hideVisibilityTestButtons(false);
+}
+
+if (getParamUserId !== null) {
+  document.getElementById("input-id").value = getParamUserId;
+  connectButtonClick();
+}
+
+// скрытие кнопок дле тестов
+function hideVisibilityTestButtons(hide) {
+  const button = document.getElementById("test-buttons");
+  if (hide) {
+    button.style.display = "none";
+  } else {
+    button.style.display = "block";
+  }
+}
+
+// управления контролами и статусом коннекта
+function setConnectionState(state) {
+  const button = document.getElementById("connect-button");
+  const status = document.getElementById("connect-status");
+  const indi = document.getElementById("connect-indi");
+  const input = document.getElementById("input-id");
+  status.innerText = state;
+  switch (state) {
+    case "connected":
+      status.style.backgroundColor = "#9cf19c";
+      indi.style.backgroundColor = "#9cf19c";
+      input.disabled = true;
+      button.innerText = "disconnect";
+      isConnected = true;
+      break;
+    case "reconnecting":
+      status.style.backgroundColor = "#fc8016";
+      indi.style.backgroundColor = "#fc8016";
+      isConnected = false;
+      break;
+    case "connecting":
+      status.style.backgroundColor = "#839bff";
+      indi.style.backgroundColor = "#839bff";
+      isConnected = false;
+      break;
+    case "disconnected":
+      status.style.backgroundColor = "#ff8f8f";
+      indi.style.backgroundColor = "#ff8f8f";
+      button.innerText = "connect";
+      input.disabled = false;
+      isConnected = false;
+      break;
+  }
+}
+
+// нажатие в кнопку коннекта
+function connectButtonClick() {
+  const userId = document.getElementById("input-id").value;
+  if (userId.length > 0) {
+    if (!isConnected) {
+      hideVisibilityTestButtons(true);
+      setConnectionState("connecting");
+      globalWS = initSocket(document.getElementById("input-id").value);
+    } else {
+      if (globalWS) {
+        needReconnect = false;
+        globalWS.close();
+      }
+      setConnectionState("disconnected");
+    }
+  }
+}
+
+// уничтожение всех данных
+function clearAll() {
+  globalProfiles = {};
+  for (const id in globalMarkers) {
+    removeMarker(id);
+  }
+
+  debugMarkers.forEach((element) => element.destroy());
+
+  globalMarkers = {};
+  globalStates = {};
+  IS_STICKERS_FETCHED_ON_CONNECT = false;
+
+}
+
+// инициализация соккета
+function initSocket(id) {
+  const wssUrlPattern = SOCKET_PATH;
+  const wssUrl = wssUrlPattern.replace(":id", id);
+  const ws = new WebSocket(wssUrl);
+
+  clearInterval(reconnectTimerId);
+
+  ws.onopen = function () {
+    // чистимся от греха подальше, так как в коннекте прилетит инит
+    clearAll();
+    // отправка баундов, чтобы слежение было во вьюпорте
+    sendBounds(ws);
+    // при открытие соккета сообщаем, что его нужно реконнектить
+    needReconnect = true;
+    // циклически отправляем пинг, чтобы брайзер понял, что коннект сдох на случай проблем
+    connectTimerId = setInterval(() => {
+      ws.send('{"type":"pingFromWebUi","payload":{}}');
+    }, 1000);
+    setConnectionState("connected");
+    ON_CONNECT_FUNCTION();
+  };
+
+  ws.onclose = function () {
+    console.log("ws closed");
+    // стираем старый интервал
+    clearInterval(connectTimerId);
+    // шедулим новый интервал для реконнекта
+    if (needReconnect) {
+      setConnectionState("reconnecting");
+      reconnectTimerId = setInterval(() => {
+        if (ENABLE_AUTO_RECONNECT) {
+          setConnectionState("reconnecting");
+          globalWS = initSocket(id);
+        }
+      }, 1000);
+    }
+  };
+
+  ws.onerror = function (e) {
+    console.log("ws error");
+    console.log(e);
+    ws.close();
+  };
+
+  ws.onmessage = function (msgevent) {
+    const msg = JSON.parse(msgevent.data);
+    processMessage(msg);
+  };
+
+  return ws;
+}
+
+// обработка входящих
+function processMessage(msg) {
+  switch (msg.type) {
+    case "initialState":
+      if (DEBUG) {
+        console.log("init", msg);
+      }
+      processInitState(msg.payload);
+
+      setTimeout(() => { 
+        if (FORCE_RECONNECT_IF_NO_STICKERS && IS_STICKERS_FETCHED_ON_CONNECT === false) {
+          globalWS.close();
+        }
+      }, 1000);
+      break;
+
+    case "friendState":
+      processState(msg.payload);
+      break;
+
+    case "friendRemoved":
+      removeProfile(msg.payload);
+      break;
+
+    case "profile":
+      addProfile(msg.payload);
+      break;
+
+    case "stickersInitialState":
+      IS_STICKERS_FETCHED_ON_CONNECT = true;
+      if (ENABLE_MARK_STICKERS_AS_VIEWED) {
+        msg.payload.friendStickersStates.forEach(
+          (element) => {
+            const friendId = element.friendId;
+            const offset = element.unviewedStickerRecords[element.unviewedStickerRecords.length - 1].offset;
+            sendStickersViewed(globalWS, friendId, offset);
+          }
+        );
+      }
+      break;
+
+    case "stickerReceived":
+      if (ENABLE_STICKERS) {
+        if (DEBUG) {
+          console.log("new sticker message", msg.payload);
+        }
+        if (
+          msg.payload.hasOwnProperty("recipientId") &&
+          msg.payload.recipientId !== null
+        ) {
+          processStickerFromTo(msg.payload);
+        } else {
+          processStickerToMe(msg.payload);
+        }
+
+        if (ENABLE_MARK_STICKERS_AS_VIEWED) {
+          const friendId = msg.payload.senderId;
+          const offset = msg.payload.stickerRecord.offset;
+          sendStickersViewed(globalWS, friendId, offset);
+        }
+      }
+
+      break;
+    case "stickersViewed": 
+      break;
+
+    default:
+      console.log("unsupported type", msg.type, msg.payload);
+      break;
+  }
+}
+
+function processInitState(payload) {
+  if (DEBUG) {
+    console.log("markerSettings", payload.markerSettings);
+  }
+  if (ENABLE_TIMEOUTS_FROM_BACKEND) {
+    movingLivenessTimeout = payload.markerSettings.movingLivenessTimeout;
+    stoppedLivenessTimeout = payload.markerSettings.stoppedLivenessTimeout;
+  }
+  // поправка на серверное время
+  serverTimestampShift = Date.now() - payload.serverTime;
+  payload.profiles.forEach((profile) => {
+    addProfile(profile, true);
+  });
+  payload.states.forEach((state) => {
+    processState(state);
+  });
+}
+
+function addProfile(profile, isInit = false) {
+  const isItChange = globalProfiles.hasOwnProperty(profile.id);
+  const key = profile.id;
+  globalProfiles[key] = profile;
+  if (DEBUG) {
+    console.log("addProfile", key, profile);
+  }
+  if (isItChange) {
+    refreshAvaInMarker(profile.id);
+    clusteriseMarkers(true);
+  } else if (!isInit) {
+    showSceneNewFriendAnimation();
+  }
+
+  if (getParamShowFriendsList === "true" || DEBUG) {
+    refreshFriendsList();
+  }
+}
+
+function refreshFriendsList() {
+  const friendsListDiv = document.getElementById("friends-list");
+  var tableContent = '<table class="friends-table">';
+  for (const id in globalProfiles) {
+    var acronym = "";
+    const avaUrl = globalProfiles[id].logo;
+    const name = globalProfiles[id].name;
+    const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+    if (backgroundImage === null) {
+      acronym = getAcronymFromName(name);
+    }
+    tableContent += "<tr>";
+    tableContent += "<td>";
+    tableContent += `<div class="friend">
+                           <div class="friend-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>`;
+    tableContent += "</td>";
+    tableContent += `<td>${id}<br/>${globalProfiles[id].name}</td>`;
+    tableContent += "</td>";
+    tableContent += "</tr>";
+  }
+  tableContent += "</table>";
+  friendsListDiv.innerHTML = tableContent;
+}
+
+function removeProfile(id) {
+  delete globalProfiles[id];
+  removeMarker(id);
+  delete globalStates[id];
+}
+
+function removeMarker(id) {
+  if (globalMarkers.hasOwnProperty(id)) {
+    if (DEBUG) {
+      console.log("removeMarker", id);
+    }
+    globalMarkers[id].destroy();
+    delete globalMarkers[id];
+  }
+}
+
+function processState(state) {
+  const id = state.id;
+
+  if (DEBUG) {
+    console.log("processState", id, state);
+  }
+
+  const lastSeen = state.lastSeen;
+  const lon = state.location.lon;
+  const lat = state.location.lat;
+  // первое вхождение на карту
+  const isInit = !globalStates.hasOwnProperty(id);
+
+  const isOldDataMarker = Date.now() - serverTimestampShift - lastSeen > stoppedLivenessTimeout;
+  // дропаем "серые" (давно стоящие) маркера
+  // @todo почему-то при дропе маркера стали пропадать вообще
+  if (isOldDataMarker && DROP_MARKERS_WITH_OLD_STATE) {
+    hideMarker(id); // обратно раскрываются в moveMarker и в декластеризации
+    return;
+  }
+
+  const marker = isInit ? null : globalMarkers[id];
+  const lastLon = isInit ? null : globalStates[id]["lon"];
+  const lastLat = isInit ? null : globalStates[id]["lat"];
+  const lastLastSeen = isInit ? null : globalStates[id]["lastSeen"];
+
+  const animationTimeByDiffSeenTime =  isInit
+    ? BASE_ANIMATION_TIME :(lastSeen - lastLastSeen) / 1000;
+
+  var animationTime = BASE_ANIMATION_TIME;
+  if (animationTimeByDiffSeenTime >= 0 && animationTimeByDiffSeenTime < 25) {
+    animationTime = animationTimeByDiffSeenTime
+  } else {
+    const locationSpeed = state.location.hasOwnProperty("speed")
+    ? state.location.speed
+    : BASE_SPEED;
+
+    const tmpAnimationTime = isInit
+      ? BASE_ANIMATION_TIME
+      : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
+
+    if (tmpAnimationTime >= 0 && tmpAnimationTime < 25) {
+      animationTime = tmpAnimationTime
+    }
+  }
+
+
+  //console.log('animationTime', animationTime);
+
+  const azimuth = isInit
+    ? null
+    : bearing(marker.getCoordinates()[1], marker.getCoordinates()[0], lat, lon);
+
+  if (isInit) {
+    globalStates[id] = {};
+  }
+
+  // если маркер двигался давно, делаем его стоящим
+  const isOldMovingData =
+    Date.now() - serverTimestampShift - lastSeen > movingLivenessTimeout
+      ? true
+      : false;
+  const isMoving =
+    state.movement.status == STATE_MOVING && !isOldMovingData ? true : false;
+
+if (globalProfiles[id] === undefined) {
+  console.log('id not found', id)
+}
+
+  const avaUrl = globalProfiles[id].logo;
+  const name = globalProfiles[id].name;
+
+  // для дебага, чтобы проверить соответствуют ли маркера реальным позициям
+  addDebugMarker(lon, lat);
+
+  switch (true) {
+    case !isInit && !isMoving: // кейсы, когда маркер останавливается
+      if (globalStates[id]["state"] == STATE_STOPPED) {
+        // маркер остался стоять, но теоретически могла прилететь новая позиция
+        moveMarker(id, marker, lon, lat, BASE_ANIMATION_TIME);
+      } else {
+        // маркер был движущимся, а стал cтоящим, поэтому заменяем
+        moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
+        globalMarkers[id] = addOrReplaceMarker(
+          id,
+          lon,
+          lat,
+          isInit,
+          isMoving,
+          null,
+          avaUrl,
+          name
+        );
+        globalStates[id]["state"] = STATE_STOPPED;
+      }
+      break;
+    case !isInit && isMoving: // кейсы, когда маркер движется
+      if (globalStates[id]["state"] == STATE_STOPPED) {
+        // раньше стоял, начал двигаться, меняем маркер и стейт
+        // рисуем маркер сперва в предыдущей точке
+        globalMarkers[id] = addOrReplaceMarker(
+          id,
+          lastLon,
+          lastLat,
+          isInit,
+          isMoving,
+          azimuth,
+          avaUrl,
+          name,
+          isOldDataMarker
+        );
+
+        moveMarker(
+          id,
+          globalMarkers[id],
+          lon,
+          lat,
+          animationTime
+        );
+        globalStates[id]["state"] = STATE_MOVING;
+      } else {
+        rotateMarker(id, azimuth);
+        moveMarker(id, marker, lon, lat, animationTime);
+      }
+      break;
+    case isInit:
+      globalMarkers[id] = addOrReplaceMarker(
+        id,
+        lon,
+        lat,
+        isInit,
+        false,
+        null,
+        avaUrl,
+        name,
+        isOldDataMarker
+      );
+      globalStates[id]["state"] = STATE_STOPPED;
+      break;
+    default:
+      console("hbz case");
+  }
+
+  globalStates[id]["lon"] = lon;
+  globalStates[id]["lat"] = lat;
+  globalStates[id]["azimuth"] = azimuth;
+  globalStates[id]["lastUpdate"] = Date.now();
+  globalStates[id]["lastSeen"] = lastSeen;
+
+  // кусок от победителя игры
+  if (BEST_WINNER_ID == id) {
+    setTimeout(() => { bestSetWinnerMarkerClassForId(id);} , 500); 
+  }
+
+  clusteriseMarkers();
+}
+
+function stopOldMarkers() {
+  for (const id in globalStates) {
+    diffWithLastUpdate = Date.now() - globalStates[id]["lastUpdate"];
+    // тушим через минуту маркера, которые встали с огнём
+    if (
+      globalStates[id].state == STATE_MOVING &&
+      diffWithLastUpdate > 60 * 1000
+    ) {
+      const avaUrl = globalProfiles[id].logo;
+      const name = globalProfiles[id].name;
+      const acronym = getAcronymFromName(name);
+      globalMarkers[id].setContent(getHtmlForStaticMarker(id, avaUrl, acronym));
+      globalStates[id].state = STATE_STOPPED;
+      globalMarkers[id].setAnchor([18, 18]);
+    }
+  }
+  //alert('Привет');
+}
+
+setInterval(stopOldMarkers, 1000);
+
+function addOrReplaceMarker(
+  id,
+  lon,
+  lat,
+  isInit,
+  isMoving,
+  azimuth,
+  avaUrl,
+  name,
+  isOldDataMarker
+) {
+  if (DEBUG) {
+    console.log("addOrReplaceMarker", id);
+  }
+  // removeMarker(id);
+
+  const markerClass =
+    isMoving && !isInit // маркер из инита всегда рисуем стоячим
+      ? // Math.random() < 0.5 ?
+        FIRE_MARKER_CONTAINER
+      : BASIC_MARKER_CONTAINER;
+
+  const acronym = getAcronymFromName(name);
+
+  var htmlMarker = null;
+
+  const content = getHtmlForMarker(
+    id,
+    markerClass,
+    avaUrl,
+    acronym,
+    azimuth,
+    isOldDataMarker
+  );
+  if (globalMarkers.hasOwnProperty(id)) {
+    htmlMarker = globalMarkers[id];
+  } else {
+    htmlMarker = new mapgl.HtmlMarker(map, {
+      coordinates: [lon, lat],
+      interactive: DEBUG,
+      html: content
+    });
+    htmlMarker.id = id;
+  }
+
+  htmlMarker.setContent(content);
+
+  if (markerClass === FIRE_MARKER_CONTAINER) {
+    htmlMarker.setAnchor([58, 43]);
+  } else {
+    htmlMarker.setAnchor([18, 18]);
+  }
+
+  return htmlMarker;
+}
+
+function getBackgroundImageForAva(avaUrl, asStyle = true) {
+  return avaUrl !== null ? "background-image: url(" + avaUrl + ");" : null;
+}
+
+function getAcronymFromName(name) {
+  return name
+    .split(/\s/)
+    .reduce((response, word) => (response += word.slice(0, 1)), "")
+    .substr(0, 2);
+}
+
+function getRotateHtmlText(azimuth) {
+  return azimuth !== null ? azimuth + "deg" : "0deg";
+}
+
+function getInvertRotateHtmlText(azimuth) {
+  return azimuth !== null ? azimuth * -1 + "deg" : "0deg";
+}
+
+function getHtmlForMarker(
+  id,
+  markerClass,
+  avaUrl,
+  acronym,
+  azimuth,
+  isOldDataMarker
+) {
+  var html = "";
+
+  const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+  if (backgroundImage !== null) {
+    acronym = "";
+  }
+
+  const rotateText = getRotateHtmlText(azimuth);
+  const invertRotateText = getInvertRotateHtmlText(azimuth);
+
+  const textClass = acronym != "" ? "ava-only-text" : "";
+
+  if (markerClass === FIRE_MARKER_CONTAINER) {
+    html = `
+      <div id="marker-${id}" class="${FIRE_MARKER_CONTAINER}" style="transform: rotate(${rotateText});">
+        <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 84px; height: 84px;" loop autoplay>
+        </dotlottie-player>
+        <div class="fired-ava-container">
+          <div id="ava-${id}" style="${backgroundImage}; transform: rotate(${invertRotateText});" class="ava ${textClass}">
+            ${acronym}
+          </div>
+        </div>
+      </div>`;
+  } else {
+    html = getHtmlForStaticMarker(id, avaUrl, acronym, isOldDataMarker);
+  }
+  return html;
+}
+
+function getHtmlForStaticMarker(id, avaUrl, acronym, isOldDataMarker) {
+  const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+  if (backgroundImage !== null) {
+    acronym = "";
+  }
+
+  const textClass = acronym != "" ? "ava-only-text" : "";
+  const opacity = isOldDataMarker ? "opacity: 0.5; " : "";
+
+  let html = `<div id="marker-${id}" style="${opacity}">
+        <div class="ava-container">
+          <div id="ava-${id}" style="${backgroundImage};" class="ava ${textClass}">
+            ${acronym}
+          </div>
+        </div>
+      </div>`;
+
+  return html;
+}
+
+function refreshAvaInMarker(id) {
+  const div = document.getElementById("ava-" + id);
+  if (div !== null) {
+    var acronym = "";
+    const avaUrl = globalProfiles[id].logo;
+    const name = globalProfiles[id].name;
+    const backgroundImage = avaUrl !== null ? "url(" + avaUrl + ")" : null;
+
+    if (backgroundImage === null) {
+      acronym = getAcronymFromName(name);
+    }
+    div.innerText = acronym;
+    div.style.backgroundImage = backgroundImage;
+  }
+}
+
+function addDebugMarker(lon, lat) {
+  if (ENABLE_DEBUG_MARKERS) {
+    const debugMarker = new mapgl.Marker(map, {
+      coordinates: [lon, lat]
+    });
+    if (debugMarkers.length >= maxDebugMarkersLenght) {
+      const first = debugMarkers.shift();
+      first.destroy();
+    }
+    debugMarkers.push(debugMarker);
+  }
+}
+
+function toRadians(degrees) {
+  return (degrees * Math.PI) / 180;
+}
+
+// Converts from radians to degrees.
+function toDegrees(radians) {
+  return (radians * 180) / Math.PI;
+}
+
+function bearing(startLat, startLon, destLat, destLon) {
+  startLat = toRadians(startLat);
+  startLon = toRadians(startLon);
+  destLat = toRadians(destLat);
+  destLon = toRadians(destLon);
+
+  y = Math.sin(destLon - startLon) * Math.cos(destLat);
+  x =
+    Math.cos(startLat) * Math.sin(destLat) -
+    Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLon - startLon);
+  brng = Math.atan2(y, x);
+  brng = toDegrees(brng);
+  return ((brng + 360) % 360) - 90;
+}
+
+function moveMarker(id, marker, nextLon, nextLat, time) {
+  if (DEBUG) {
+    console.log("moveMarker", id);
+  }
+
+  showMarker(id);
+
+  const mapLon = marker.getCoordinates()[0];
+  const mapLat = marker.getCoordinates()[1];
+
+  const track = [
+    { coordinates: [mapLon, mapLat], t: 0 },
+    { coordinates: [nextLon, nextLat], t: time }
+  ];
+
+  // делаем анимацию для значимых движений
+  if (
+    Math.abs(mapLon - nextLon) > 0.00001 ||
+    Math.abs(mapLat - nextLat) > 0.00001
+  ) {
+    moveOn(track, marker, id);
+  }
+}
+
+function rotateMarker(id, azimuth) {
+  const fixedAzimuth = azimuth + globalMapRotation;
+  const avaElement = document.getElementById(`ava-${id}`);
+  const markerElement = document.getElementById(`marker-${id}`);
+  const invertAzimut = fixedAzimuth * -1;
+  if (markerElement !== null) {
+    markerElement.style.transform = `rotate(${fixedAzimuth}deg)`;
+  }
+  if (avaElement !== null) {
+    avaElement.style.transform = `rotate(${invertAzimut}deg)`;
+  }
+}
+
+async function moveOn(track, marker, userId) {
+  // current segment index
+  let i = 0;
+
+  // startup absolute time
+  const start = performance.now();
+
+  // segment points
+  let curr = track[i],
+    next = track[i + 1];
+
+  // сохраняем рандомный номер созданной анимации, чтобы не играть те, что не актуальны
+  const animationRandomNumber = Math.random();
+  if (userId) {
+    globalStates[userId]["animationRandomNumber"] = animationRandomNumber;
+  }
+
+  while (
+    next &&
+    (userId == null || 
+      (
+        globalStates.hasOwnProperty(userId) 
+        && 
+        globalStates[userId].hasOwnProperty("animationRandomNumber") 
+        && 
+        globalStates[userId]["animationRandomNumber"] == animationRandomNumber))
+  ) {
+    // time from start, ms
+    const dt = (performance.now() - start) / 1000;
+
+    // position in segment
+    const ratio = (dt - curr.t) / (next.t - curr.t);
+
+    if (isFinite(ratio)) {
+      // get current pos via lienar interpolation
+      const pos = lerp(curr.coordinates, next.coordinates, ratio);
+      if (pos[0] >= 180 || pos[0] <= -180 || pos[1] >= 90 || pos[1] <= -90) {
+        if (DEBUG) {
+          console.log("wrong track", track);
+          console.log("wrong pos", pos);
+          console.log("wrong ratio", ratio);
+        }
+      } else {
+        marker.setCoordinates(pos);
+        // wait next animation frame
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+    }
+
+    // iterate segments if needed
+    if (dt > next.t) {
+      i += 1;
+      curr = next;
+      next = track[i + 1];
+    }
+  }
+}
+
+function lerp(x, y, ratio) {
+  return [x[0] + (y[0] - x[0]) * ratio, x[1] + (y[1] - x[1]) * ratio];
+}
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the earth in km
+  const dLat = toRadians(lat2 - lat1); // deg2rad below
+  const dLon = toRadians(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c; // Distance in km
+  return d;
+}
+
+function calculateAnimationTime(lastLat, lastLon, lat, lon, speed) {
+  const distInMeters =
+    getDistanceFromLatLonInKm(lastLat, lastLon, lat, lon) * 1000;
+  const time = distInMeters / (speed > 0 ? speed : 0.1);
+  return time * 1.1; // костыль +10%
+}
+
+function reRotateMarkers() {
+  for (const id in globalStates) {
+    if (globalStates[id]["state"] == STATE_MOVING) {
+      rotateMarker(id, globalStates[id]["azimuth"]);
+    }
+  }
+}
+
+// при окончании вращения карты сохраняем поправочный коэффициент
+// шлем вьюпорт
+map.on("rotation", () => {
+  globalMapRotation = map.getRotation();
+  reRotateMarkers();
+});
+
+map.on("moveend", () => {
+  sendBounds(globalWS);
+  clusteriseMarkers(true);
+});
+
+map.on("move", () => {});
+
+function sendBounds(ws) {
+  if (ws && ws.readyState == 1 && ENABLE_SEND_BOUNDS) {
+    const bounds = map.getBounds();
+
+    const message = {
+      type: "viewportChanged",
+      payload: {
+        zoom:
+          OVERRIDED_ZOOM !== null ? OVERRIDED_ZOOM : Math.floor(map.getZoom()),
+        viewport: {
+          topLeft: {
+            lon: bounds.southWest[0],
+            lat: bounds.northEast[1]
+          },
+          bottomRight: {
+            lon: bounds.northEast[0],
+            lat: bounds.southWest[1]
+          }
+        }
+      }
+    };
+
+    const jsonMessage = JSON.stringify(message);
+    ws.send(jsonMessage);
+    if (DEBUG) {
+      console.log("send bounds", jsonMessage);
+    }
+  }
+}
+
+function sendStickersViewed(ws, friendId, offset) {
+  if (ws && ws.readyState == 1 && ENABLE_MARK_STICKERS_AS_VIEWED) {
+    const message = {
+      type: "stickersViewed",
+      payload: {
+        friendId: friendId,
+        lastViewedStickerOffset: offset
+      }
+    };
+
+    const jsonMessage = JSON.stringify(message);
+    ws.send(jsonMessage);
+    if (DEBUG) {
+      console.log("send StickersViewed", jsonMessage);
+    }
+  }
+}
+
+function processStickerToMe(payload) {
+  const senderId = payload.senderId;
+  const stickerId = payload.stickerRecord.sticker.stickerId;
+  const sendAt = payload.stickerRecord.sentAt
+  const stickersCount = payload.stickerRecord.sticker.count;
+
+  if (ENABLE_STICKERS_TO_ME) {
+    const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+    if (htmlMarker === null) {
+      console.log("can't find globalMarker for markerId", senderId);
+      return;
+    }
+
+    if (DEBUG && (FIRST_LOG_LAST_STICKERS_TO_ME || BEST_LOG_LAST_STICKERS_TO_ME)) {
+      console.log(senderId, stickerId);
+    }
+
+    
+    setTimeout(function () {
+      htmlMarker.destroy();
+    }, 1000); // change time if changed animation css time
+  }
+
+  logStickerByUser(senderId, stickerId, sendAt);
+}
+
+function spawnEmoji(senderId, stickerId, stickersCount) {
+  //  startCoordinates = globalStates
+  //const senderLon = globalStates[senderId]["lon"];
+  //const senderLat = globalStates[senderId]["lat"];
+
+  if (!globalMarkers.hasOwnProperty(senderId)) {
+    return null;
+  }
+  const senderMarker = globalMarkers[senderId];
+  const senderLon = senderMarker.getCoordinates()[0];
+  const senderLat = senderMarker.getCoordinates()[1];
+
+  if (!SUPPORTED_EMOJI.includes(stickerId)) {
+    console.log("unsupported emoji", stickerId);
+    return;
+  }
+
+  return createStickerMapMarker(stickerId, senderLon, senderLat);
+}
+
+function createStickerMapMarker(stickerId, startLon, startLat, emogiClass = "emoji-marker", addRotation = false) {
+  const markerClass = "emogi-" + stickerId;
+
+  const html = addRotation ? `<div class="animate-rotating"><div class="${emogiClass} ${markerClass}"></div></div>` : `<div class="${emogiClass} ${markerClass}"></div>`;
+
+  const htmlMarker = new mapgl.HtmlMarker(map, {
+    coordinates: [startLon, startLat],
+    interactive: DEBUG, // @todo false
+    html: html
+  });
+  htmlMarker.setAnchor([10, 16]);
+  return htmlMarker;
+}
+
+function processStickerFromTo(payload) {
+  if (DEBUG) {
+    console.log("sticker from to", payload);
+  }
+  const senderId = payload.senderId;
+  const stickerId = payload.stickerRecord.sticker.stickerId;
+  const stickersCount = payload.stickerRecord.sticker.count;
+  const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+  if (htmlMarker === null) {
+    console.log("can't find globalMarker for markerId", senderId);
+    return;
+  }
+  const coordinates = htmlMarker.getCoordinates();
+  const nextLon = globalStates[recipientId]["lon"];
+  const nextLat = globalStates[recipientId]["lat"];
+
+  moveMarker(
+    null,
+    htmlMarker,
+    nextLon,
+    nextLat,
+    1
+  );
+  setTimeout(function () {
+    htmlMarker.destroy();
+  }, 1000); // change time if changed animation css time
+}
+
+function clusteriseMarkers(forceRedraw = false) {
+  if (ENABLE_CLUSTERS) {
+    const bounds = map.getBounds();
+
+    const container = document.getElementById("container");
+    const countWidthSquare = Math.floor(
+      container.clientWidth / MIN_PIXEL_INTERSECTION_FOR_CLUSTER
+    );
+    const countHeigthSquare = Math.floor(
+      container.clientHeight / MIN_PIXEL_INTERSECTION_FOR_CLUSTER
+    );
+
+    const lonStep =
+      (bounds.northEast[0] - bounds.southWest[0]) / countWidthSquare;
+    const latStep =
+      (bounds.northEast[1] - bounds.southWest[1]) / countHeigthSquare;
+
+    var markersForClusters = [];
+
+    for (const id in globalMarkers) {
+      if (globalStates[id]["state"] == STATE_STOPPED) {
+        const markersCoordinates = globalMarkers[id].getCoordinates();
+        if (
+          bounds.northEast[0] > markersCoordinates[0] &&
+          bounds.southWest[0] < markersCoordinates[0] &&
+          bounds.northEast[1] > markersCoordinates[1] &&
+          bounds.southWest[1] < markersCoordinates[1]
+        ) {
+          markersForClusters.push(globalMarkers[id]);
+        }
+      }
+    }
+
+    // тупо взял тут https://ru.stackoverflow.com/questions/524772/%D0%9A%D0%B0%D0%BA%D0%BE%D0%B9-%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D1%83%D0%B5%D1%82-%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D0%B4%D0%BB%D1%8F-%D0%BE%D0%B1%D1%8A%D0%B5%D0%B4%D0%B8%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F-%D1%82%D0%BE%D1%87%D0%B5%D0%BA-%D0%B2-%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D0%B8
+    /* псевдокласс точки */
+
+    function Point(x, y, id) {
+      this._x = x;
+      this._y = y;
+      this._id = id;
+    }
+
+    Point.prototype.getX = function () {
+      return this._x;
+    };
+
+    Point.prototype.getY = function () {
+      return this._y;
+    };
+
+    Point.prototype.getId = function () {
+      return this._id;
+    };
+
+    /* расчеты */
+    var points = new Array(); // массив точек
+
+    for (const i in markersForClusters) {
+      const markerCoordinates = markersForClusters[i].getCoordinates();
+      points.push(
+        new Point(
+          markerCoordinates[0],
+          markerCoordinates[1],
+          markersForClusters[i].id
+        )
+      );
+    }
+
+    const mX = lonStep; // максимальное растояние по X
+    const mY = latStep; // максимальное растояние по Y
+
+    /* растояние между двумя точками */
+    function calcDistance(p1, p2) {
+      return Math.sqrt(
+        Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2)
+      );
+    }
+
+    /* условия объединения */
+    function isNear(p1, p2, mX, mY) {
+      return Math.abs(p1.getX() - p2.getX()) <= mX &&
+        Math.abs(p1.getY() - p2.getY()) <= mY
+        ? true
+        : false;
+    }
+
+    /* расчет матрицы расстояний */
+    function calcMasDistances(mas) {
+      var l = mas.length;
+      var r = [];
+      for (var i1 = 0; i1 < l; i1++) {
+        r[i1] = [];
+        for (var i2 = 0; i2 < l; i2++) {
+          if (i1 == i2) {
+            r[i1][i2] = 0;
+          } else if (i1 < i2) {
+            r[i1][i2] = calcDistance(mas[i1], mas[i2]);
+          } else {
+            r[i1][i2] = r[i2][i1];
+          }
+        }
+      }
+      return r;
+    }
+
+    /* смена элементов массива местами */
+    function swap(n1, n2, mas) {
+      var x;
+      x = mas[n1];
+      mas[n1] = mas[n2];
+      mas[n2] = x;
+      return mas;
+    }
+
+    /* расчет матрицы индексов близости */
+    function calcMasIndexes(mas) {
+      var l = mas.length;
+      var r = [];
+
+      var n = [];
+      for (var i = 0; i < l; i++) {
+        n[i] = i;
+      }
+
+      for (var i = 0; i < l; i++) {
+        var ns = n.slice();
+        var ds = mas[i].slice();
+
+        for (var i1 = 0; i1 < l - 1; i1++) {
+          for (var i2 = i1 + 1; i2 < l; i2++) {
+            if (ds[i1] > ds[i2]) {
+              ns = swap(i1, i2, ns);
+              ds = swap(i1, i2, ds);
+            }
+          }
+        }
+        r[i] = ns.slice();
+      }
+      return r;
+    }
+
+    /* существование элемента в массиве */
+    function exist(n, mas) {
+      for (var i = 0; i < mas.length; i++) {
+        if (n == mas[i]) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /* кластеризация */
+    function clastering(points, indexes, used, pn, cl) {
+      if (!used[pn]) {
+        cl[cl.length] = pn;
+        used[pn] = true;
+
+        for (var i = 1; i < points.length; i++) {
+          var pn2 = indexes[pn][i];
+
+          if (exist(pn2, cl)) {
+            continue;
+          } // условие выхода из цикла
+
+          if (isNear(points[pn], points[pn2], mX, mY)) {
+            clastering(points, indexes, used, pn2, cl);
+          } else {
+            break;
+          }
+        }
+      }
+    }
+
+    var distances = calcMasDistances(points); // матрица растояний
+    var indexes = calcMasIndexes(distances); // матрица индексов
+
+    var used = []; // массив задействованных элементов
+    for (var i = 0; i < points.length; i++) {
+      used[i] = false;
+    }
+
+    var clasters = []; // матрица кластеров
+
+    /* кластеризация */
+    for (var i = 0; i < points.length; i++) {
+      var cl = [];
+      clastering(points, indexes, used, i, cl);
+      if (cl.length > 0) {
+        clasters.push(cl.slice());
+      }
+    }
+
+    // конец спизженной часьи
+
+    var finalClasters = [];
+    var finalClastersIds = [];
+    for (var i = 0; i < clasters.length; i++) {
+      if (clasters[i].length > 1) {
+        var ids = [];
+        for (var j = 0; j < clasters[i].length; j++) {
+          ids.push(points[clasters[i][j]].getId());
+        }
+        finalClasters.push(ids);
+        finalClastersIds = finalClastersIds.concat(ids);
+      }
+    }
+
+    var currentclusterMarkers = {};
+    for (const i in finalClasters) {
+      const clusterId = finalClasters[i].join("-");
+
+      // приходится перерисовывать маркера, так как анимация слайдера ломается
+      // @todo, переписать слайдер, чтобы не зависил от позиции на экране
+      if (forceRedraw && clusterMarkers.hasOwnProperty(clusterId)) {
+        clusterMarkers[clusterId].destroy();
+        delete clusterMarkers[clusterId];
+      }
+
+      if (!clusterMarkers.hasOwnProperty(clusterId)) {
+        const marker = createClusterMarker(finalClasters[i]);
+        clusterMarkers[clusterId] = marker;
+      }
+
+      currentclusterMarkers[clusterId] = finalClasters[i];
+    }
+
+    Object.entries(clusterMarkers).forEach((entry) => {
+      const [key, value] = entry;
+
+      if (!currentclusterMarkers.hasOwnProperty(key)) {
+        value.destroy();
+        delete clusterMarkers[key];
+      }
+    });
+
+    for (const i in markersForClusters) {
+      if (!finalClastersIds.includes(markersForClusters[i].id)) {
+        showMarker(markersForClusters[i].id);
+      }
+    }
+  }
+}
+
+function shuffle(array) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex]
+    ];
+  }
+
+  return array;
+}
+
+function createClusterMarker(ids) {
+  const sliderId =
+    "slider-" + ids.join("-") + "-" + Math.floor(Math.random() * 1000000000);
+  // рандомим, чтобы при пересоздании кластера не повторять порядок
+  ids = shuffle(ids);
+  var sumLon = 0;
+  var sumLat = 0;
+  for (const id in ids) {
+    const coordinates = globalMarkers[ids[id]].getCoordinates();
+    sumLon += coordinates[0];
+    sumLat += coordinates[1];
+    hideMarker(ids[id]);
+  }
+  const medianLon = sumLon / ids.length;
+  const medianLat = sumLat / ids.length;
+
+  const html = getHtmlForClusterMarker(ids, sliderId);
+
+  const htmlMarker = new mapgl.HtmlMarker(map, {
+    coordinates: [medianLon, medianLat],
+    interactive: DEBUG,
+    html: html
+  });
+
+  htmlMarker.setAnchor([18, 18]);
+
+  waitForElement("#" + sliderId, 3000)
+    .then(function () {
+      new ItcSimpleSlider("#" + sliderId, {
+        loop: true,
+        autoplay: true,
+        swipe: false,
+        interval: 2000
+      });
+    })
+    .catch(() => {
+      console.log("Not found cluster div element");
+    });
+
+  return htmlMarker;
+}
+
+function getHtmlForClusterMarker(ids, sliderId) {
+  var html = "";
+  var items = "";
+
+  const count = ids.length;
+  const clusterCounterClass =
+    count < 100 ? "cluster-counter-small" : "cluster-counter-big";
+  for (const i in ids) {
+    var acronym = "";
+    const avaUrl = globalProfiles[ids[i]].logo;
+    const name = globalProfiles[ids[i]].name;
+    const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+    if (backgroundImage === null) {
+      acronym = getAcronymFromName(name);
+    }
+
+    const itemClass = acronym != "" ? "itcss_item_text" : "itcss_item_ava";
+    items += `
+      <div class="itcss__item">
+        <div style="${backgroundImage}"  class="${itemClass}">${acronym}</div>
+      </div>`;
+  }
+
+  html = `<div id="marker-${sliderId}" >
+           <div class="cluster-ava-container">
+            <div class="ava">
+              <div class="itcss" id="${sliderId}" >
+                <div class="itcss__wrapper" style="background-color: gray;">
+                  <div class="itcss__items">
+                    ${items}
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+           <div class="cluster-counter ${clusterCounterClass}">
+              ${count}
+           </div>
+         </div>`;
+
+  return html;
+}
+
+function hideMarker(id) {
+  if (globalMarkers.hasOwnProperty(id)) {
+    const divMarker = document.getElementById("marker-" + id);
+    if (divMarker !== null) {
+      divMarker.style.display = "none";
+      idsUsersInClusters[id] = true;
+    } else {
+      if (DEBUG) {
+        console.log("hideMarker. marker not found", id);
+      }
+    }
+  }
+}
+
+function showMarker(id) {
+  if (globalMarkers.hasOwnProperty(id)) {
+    const divMarker = document.getElementById("marker-" + id);
+    if (divMarker !== null) {
+      divMarker.style.display = "block";
+      divMarker.style.opacity = "1";
+      delete idsUsersInClusters[id];
+    } else {
+      if (DEBUG) {
+        console.log("showMarker. marker not found", id);
+        console.log(globalMarkers[id]);
+      }
+    }
+  }
+}
+
+function waitForElement(querySelector, timeout) {
+  return new Promise((resolve, reject) => {
+    var timer = false;
+    if (document.querySelectorAll(querySelector).length) return resolve();
+    const observer = new MutationObserver(() => {
+      if (document.querySelectorAll(querySelector).length) {
+        observer.disconnect();
+        if (timer !== false) clearTimeout(timer);
+        return resolve();
+      }
+    });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+    if (timeout)
+      timer = setTimeout(() => {
+        observer.disconnect();
+        reject();
+      }, timeout);
+  });
+}
+
+function mapToUser(id) {
+  goMapCenterToId(document.getElementById("input-follow-id").value);
+}
+
+function goMapCenterToId(id) {
+  map.setCenter(globalMarkers[id].getCoordinates());
+}
+
+// ------------------------------------ prewarm ------------------------------- //
+
+function prewarm() {
+  const controlsDiv = document.getElementById("controls");
+  SUPPORTED_EMOJI.forEach((emogi) => {
+    const elemDiv = document.createElement("div");
+    elemDiv.style.cssText = "width:0px;height:0px;";
+    elemDiv.classList.add("emogi-" + emogi);
+    controlsDiv.appendChild(elemDiv);
+  });
+
+  const elemDiv = document.createElement("div");
+  elemDiv.innerHTML = `<div>
+        <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 0px; height: 0px;">
+        </dotlottie-player>
+ <!--       <dotlottie-player src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR.json" background="transparent" speed="1" style="width: 0px; height: 0px">
+        </dotlottie-player> -->
+        
+        </div>
+        
+        
+        `;
+  controlsDiv.appendChild(elemDiv);
+}
+
+prewarm();
+
+// ------------------------------------ scenes ------------------------------- //
+
+switch (getParamScene) {
+  case "2fest": {
+    startScene2fest();
+    break;
+  }
+
+  case "port": {
+    startScenePort();
+    break;
+  }
+
+case "codefest": {
+    startSceneCodefest();
+    break;
+  }
+}
+
+function startScene2fest() {
+  currentScene = "2fest";
+  //OVERRIDED_ZOOM = 100;
+
+  map.setCenter([82.898612, 54.980413]);
+  map.setZoom(17.5);
+  map.setPitch(45.51);
+  map.setRotation(-43.33);
+  //document.getElementById("input-id").value = "2fest";
+  //document.getElementById("best-game-launch-info").style.backgroundImage = "url('https://rezonx3m.github.io/friends/static/best-game-launch-2fest.png')";
+  
+
+  document.getElementById("input-id").value = "port";
+
+  
+
+  SOCKET_PATH =
+    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
+
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+  ENABLE_CLUSTERS = false;
+  ENABLE_STICKERS = true;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+
+  setTimeout(startGameBestTimeSticker, 1500);
+  //startGameFirstSendSticker();
+  
+}
+
+function startSceneZEM() {
+  currentScene = "ZEM";
+  //OVERRIDED_ZOOM = 100;
+  map.setCenter([82.9145, 55.0295]);
+  //map.setZoom(17.5);
+  //map.setPitch(50);
+  //map.setRotation(-170.85);
+  document.getElementById("input-id").value = "ZEM";
+  //startGameFirstSendSticker();
+  SOCKET_PATH =
+    "ws://zem.rezon.webapi-dnd.os-n3.hw/api/1.1/user/ws";
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+
+}
+
+function startScenePort() {
+  currentScene = "port";
+  OVERRIDED_ZOOM = 100;
+  map.setCenter([30.242201, 59.923987]);
+  map.setZoom(18.71);
+  map.setPitch(20.1);
+  map.setRotation(142.11);
+
+  //const snow = new mapglSnow.Snow(map);
+
+  playerQR.load(lottieQR);
+
+  playerCongratsBlue.load(lottieCongratsBlue);
+  playerCongratsRed.load(lottieCongratsRed);
+  playerCongratsGreen.load(lottieCongratsGreen);
+
+  ENABLE_CLUSTERS = false;
+  ENABLE_STICKERS = true;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+  document.getElementById("input-id").value = "port";
+
+  
+
+  SOCKET_PATH =
+    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true&channes=markers,stickers";
+    connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+  if (getParamHidePromoQR !== "true") {
+    document.getElementById("qr-promo").style.display = "block";
+  }
+
+  setInterval(portSendPing, 1000);
+  setInterval(portSendShowStub, 1000);
+
+  //showScenePushButtonAnimation();
+  setTimeout(addPortBots, 1000);
+  ON_CONNECT_FUNCTION = addPortBots;
+  setTimeout(startGameBestTimeSticker, 1500);
+  
+
+  document.onkeypress = function (e) {
+    e = e || window.event;
+    switch (e.keyCode) {
+
+      case 48:
+        window.location.reload();;
+        break;
+
+
+      case 49:
+        perfTest();
+        break;
+
+      case 50:
+        showSceneNewFriendAnimation();
+        break;
+
+      case 51:
+        showScenePushButtonAnimation();
+        break;
+
+      case 52:
+        document.getElementById("port-send-ping").checked = true;
+        break;
+
+      case 53:
+        document.getElementById("port-send-ping").checked = false;
+        break;
+
+      case 54:
+        PORT_FORCE_SEND_SHOW_STUB = false;
+        break;
+
+      case 55:
+        PORT_FORCE_SEND_SHOW_STUB = true;
+        break;
+
+      case 56:
+        processStickerToMe(testMessageStickerFromToMe2);
+        break;
+
+      case 57:
+        processStickerToMe(testMessageStickerFromToMe);
+        break;
+
+      
+
+        
+    }
+  };
+
+  //showScenePushButtonAnimation();
+}
+
+
+function startSceneCodefest() {
+  currentScene = "port";
+  //OVERRIDED_ZOOM = 100;
+  
+  map.setCenter([82.747614, 54.998218]);
+  map.setZoom(19);
+  map.setPitch(40);
+  map.setRotation(8);
+
+  //const snow = new mapglSnow.Snow(map);
+  ENABLE_CLUSTERS = false;
+  ENABLE_STICKERS = true;
+  ENABLE_STICKERS_TO_ME = false;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+  document.getElementById("input-id").value = "port"; // todo @change to codefest
+
+  
+
+  SOCKET_PATH =
+    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true&channes=markers,stickers";
+  
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+  setTimeout(addCodefestBots, 1000);
+  ON_CONNECT_FUNCTION = addCodefestBots;
+  setTimeout(startGameBestTimeSticker, 1500);
+  
+
+  document.onkeypress = function (e) {
+    e = e || window.event;
+    switch (e.keyCode) {
+
+      case 48:
+        window.location.reload();;
+        break;
+
+
+      case 55:
+        var sticker = testMessageStickerFromToMe;
+        sticker.stickerRecord.sticker.stickerId = BEST_GAME_CURRENT_STICKER;
+        processStickerToMe(sticker);
+        break; 
+
+      case 56:
+        processStickerToMe(testMessageStickerFromToMe2);
+        break;
+
+      case 57:
+        processStickerToMe(testMessageStickerFromToMe);
+        break;
+        
+    }
+  };
+
+  //showScenePushButtonAnimation();
+}
+
+
+var CODEFEST_BOTS_STARTED = false;
+
+function addCodefestBots() {
+  const codefestBotId = "codefestbot";
+  const codefestBotId1 = "codefestbot1";
+  const codefestBotId2 = "codefestbot2";
+  const codefestBotId3 = "codefestbot3";
+
+  const profileCodefest = {
+    id: codefestBotId,
+    name: "Codefest",
+    logo: "https://i2.photo.2gis.com/images/profile/30258560158804614_b42b.jpg"
+  };
+
+  const profileCodefest1 = {
+    id: codefestBotId1,
+    name: "Алиса Кюнтиева",
+    logo: "https://rezonx3m.github.io/friends/static/bot1.JPG"
+  };
+
+  const profileCodefest2 = {
+    id: codefestBotId2,
+    name: "Какоето Имя",
+    logo: "https://rezonx3m.github.io/friends/static/bot2.JPG"
+  };
+
+  const profileCodefest3 = {
+    id: codefestBotId3,
+    name: "Еще Фамилия",
+    logo: "https://rezonx3m.github.io/friends/static/bot3.JPG"
+  };
+
+  const profileState = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.998429,
+        lon: 82.747358,
+        azimuth: 0,
+        speed: 0,
+        accuracy: 1
+      },
+      battery: {
+        level: 1
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  var profileState1 = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId1,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.998506,
+        lon: 82.746942,
+        azimuth: 206.91267,
+        speed: 1.5,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "moving",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  const profileState2 = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId2,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.997792,
+        lon: 82.747533,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  const profileState3 = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId3,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.998515,
+        lon: 82.74775,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+  addProfile(profileCodefest, true);
+  addProfile(profileCodefest1, true);
+  addProfile(profileCodefest2, true);
+  addProfile(profileCodefest3, true);
+  processMessage(profileState);
+  processMessage(profileState1);
+  processMessage(profileState2);
+  processMessage(profileState3);
+
+  bot1movements = [
+    [82.746942, 54.998506],
+    [82.746955, 54.998449],
+    [82.746971, 54.998386],
+    [82.746987, 54.998326],
+    [82.747004, 54.998262],
+    [82.747021, 54.998203],
+    [82.747074, 54.998157],
+    [82.747176, 54.998128],
+    [82.74728, 54.99812],
+    [82.747404, 54.998129],
+    [82.747513, 54.99814]
+  ];
+  if (CODEFEST_BOTS_STARTED === false) {
+    moveBot(bot1movements, true, 0, 5000);
+    CODEFEST_BOTS_STARTED = true;
+  }
+
+  function moveBot(path, isForwardDirection, position, animationTime) {
+    if (position == 0) {
+      isForwardDirection = true;
+    } else if (position == path.length - 1) {
+      isForwardDirection = false;
+    }
+    // console.log("position", position);
+    const nextPosition = path[position];
+
+    profileState1.payload.location.lat = nextPosition[1];
+    profileState1.payload.location.lon = nextPosition[0];
+    profileState1.payload.lastSeen = Date.now() * 1000;
+    processMessage(profileState1);
+
+    currentPosition = isForwardDirection ? position++ : position--;
+    setTimeout(function () {
+      moveBot(path, isForwardDirection, position, animationTime);
+    }, animationTime);
+  }
+}
+
+//-----------------------------------//
+
+var PORT_BOTS_STARTED = false;
+
+function addPortBots() {
+  const portBotId = "portbot";
+  const portBotId1 = "portbot1";
+  const portBotId2 = "portbot2";
+  const portBotId3 = "portbot3";
+
+  const profilePort = {
+    id: portBotId,
+    name: "Севкабель Порт",
+    logo: "https://i2.photo.2gis.com/images/profile/30258560158804614_b42b.jpg"
+  };
+
+  const profilePort1 = {
+    id: portBotId1,
+    name: "Алиса Кюнтиева",
+    logo: "https://rezonx3m.github.io/friends/static/bot1.JPG"
+  };
+
+  const profilePort2 = {
+    id: portBotId2,
+    name: "Какоето Имя",
+    logo: "https://rezonx3m.github.io/friends/static/bot2.JPG"
+  };
+
+  const profilePort3 = {
+    id: portBotId3,
+    name: "Еще Фамилия",
+    logo: "https://rezonx3m.github.io/friends/static/bot3.JPG"
+  };
+
+  const profileState = {
+    type: "friendState",
+    payload: {
+      id: portBotId,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 59.923999,
+        lon: 30.242194,
+        azimuth: 0,
+        speed: 0,
+        accuracy: 1
+      },
+      battery: {
+        level: 1
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  var profileState1 = {
+    type: "friendState",
+    payload: {
+      id: portBotId1,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 59.924838,
+        lon: 30.240264,
+        azimuth: 206.91267,
+        speed: 1.5,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "moving",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  const profileState2 = {
+    type: "friendState",
+    payload: {
+      id: portBotId2,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 59.924661,
+        lon: 30.241195,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  const profileState3 = {
+    type: "friendState",
+    payload: {
+      id: portBotId3,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 59.923647,
+        lon: 30.241312,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+  addProfile(profilePort, true);
+  addProfile(profilePort1, true);
+  addProfile(profilePort2, true);
+  addProfile(profilePort3, true);
+  processMessage(profileState);
+  processMessage(profileState1);
+  processMessage(profileState2);
+  processMessage(profileState3);
+
+  bot1movements = [
+    [30.240264, 59.924838],
+    [30.240412, 59.924776],
+    [30.240554, 59.92472],
+    [30.240696, 59.924649],
+    [30.240849, 59.924607],
+    [30.240987, 59.924593],
+    [30.241109, 59.924617],
+    [30.241218, 59.92466],
+    [30.241308, 59.924716],
+    [30.24142, 59.924787],
+    [30.241538, 59.924827],
+    [30.241705, 59.924772],
+    [30.241826, 59.924713],
+    [30.241932, 59.924667],
+    [30.242072, 59.924615],
+    [30.242169, 59.924565],
+    [30.242291, 59.924518],
+    [30.24242, 59.924471],
+    [30.242553, 59.924417],
+    [30.242686, 59.924364],
+    [30.242804, 59.924317],
+    [30.242934, 59.924261],
+    [30.243033, 59.924224],
+    [30.243117, 59.924184],
+    [30.243138, 59.924116],
+    [30.243126, 59.924054],
+    [30.243036, 59.924003],
+    [30.242963, 59.923935],
+    [30.242936, 59.923845],
+    [30.242975, 59.923777],
+    [30.242931, 59.923719],
+    [30.242881, 59.923651],
+    [30.242881, 59.9236],
+    [30.242872, 59.923546],
+    [30.242998, 59.923492],
+    [30.243095, 59.923448],
+    [30.243099, 59.923385],
+    [30.243082, 59.92331],
+    [30.24304, 59.923233],
+    [30.24301, 59.923156],
+    [30.242987, 59.923085],
+    [30.243092, 59.923028],
+    [30.243232, 59.922996],
+    [30.243352, 59.922967],
+    [30.243506, 59.922936],
+    [30.243706, 59.922899],
+    [30.243852, 59.922862],
+    [30.24402, 59.922863]
+  ];
+  if (PORT_BOTS_STARTED === false) {
+    moveBot(bot1movements, true, 0, 5000);
+    PORT_BOTS_STARTED = true;
+  }
+
+  function moveBot(path, isForwardDirection, position, animationTime) {
+    if (position == 0) {
+      isForwardDirection = true;
+    } else if (position == path.length - 1) {
+      isForwardDirection = false;
+    }
+    // console.log("position", position);
+    const nextPosition = path[position];
+
+    profileState1.payload.location.lat = nextPosition[1];
+    profileState1.payload.location.lon = nextPosition[0];
+    profileState1.payload.lastSeen = Date.now() * 1000;
+    processMessage(profileState1);
+
+    currentPosition = isForwardDirection ? position++ : position--;
+    setTimeout(function () {
+      moveBot(path, isForwardDirection, position, animationTime);
+    }, animationTime);
+  }
+}
+
+function showSceneNewFriendAnimation() {
+  if (currentScene === "port") {
+    portSendNewFriend();
+
+    if (!BEST_GAME_STARTED) {
+      const randomNumber = Math.floor(Math.random() * 3);
+      const isBusy = getPopupAnimationBusy();
+      if (!isBusy) {
+        switch (randomNumber) {
+          case 0:
+            playerCongratsBlue.seek(0);
+            playerCongratsBlue.play();
+            break;
+          case 1:
+            playerCongratsRed.seek(0);
+            playerCongratsRed.play();
+            break;
+          case 2:
+            playerCongratsGreen.seek(0);
+            playerCongratsGreen.play();
+            break;
+        }
+        setPopupAnimationBusy(true);
+        setPopupAnimationBusy(false, POPUP_CONGRATS_ANIMATION_TIME);
+        POPUP_CURRENT_ANIMATION = "congrats";
+      } else if (POPUP_CURRENT_ANIMATION !== "congrats") {
+        POPUP_NEXT_ANIMATION = "congrats";
+      }
+    }
+  }
+}
+
+function setPopupAnimationBusy(status, time = null) {
+  if (time) {
+    setTimeout(function () {
+      POPUP_ANIMATION_IS_BUSY = status;
+      if (status == false) {
+        if (POPUP_NEXT_ANIMATION != null) {
+          switch (POPUP_NEXT_ANIMATION) {
+            case "qr":
+              showScenePushButtonAnimation();
+              break;
+            case "congrats":
+              showSceneNewFriendAnimation();
+              break;
+          }
+          POPUP_NEXT_ANIMATION = null;
+        }
+      }
+    }, time);
+  } else {
+    POPUP_ANIMATION_IS_BUSY = status;
+  }
+}
+
+function getPopupAnimationBusy() {
+  return POPUP_ANIMATION_IS_BUSY;
+}
+
+var bestGameNeedWaitAlreadyBusy = false;
+
+function showScenePushButtonAnimation() {
+  if (DEBUG) {
+    console.log("push button");
+  }
+  if (currentScene === "port") {
+    const isBusy = getPopupAnimationBusy();
+
+    if (BEST_GAME_STARTED) {
+      fadeIn(document.getElementById("best-game-need-wait"), 500);
+      if (bestGameNeedWaitAlreadyBusy !== true) {
+        bestGameNeedWaitAlreadyBusy = true;
+        setTimeout(function() {
+          fadeOut(document.getElementById("best-game-need-wait"), 500);
+          bestGameNeedWaitAlreadyBusy = false;
+        }, 5000);
+      }
+    } else if (!isBusy) {
+      if (!BEST_GAME_STARTED) {
+        // lottie version
+        playerQR.seek(0);
+        playerQR.play();
+        setPopupAnimationBusy(true);
+        setPopupAnimationBusy(false, POPUP_QR_ANIMATION_TIME);
+        POPUP_CURRENT_ANIMATION = "qr";
+      } else {
+        
+      }
+
+      // css version
+      // let element = document.getElementById("popup-qr");
+      // element.classList.remove("popup-qr-class");
+      // void element.offsetWidth;
+      // element.classList.add("popup-qr-class");
+      // element.style.display = "block";
+      // setTimeout(function () {
+      //   element.style.display = "none";
+      // }, POPUP_QR_ANIMATION_TIME);
+    } else if (POPUP_CURRENT_ANIMATION !== "qr") {
+      POPUP_NEXT_ANIMATION = "qr";
+    }
+  }
+}
+
+function portSendNewFriend() {
+  if (window.hasOwnProperty("electronAPI")) {
+    window.electronAPI.addNewFriend();
+  }
+  if (DEBUG) {
+    console.log("send new friend action to TD");
+  }
+}
+
+function portSendPing() {
+  let checked = document.getElementById("port-send-ping").checked;
+
+  if (checked) {
+    if (window.hasOwnProperty("electronAPI")) {
+      window.electronAPI.ping();
+    }
+    if (DEBUG) {
+      console.log("send ping to TD");
+    }
+  }
+}
+
+function portReceivePushButton() {
+  showScenePushButtonAnimation();
+  if (DEBUG) {
+    console.log("receive push button from TD");
+  }
+}
+
+function portSendShowStub() {
+  if (!isConnected || PORT_FORCE_SEND_SHOW_STUB) {
+    if (window.hasOwnProperty("electronAPI")) {
+      window.electronAPI.showStub();
+    }
+    if (DEBUG) {
+      console.log("send show stub");
+    }
+  } else if (DEBUG) {
+    console.log("show stub not sended, because all rigth");
+  }
+}
+
+// function portSendHideStub() {
+//   if (window.hasOwnProperty("electronAPI")) {
+//     window.electronAPI.hideStub();
+//   }
+// }
+
+// ------------------------------------ tests ------------------------------- //
+
+function perfTest() {
+  testMessage.payload.location.lat = map.getCenter()[1];
+  testMessage.payload.location.lon = map.getCenter()[0];
+  map.setZoom(11.5);
+
+  const maxI = 100;
+  const floor = Math.floor(Math.sqrt(maxI));
+  for (i = 1; i <= maxI; i++) {
+    testProfile.id = "test-" + i;
+    testMessage.payload.id = testProfile.id;
+
+    addProfile(testProfile);
+
+    testMessage.payload.location.lon += 0.01;
+
+    processMessage(testMessage);
+    if (i % floor == 0) {
+      testMessage.payload.location.lat += 0.01;
+      testMessage.payload.location.lon -= 0.01 * floor;
+      processMessage(testMessage);
+      testMessageStickerFromTo.senderId = "test-" + i;
+      testMessageStickerFromTo.recipientId = "test-" + (i - 9);
+      processStickerFromTo(testMessageStickerFromTo);
+    }
+  }
+}
+
+// 45755262
+const testId1 = "abc123";
+const testId2 = "xyz789";
+const testId3 = "zzz666";
+const testId4 = "999999";
+
+var testMessageStickerFromTo = {
+  senderId: testId1,
+  recipientId: testId2,
+  stickerRecord: {
+    sticker: {
+      stickerId: "fire",
+      count: 1
+    }
+  }
+};
+
+var testMessageStickerFromToMe = {
+  senderId: 'codefestbot1',
+  stickerRecord: {
+    sticker: {
+      stickerId: "go",
+      count: 1
+    }
+  }
+};
+
+var testMessageStickerFromToMe2 = {
+  senderId: 'codefestbot1',
+  stickerRecord: {
+    sticker: {
+      stickerId: "poop",
+      count: 1
+    }
+  }
+};
+
+var testProfile = {
+  id: testId1,
+  name: "Poop Boop",
+  logo: "https://rezonx3m.github.io/friends/static/poop.png"
+};
+
+var testProfile2 = {
+  id: testId2,
+  name: "Foo Bar",
+  logo: null
+};
+
+var testProfile3 = {
+  id: testId3,
+  name: "Zoo zoo",
+  logo: null
+};
+
+var testProfile4 = {
+  id: testId4,
+  name: "Yo Yo",
+  logo: "https://rezonx3m.github.io/friends/static/fire.png"
+};
+
+var testMessage = {
+  type: "friendState",
+  payload: {
+    id: testId1,
+    lastSeen: 16987361519730,
+    location: {
+      lat: map.getCenter()[1],
+      lon: map.getCenter()[0],
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+var testMessage2 = {
+  type: "friendState",
+  payload: {
+    id: testId2,
+    lastSeen: 16987361519730,
+    location: {
+      lat: 55.03,
+      lon: 82.99,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+var testMessage3 = {
+  type: "friendState",
+  payload: {
+    id: testId3,
+    lastSeen: 16987361519730,
+    location: {
+      lat: 55.02,
+      lon: 82.97,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+var testMessage4 = {
+  type: "friendState",
+  payload: {
+    id: testId4,
+    lastSeen: 16987361519730,
+    location: {
+      lat: 55.035,
+      lon: 82.999,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+function testMove() {
+  const multiplier1 = Math.random() > 0.5 ? 1 : -1;
+  const multiplier2 = Math.random() > 0.5 ? 1 : -1;
+  testMessage.payload.location.lon += 0.01 * multiplier1;
+  testMessage.payload.location.lat += 0.01 * multiplier2;
+  processMessage(testMessage);
+}
+
+function testRotate() {
+  rotateMarker(testId1, Math.random() * 360);
+}
+
+function testRandomSticker() {
+  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
+  testMessageStickerFromTo.stickerRecord.sticker.stickerId =
+    SUPPORTED_EMOJI[stickerN];
+  processStickerFromTo(testMessageStickerFromTo);
+}
+
+function testChangeAva() {
+  testProfile["name"] = "Angry Bird";
+  testProfile["logo"] = "https://rezonx3m.github.io/friends/static/angry.png";
+  addProfile(testProfile);
+}
+
+if (DEBUG) {
+  addProfile(testProfile);
+  addProfile(testProfile2);
+  addProfile(testProfile3);
+  addProfile(testProfile4);
+  processMessage(testMessage);
+  processMessage(testMessage2);
+  processMessage(testMessage3);
+  processMessage(testMessage4);
+}
+
+// ------------------------------------ games ------------------------------- //
+
+
+function logStickerByUser(id, sticker, sendAt) {
+
+  if (id == SUPER_USER_ID) {
+    if (LAST_SUPER_USER_STICKERS.length >= 7) {
+        LAST_SUPER_USER_STICKERS.shift();
+    } 
+    LAST_SUPER_USER_STICKERS.push(sticker);
+
+    if (
+      LAST_SUPER_USER_STICKERS.length == 7 &&
+      LAST_SUPER_USER_STICKERS[0] == "poop" &&
+      LAST_SUPER_USER_STICKERS[1] == "poop" &&
+      LAST_SUPER_USER_STICKERS[2] == "poop" &&
+      LAST_SUPER_USER_STICKERS[3] == "go" &&
+      LAST_SUPER_USER_STICKERS[4] == "go" &&
+      LAST_SUPER_USER_STICKERS[5] == "go" &&
+      LAST_SUPER_USER_STICKERS[6] == "poop" 
+    ) {
+      window.location.reload();
+    }
+  }
+
+  
+
+
+  // игра на лучшее вресмя
+  if (BEST_LOG_LAST_STICKERS_TO_ME) {
+
+    if (!BEST_GAME_IGNORE_PLAYER_DISTANCE) {
+      if (!globalMarkers.hasOwnProperty(id)) {
+        return;
+      }
+      const senderMarker = globalMarkers[id];
+      const senderLon = senderMarker.getCoordinates()[0];
+      const senderLat = senderMarker.getCoordinates()[1];
+      const center = map.getCenter();
+      const distance = getDistanceFromLatLonInKm(senderLat, senderLon, center[1], center[0]);
+      if (distance > BEST_GAME_MIN_DISTANCE_TO_START) {
+        return;
+      }
+
+    }
+
+    if (sticker == "go") {
+      if (BEST_GAME_STARTED === false) {
+        BEST_GAME_STARTED = true;
+        bestLaunchTimerBeforeStartGame();
+      }
+
+      if (!BEST_CURRENT_GAMERS.hasOwnProperty(id)) { // @todo убрать ограничение
+        BEST_CURRENT_GAMERS[id] = {
+          id: id,
+          name: globalProfiles[id].name,
+          avaUrl: globalProfiles[id].logo,
+          scores: {},
+          scoresSum: 0
+        }
+        
+        bestRerenderCurrentPlayersList();
+      }
+    }
+
+    if (BEST_GAME_IN_PROGRESS && BEST_CURRENT_GAMERS.hasOwnProperty(id)) {
+      if (BEST_GAME_CURRENT_STICKER == sticker) {
+        bestGameProcessCorrectSticker(id, sticker, sendAt);
+      } else {
+        // bestGameProcessIncorrectSticker(id);
+      }
+    }
+    
+    //BEST_GAME_CURRENT_STICKER
+
+  } else if (FIRST_ALLOW_ADD_NEW_PLAYERS) { // игра на большее количество первых
+    var hasNewGamer = false;
+    if (FIRST_LOG_LAST_STICKERS_TO_ME) {
+      if (!FIRST_LAST_STICKERS_BY_USERS.hasOwnProperty(id)) {
+        FIRST_LAST_STICKERS_BY_USERS[id] = [];
+      } else if (FIRST_LAST_STICKERS_BY_USERS[id].length >= 5) {
+        FIRST_LAST_STICKERS_BY_USERS[id].shift();
+      }
+      FIRST_LAST_STICKERS_BY_USERS[id].push(sticker);
+
+      if (DEBUG) {
+        console.log(FIRST_LAST_STICKERS_BY_USERS);
+      }
+
+      if (
+        FIRST_LAST_STICKERS_BY_USERS[id].length == 5 &&
+        FIRST_LAST_STICKERS_BY_USERS[id][0] == "fire" &&
+        FIRST_LAST_STICKERS_BY_USERS[id][1] == "poop" &&
+        FIRST_LAST_STICKERS_BY_USERS[id][2] == "greenheart" &&
+        FIRST_LAST_STICKERS_BY_USERS[id][3] == "greenheart" &&
+        FIRST_LAST_STICKERS_BY_USERS[id][4] == "snowball"
+      ) {
+        if (!FIRST_CURRENT_GAMERS.includes(id)) {
+          FIRST_CURRENT_GAMERS.push(id);
+          hasNewGamer = true;
+          FIRST_CURRENT_GAMERS_SCORE[id] = 0;
+        }
+      }
+
+      var tableContent = '<table class="gamers-table">';
+      if (FIRST_CURRENT_GAMERS.length > 0) {
+        const timerElement = document.querySelector(".timer");
+        timerElement.style.display = "flex";
+
+        tableContent += "<tr>";
+        for (var i = 0; i < FIRST_CURRENT_GAMERS.length; i++) {
+          var acronym = "";
+          const avaUrl = globalProfiles[FIRST_CURRENT_GAMERS[i]].logo;
+          const name = globalProfiles[FIRST_CURRENT_GAMERS[i]].name;
+          const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+          if (backgroundImage === null) {
+            acronym = getAcronymFromName(name);
+          }
+          if (i % 10 == 0 && i != 0) {
+            tableContent += "</tr>";
+            tableContent += '</table class="gamers-table">';
+            tableContent += '<table class="gamers-table">';
+          }
+          tableContent += "<td>";
+          tableContent += `<div class="gamer">
+                           <div class="gamer-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>
+                           <div class="gamer-score" id="gamer-score-${FIRST_CURRENT_GAMERS[i]}">0</div>
+                         <div>`;
+          tableContent += "</td>";
+        }
+        tableContent += "</tr>";
+      }
+
+      if (hasNewGamer) {
+        waitMoreGamers(FIRST_CURRENT_GAMERS.length);
+      }
+
+      tableContent += "</table>";
+      gameElement.innerHTML = tableContent;
+    }
+  } else if (FIRST_GAME_STARTED) {
+    if (
+      FIRST_CURRENT_GAMERS.includes(id) &&
+      sticker == FIRST_CURRENT_STICKER &&
+      FIRST_CURRENT_ROUTN_WINNER === null
+    ) {
+      FIRST_CURRENT_ROUTN_WINNER = id;
+      if (DEBUG) {
+        console.log("round winner", FIRST_CURRENT_ROUTN_WINNER);
+      }
+      FIRST_CURRENT_GAMERS_SCORE[id] = FIRST_CURRENT_GAMERS_SCORE[id] + 1;
+      const gamerScore = document.getElementById("gamer-score-" + id);
+      gamerScore.innerText = FIRST_CURRENT_GAMERS_SCORE[id];
+      if (FIRST_SCORE_TO_WIN == FIRST_CURRENT_GAMERS_SCORE[id]) {
+        finishGame(id);
+      }
+    }
+
+    // логика игры
+  }
+}
+
+function startGameFirstSendSticker() {
+  FIRST_LOG_LAST_STICKERS_TO_ME = true;
+  const friendName = "RND 2FEST";
+  const gameContainer = document.getElementById("game-container");
+  const intro = document.getElementById("game-first-send-intro");
+  intro.innerHTML = `
+  <div>
+  <div>Для подключения к игре отправьте другу ${friendName} &nbsp;
+  <div class="emogi-fire game-first-send-intro-emoji"></div>
+  <div class="emogi-poop game-first-send-intro-emoji"></div>
+  <div class="emogi-greenheart game-first-send-intro-emoji"></div>
+  <div class="emogi-greenheart game-first-send-intro-emoji"></div>
+  <div class="emogi-snowball game-first-send-intro-emoji"></div>
+  </div>
+  </div>`;
+  gameContainer.style.display = "block";
+}
+
+var startBestTime = 0;
+const now = () => performance.now();
+
+
+function startBestTimer(duration) {
+  BEST_TIMER.style.display = "block";
+  var duration;
+  
+  const update = () => {
+    const delta = now() - startBestTime;
+    const difference = duration - delta;
+    const percent = Math.max(0, Math.min(100, (difference / duration) * 100));
+    
+    BEST_TIMER.style.setProperty('--progress', percent);
+    
+    if (difference > 0) {
+      requestAnimationFrame(update);
+    }
+  };
+
+  startBestTime = now();
+    requestAnimationFrame(update);
+    setTimeout(() => {BEST_TIMER.style.display = "none"}, duration);
+};
+
+const fadeIn = (el, timeout) => {
+  el.style.opacity = 0;
+  el.style.display = 'block';
+  el.style.transition = `opacity ${timeout}ms`;
+  setTimeout(() => {
+    el.style.opacity = 1;
+  }, 10);
+};
+
+const fadeOut = (el, timeout) => {
+  el.style.opacity = 1;
+  el.style.transition = `opacity ${timeout}ms`;
+  el.style.opacity = 0;
+
+  setTimeout(() => {
+    el.style.display = 'none';
+  }, timeout);
+};
+
+function startGameBestTimeSticker() {
+  BEST_LOG_LAST_STICKERS_TO_ME = true;
+
+  // warmup
+  document.getElementById("best-leader-board").style.display = "block";
+  map.invalidateSize();
+  goMapCenterToId("codefestbot");
+  document.getElementById("best-game-launch-info").style.display = "block";
+  bestGameReloadLiaders();
+  
+}
+
+function getRandom(min, max, integer = true) {
+  return integer ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min) + min;
+}
+
+function bestGetFirstColumnById(avaUrl, name, isLeader = false) {
+  var acronym = "";
+  
+  const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+  if (backgroundImage === null) {
+    acronym = getAcronymFromName(name);
+  }
+
+  const classAva = isLeader ? "winner-leader-board-ava-container" : "leader-board-ava-container";
+  return `<div class="friend"><div class="${classAva}" style="${backgroundImage}">${acronym}</div></div>`;
+
+}
+
+function bestRerenderCurrentPlayersList() {
+
+  var HTML = `<table class = "best-leader-top-table">`;
+  for (id in BEST_CURRENT_GAMERS) {
+    const name = BEST_CURRENT_GAMERS[id].name;
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(BEST_CURRENT_GAMERS[id].avaUrl, name)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${name}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${BEST_CURRENT_GAMERS[id].scoresSum}</td>`;
+    HTML += `</tr>`;
+  }
+  HTML += `</table>`;
+  document.getElementById("best-current-game-players-table-container").innerHTML = HTML;
+
+}
+
+function bestRerenderLeaderCurrentHourList(results) {
+  if (results.length == 0) {
+    results = [ 
+                {
+                  user_ava_path: null, 
+                  user_name: "Ждем тебя",
+                  max_score: ":)"
+                }
+      ]
+  }
+
+  var HTML = `<table class = "best-leader-top-table">`;
+  for (i = 0; i < results.length; i++) {
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${results[i].user_name}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${results[i].max_score}</td>`;
+    HTML += `</tr>`;
+  }
+  HTML += `</table>`;
+  document.getElementById("best-current-game-players-current-hour-leaders-container").innerHTML = HTML;
+
+}
+
+function bestRerenderLeaderPreviousHourList(results) {
+  if (results.length == 0) {
+    results = [ 
+                {
+                  user_ava_path: null, 
+                  user_name: "Ждем тебя",
+                  max_score: ":)"
+                }
+      ]
+  }
+  
+
+  var HTML = `<table class = "best-leader-top-table">`;
+  for (i = 0; i < results.length; i++) {
+
+    if (i == 0) {
+      bestSetWinnerMarkerClassForId(results[i].user_id);
+    }
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name, i == 0)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${results[i].user_name}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${results[i].max_score}</td>`;
+    HTML += `</tr>`;
+  }
+  HTML += `</table>`;
+  document.getElementById("best-current-game-players-previous-hour-leaders-container").innerHTML = HTML;
+
+}
+
+function bestGameReloadLiaders() {
+
+    const tsNow = Math.floor((Date.now() - serverTimestampShift) / 1000)
+    $.getJSON( `http://codefest.rezon.webapi-dnd.os-n3.hw/codefest/getLeaders?timestamp=${tsNow}&limit=5`, function( json ) {
+      bestRerenderLeaderCurrentHourList(json);
+    });
+
+    const d = new Date();
+    const time = Math.floor((d.setHours(d.getHours() - 1) - serverTimestampShift) / 1000);
+
+    $.getJSON( `http://codefest.rezon.webapi-dnd.os-n3.hw/codefest/getLeaders?timestamp=${time}&limit=3`, function( json ) {
+      bestRerenderLeaderPreviousHourList(json);
+    });
+}
+
+
+function bestLaunchTimerBeforeStartGame() {
+    BEST_GAME_CURRENT_ID = CryptoJS.MD5(Date.now().toString()).toString();
+    BEST_GAME_TIME_STARTED = Math.floor((Date.now() - serverTimestampShift) / 1000);
+    startBestTimer(BEST_SHOW_RULES_TIMER);
+    // fadeIn(document.getElementById("best-game-rules"), 500)
+    fadeIn(document.getElementById("best-current-game-players-list"), 500);
+    // fadeOut(document.getElementById("best-game-launch-info"), 500);
+    
+    // playerQR.seek("100%"); // @todo почему это тут
+    // playerCongratsBlue.seek("100%");
+    // playerCongratsRed.seek("100%");
+    // playerCongratsGreen.seek("100%");
+    setTimeout(() => {
+      // fadeOut(document.getElementById("best-game-rules"), 500);
+      BEST_GAME_IN_PROGRESS = true;
+      bestStartPushingStickersWithTimersAndCountResults();
+    }, BEST_SHOW_RULES_TIMER);
+}
+
+
+function bestStartPushingStickersWithTimersAndCountResults() {
+  bestSpawnRandomSticker();
+}
+
+function bestSpawnRandomSticker() {
+
+  const duration = BEST_GAME_ONE_ROUND_DURATION;
+  const randomSticker = getRandomSticker();
+  BEST_GAME_CURRENT_STICKER = randomSticker;
+  BEST_GAME_CURRENT_ROUND++;
+
+  const bounds = map.getBounds();
+  const center = globalMarkers['codefestbot'].getCoordinates(); // @codefest bot center
+
+  const container = document.getElementById("container");
+  
+  const htmlMarker = createStickerMapMarker(randomSticker, center[0], center[1], "best-emoji-marker-sticker", true)
+
+  var randomPoint = null;
+  switch (getRandom(0,3)) {
+    case 0:
+      randomPoint = map.unproject([0, getRandom(0, container.clientHeight)]);
+      break;
+    case 1: 
+      randomPoint = map.unproject([container.clientWidth, getRandom(0, container.clientHeight)]);
+      break;
+    case 2: 
+      randomPoint = map.unproject([getRandom(0, container.clientWidth), 0]);
+      break;
+    case 3: 
+      randomPoint = map.unproject([getRandom(0, container.clientWidth), container.clientHeight]);
+      break;
+  }
+
+  moveMarker(
+    null,
+    htmlMarker,
+    randomPoint[0],
+    randomPoint[1],
+    duration
+  );
+
+  BEST_GAME_CURRENT_STICKER_MARKER = htmlMarker;
+
+  const firstPartText = BEST_GAME_CURRENT_ROUND < 10 && BEST_GAME_TOTAL_ROUNDS > 10 ? '&nbsp&nbsp' : '';
+
+  document.getElementById("best-timer-text").innerHTML = firstPartText + BEST_GAME_CURRENT_ROUND + ' / ' + BEST_GAME_TOTAL_ROUNDS;
+  startBestTimer(duration * 1000);
+
+  if (BEST_GAME_CURRENT_ROUND < BEST_GAME_TOTAL_ROUNDS) {
+    setTimeout(function () {
+      htmlMarker.destroy();
+      bestSpawnRandomSticker();
+    }, duration * 1000); // change time if changed animation css time
+  } else {
+    setTimeout(function () {
+      htmlMarker.destroy();
+      bestFinishGame();
+    }, duration * 1000); // change time if changed animation css time
+  }
+}
+
+function bestFinishGame() {
+  var maxResult = 0;
+  var currentWinner = null;
+  for (const userId in BEST_CURRENT_GAMERS) {
+    if (BEST_CURRENT_GAMERS[userId].scoresSum > maxResult) {
+      currentWinner = userId;
+      maxResult = BEST_CURRENT_GAMERS[userId].scoresSum;
+    }
+  }
+
+
+  bestSendResultsToBE(BEST_CURRENT_GAMERS);
+
+}
+
+function bestSendResultsToBE(results) {
+  //results.forEach((element) => element.ava_path = globalProfiles[element.id].logo);
+  // globalProfiles[id].logo
+  json = {
+    game_id: BEST_GAME_CURRENT_ID,
+    game_time: BEST_GAME_TIME_STARTED,
+    results: results
+  }
+
+  $.ajax("https://offline-zond.api.2gis.com/codefest/postResults", {
+    data : JSON.stringify(json),
+    contentType : 'application/json',
+    type : 'POST',
+    success: function () {
+        bestGameSuccessFinished();
+    },
+    error: function (error) {
+      console.log(error);
+      //@todo make error on display
+    }
+  })
+}
+
+function bestGameSuccessFinished() {
+  setTimeout(() => {
+    // fadeOut(document.getElementById("best-game-new-winner"), 500);
+    // fadeOut(document.getElementById("best-game-lose"), 500);
+    bestGameReloadLiaders();
+    BEST_CURRENT_GAMERS = {};
+    BEST_GAME_STARTED = false;
+    BEST_GAME_IN_PROGRESS = false;
+    BEST_GAME_CURRENT_STICKER = null;
+    BEST_GAME_CURRENT_STICKER_MARKER = null;
+    BEST_GAME_CURRENT_ROUND = 0;
+    document.getElementById("best-timer-text").innerHTML = "";
+    // fadeIn(document.getElementById("best-game-launch-info"), 500);
+    fadeOut(document.getElementById("best-current-game-players-list"), 500);
+  }, BEST_SHOW_FINISH_IMAGE);
+}
+
+
+function bestSetWinnerMarkerClassForId(id) {
+
+  const elemetsFiredWinners = document.getElementsByClassName("winner-fired-ava-container");
+  for (var i = 0; i < elemetsFiredWinners.length; i++) {
+    if (elemetsFiredWinners.item(i).classList.contains("winner-fired-ava-container")) {
+      elemetsFiredWinners.item(i).classList.add("fired-ava-container");
+      elemetsFiredWinners.item(i).classList.remove("winner-fired-ava-container");
+    }
+  }
+
+  const elemetsWinners = document.getElementsByClassName("winner-ava-container");
+  for (var i = 0; i < elemetsWinners.length; i++) {
+    if (elemetsWinners.item(i).classList.contains("winner-ava-container")) {
+      elemetsWinners.item(i).classList.add("ava-container");
+      elemetsWinners.item(i).classList.remove("winner-ava-container");
+    }
+  }
+
+  if (globalMarkers.hasOwnProperty(id)) {
+    const divMarker = document.getElementById("marker-" + id);
+    if (divMarker !== null) {
+      const markerFiredElement = divMarker.getElementsByClassName("fired-ava-container");
+      if (markerFiredElement.length > 0) {
+        if (markerFiredElement[0].classList.contains("fired-ava-container")) {
+          markerFiredElement[0].classList.add("winner-fired-ava-container");
+          markerFiredElement[0].classList.remove("fired-ava-container");
+        }
+      }
+
+      const markerAvaElement = divMarker.getElementsByClassName("ava-container");
+      if (markerAvaElement.length > 0) {
+        if (markerAvaElement[0].classList.contains("ava-container")) {
+          markerAvaElement[0].classList.add("winner-ava-container");
+          markerAvaElement[0].classList.remove("ava-container");
+        }
+      }    
+    } else {
+      if (DEBUG) {
+        console.log("bestSetWinnerMarkerClassForId. marker not found", id);
+        console.log(globalMarkers[id]);
+      }
+    }
+  }
+}
+
+function bestGameProcessCorrectSticker(userId, sticker, sendAt) {
+  //serverTimestampShift
+
+  const deltaTime = (now() - startBestTime - 500) / 1000;
+
+  const floorDelta = Math.floor(deltaTime);
+  const points = (3 - floorDelta) > 3 ? 3 : 3 - floorDelta;
+  const additionalScore = points > 0 ? points : 0;
+
+  if (!BEST_CURRENT_GAMERS[userId].scores.hasOwnProperty(BEST_GAME_CURRENT_ROUND)) { // @todo сделать для двух и более стикеров
+    BEST_CURRENT_GAMERS[userId].scores[BEST_GAME_CURRENT_ROUND] = additionalScore;
+    BEST_CURRENT_GAMERS[userId].scoresSum += additionalScore;
+  } 
+
+  bestRerenderCurrentPlayersList();
+
+  const senderMarker = globalMarkers[userId];
+  const senderLon = senderMarker.getCoordinates()[0];
+  const senderLat = senderMarker.getCoordinates()[1];
+  const htmlMarker = createStickerMapMarker(sticker, senderLon, senderLat, "best-emoji-marker-sticker-shot")
+  const duration = 200;
+  moveMarker(
+    null,
+    htmlMarker,
+    BEST_GAME_CURRENT_STICKER_MARKER.getCoordinates()[0],
+    BEST_GAME_CURRENT_STICKER_MARKER.getCoordinates()[1],
+    duration / 1000
+  );
+
+  setTimeout(function () {
+      htmlMarker.destroy();
+  }, duration);
+}
+
+function bestGameProcessIncorrectSticker(userId) {
+  
+}
+
+
+//--------------------------------------------------------//
+
+const timerName = document.getElementById("timer__name");
+const gameElement = document.getElementById("game");
+const secondsDiv = document.querySelector(".timer__seconds");
+const centerGameDiv = document.getElementById("game-center-screen");
+const centerSrickerDiv = document.getElementById("game-sticker-container");
+timerName.innerHTML = "Ожидаем игроков...";
+
+function finishGame(winnerId) {
+  centerSrickerDiv.innerHTML = `<div></div>`;
+  FIRST_GAME_FINISHED = true;
+
+  hideTimer();
+  //setTimeout(restartGame, 10000); //@todo return after debug
+  setTimeout(restartGame, 10000);
+
+  var winners = [];
+  if (!winnerId) {
+    var maxScore = 0;
+    for (const id in FIRST_CURRENT_GAMERS_SCORE) {
+      if (FIRST_CURRENT_GAMERS_SCORE[id] == maxScore) {
+        winners.push(id);
+      } else if (FIRST_CURRENT_GAMERS_SCORE[id] > maxScore) {
+        winners = [];
+        maxScore = FIRST_CURRENT_GAMERS_SCORE[id];
+        winners.push(id);
+      }
+    }
+  }
+
+  if (winners.length == 1) {
+    winnerId = winners[0];
+  }
+  if (winnerId) {
+    timerName.innerHTML = "У нас есть победитель!!!";
+    var acronym = "";
+    const avaUrl = globalProfiles[winnerId].logo;
+    const name = globalProfiles[winnerId].name;
+    const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+    if (backgroundImage === null) {
+      acronym = getAcronymFromName(name);
+    }
+    gameElement.innerHTML = `<div class="gamer-ava ava ava-only-text winner" style="${backgroundImage}">${acronym}</div>`;
+  } else {
+    timerName.innerHTML = "У несколько победителей!!!";
+    for (var i = 0; i < winners.length; i++) {
+      const gamerScore = document.getElementById("gamer-score-" + winners[i]);
+      gamerScore.style.backgroundColor = "#F99D33";
+    }
+  }
+}
+
+function startTimer(seconds, callback) {
+  if (DEBUG) {
+    console.log("start timer with callback", seconds, callback);
+  }
+  if (FIRST_GAME_TIMER_ID != null) {
+    clearInterval(FIRST_GAME_TIMER_ID);
+  }
+  d1 = new Date();
+  d2 = new Date(d1);
+  d2.setSeconds(d1.getSeconds() + seconds);
+  function countdownTimer() {
+    const diff = d2 - new Date();
+    if (diff <= 0) {
+      clearInterval(FIRST_GAME_TIMER_ID);
+      if (typeof callback === "function") {
+        callback();
+      }
+    } else {
+      const seconds = Math.floor(diff / 1000);
+      secondsDiv.textContent = seconds < 10 ? "0" + seconds : seconds;
+    }
+  }
+
+  showTimer();
+  //countdownTimer();
+  FIRST_GAME_TIMER_ID = setInterval(countdownTimer, 40); // 25fps
+}
+
+function showTimer() {
+  secondsDiv.style.display = "block";
+}
+
+function hideTimer() {
+  secondsDiv.style.display = "none";
+}
+
+function waitMoreGamers(currentCountGamers) {
+  if (FIRST_CURRENT_GAMERS.length < FIRST_MAX_PLAYERS) {
+    const seconds = currentCountGamers == 1 ? 60 : 15; //@todo 60 15
+    startTimer(seconds, function () {
+      return processFinishWaitMoreGamesTimer(currentCountGamers);
+    });
+  } else {
+    processFinishWaitMoreGamesTimer(currentCountGamers);
+  }
+}
+
+function processFinishWaitMoreGamesTimer(currentCountGamers) {
+  FIRST_ALLOW_ADD_NEW_PLAYERS = false;
+  if (currentCountGamers <= (getParamDebugGame === "true" ? 0 : 1)) {
+    timerName.innerHTML = "Недостаточно игроков, собираем игру заново!";
+    hideTimer();
+    setTimeout(restartGame, 2000);
+  } else {
+    startGame();
+  }
+}
+
+function startGame() {
+  FIRST_GAME_STARTED = true;
+  FIRST_GAME_FINISHED = false;
+  timerName.innerHTML = "Готовы??? Кто-же первый отправит нужный стикер!?";
+  startTimer(5, playRound);
+}
+
+function playRound() {
+  if (!FIRST_GAME_FINISHED && FIRST_GAME_STARTED) {
+    if (FIRST_CURRENT_ROUND_NUM < FIRST_MAX_ROUNDS) {
+      FIRST_CURRENT_ROUND_NUM = FIRST_CURRENT_ROUND_NUM + 1;
+      FIRST_CURRENT_ROUTN_WINNER = null;
+      FIRST_CURRENT_STICKER = getRandomSticker();
+      timerName.innerHTML = "Лови его!"; // "рандомные тексты";
+      if (DEBUG) {
+        console.log("round", FIRST_CURRENT_STICKER);
+      }
+      const emogiClass = "emogi-" + FIRST_CURRENT_STICKER;
+      centerSrickerDiv.innerHTML = `<div class="${emogiClass} game-center-screen-sticker"></div>`;
+
+      centerGameDiv.style.marginLeft = getRandomLeftForSticker() + "px";
+      centerGameDiv.style.marginTop = getRandomTopForSticker() + "px";
+
+      startTimer(3, playRound);
+    } else {
+      finishGame();
+    }
+  } else {
+    centerSrickerDiv.innerHTML = `<div></div>`;
+  }
+}
+
+function restartGame() {
+  if (DEBUG) {
+    console.log("restart game");
+  }
+  FIRST_LAST_STICKERS_BY_USERS = {};
+  FIRST_CURRENT_GAMERS = [];
+  FIRST_CURRENT_GAMERS_SCORE = {};
+  timerName.innerHTML = "Ожидаем игроков";
+  FIRST_ALLOW_ADD_NEW_PLAYERS = true;
+  gameElement.innerHTML = "";
+  hideTimer();
+  FIRST_CURRENT_STICKER = null;
+  FIRST_CURRENT_ROUTN_WINNER = null;
+  FIRST_GAME_FINISHED = false;
+  FIRST_GAME_STARTED = false;
+  FIRST_CURRENT_ROUND_NUM = 0;
+  centerSrickerDiv.innerHTML = `<div></div>`;
+}
+
+function getRandomSticker() {
+  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
+  return SUPPORTED_EMOJI[stickerN];
+}
+
+function getRandomLeftForSticker() {
+  const container = document.getElementById("game-container");
+  return Math.floor(Math.random() * container.clientWidth);
+}
+
+function getRandomTopForSticker() {
+  const container = document.getElementById("game-container");
+  return Math.floor(Math.random() * (container.clientHeight - 100));
+}
+
+function gameTest() {
+  startScene2fest();
+  var testMessageSticker1 = {
+    senderId: "debf959572c14aba8a5147678bf831aa",
+    stickerRecord: {
+      sticker: {
+        stickerId: "fire",
+        count: 1
+      }
+    }
+  };
+  var testMessageSticker2 = {
+    senderId: "debf959572c14aba8a5147678bf831aa",
+    stickerRecord: {
+      sticker: {
+        stickerId: "poop",
+        count: 1
+      }
+    }
+  };
+  var testMessageSticker3 = {
+    senderId: "debf959572c14aba8a5147678bf831aa",
+    stickerRecord: {
+      sticker: {
+        stickerId: "greenheart",
+        count: 1
+      }
+    }
+  };
+  var testMessageSticker4 = {
+    senderId: "debf959572c14aba8a5147678bf831aa",
+    stickerRecord: {
+      sticker: {
+        stickerId: "snowball",
+        count: 1
+      }
+    }
+  };
+
+  function addBots() {
+    for (const id in globalMarkers) {
+      testMessageSticker1.senderId = id;
+      testMessageSticker2.senderId = id;
+      testMessageSticker3.senderId = id;
+      testMessageSticker4.senderId = id;
+      processStickerToMe(testMessageSticker1);
+      processStickerToMe(testMessageSticker2);
+      processStickerToMe(testMessageSticker3);
+      processStickerToMe(testMessageSticker3);
+      processStickerToMe(testMessageSticker4);
+    }
+  }
+
+  setTimeout(addBots, 8000);
+}
+
+// ------------------ cropper ------------------------------//
+
+function getRoundedCanvas(sourceCanvas) {
+  var canvas = document.createElement("canvas");
+  var context = canvas.getContext("2d");
+  var width = sourceCanvas.width;
+  var height = sourceCanvas.height;
+
+  canvas.width = width;
+  canvas.height = height;
+  context.imageSmoothingEnabled = true;
+  context.drawImage(sourceCanvas, 0, 0, width, height);
+  context.globalCompositeOperation = "destination-in";
+  context.beginPath();
+  context.arc(
+    width / 2,
+    height / 2,
+    Math.min(width, height) / 2,
+    0,
+    2 * Math.PI,
+    true
+  );
+  context.fill();
+  return canvas;
+}
+
+function cropImage(base64) {
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  var cw = canvas.width;
+  var ch = canvas.height;
+
+  var img = new Image();
+  img.onload = start;
+  img.src = url;
+  function start() {
+    var cw, ch;
+    cw = canvas.width = img.width;
+    ch = canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    ctx.globalCompositeOperation = "destination-in";
+    ctx.beginPath();
+    ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+    const dataURL = canvas.toDataURL();
+    console.log(dataURL);
+  }
+}
+
+function showBase64Image(base64) {
+  console.log(base64);
+}
+
+function loadImage(url) {
+  let _img = document.getElementById("img-loader");
+  let newImg = new Image();
+  newImg.onload = function () {
+    _img.src = this.src;
+    const image = _img;
+
+    // Get the remote image as a Blob with the fetch API
+    fetch(_img.src)
+      .then((res) => res.blob())
+      .then((blob) => {
+        // Read the Blob as DataURL using the FileReader API
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          console.log(reader.result);
+          // Logs data:image/jpeg;base64,wL2dvYWwgbW9yZ...
+
+          // Convert to Base64 string
+          const base64 = getBase64StringFromDataURL(reader.result);
+          console.log(base64);
+          // Logs wL2dvYWwgbW9yZ...
+        };
+        reader.readAsDataURL(blob);
+      });
+    //cropImage(url);
+  };
+  newImg.src = url;
+}
+
+const getBase64StringFromDataURL = (dataURL) =>
+  dataURL.replace("data:", "").replace(/^.+,/, "");
+
+//loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
+
+//  startSceneZEM();
+
+// $.ajax("https://offline-zond.api.2gis.com/codefest/post_results", {
+//     data : '"test":"bla"',
+//     contentType : 'application/json',
+//     type : 'POST'})
+
+
+// $.getJSON( "https://offline-zond.api.2gis.com/codefest/index", function( json ) {
+//   console.log( "JSON Data: " + json.message );
+//  });
+
+
+</script>
+</body>
+
+</html>
