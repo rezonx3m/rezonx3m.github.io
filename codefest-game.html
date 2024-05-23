@@ -3881,14 +3881,14 @@ function bestRerenderLeaderPreviousHourList(results) {
 function bestGameReloadLiaders() {
 
     const tsNow = Math.floor((Date.now() - serverTimestampShift) / 1000)
-    $.getJSON( `http://codefest.rezon.webapi-dnd.os-n3.hw/codefest/getLeaders?timestamp=${tsNow}&limit=5`, function( json ) {
+    $.getJSON( `https://codefest.rezon.webapi-dnd.os-n3.hw/codefest/getLeaders?timestamp=${tsNow}&limit=5`, function( json ) {
       bestRerenderLeaderCurrentHourList(json);
     });
 
     const d = new Date();
     const time = Math.floor((d.setHours(d.getHours() - 1) - serverTimestampShift) / 1000);
 
-    $.getJSON( `http://codefest.rezon.webapi-dnd.os-n3.hw/codefest/getLeaders?timestamp=${time}&limit=3`, function( json ) {
+    $.getJSON( `https://codefest.rezon.webapi-dnd.os-n3.hw/codefest/getLeaders?timestamp=${time}&limit=3`, function( json ) {
       bestRerenderLeaderPreviousHourList(json);
     });
 }
