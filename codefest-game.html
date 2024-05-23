@@ -1168,7 +1168,7 @@ const map = new mapgl.Map("container", {
   center: [82.963483, 55.039882],
   zoom: 12,
   key: "2a5f353b-5172-411f-b1a2-8ea58b3f290c",
-  style: "b16cfd38-28d4-401c-a8a0-4942de84ce3a",
+  //style: "b16cfd38-28d4-401c-a8a0-4942de84ce3a",
   floorsEnabled: true,
   minZoom: 2,
   maxZoom: 20,
@@ -2752,7 +2752,7 @@ function startSceneCodefest() {
   //OVERRIDED_ZOOM = 100;
   
   map.setCenter([82.747614, 54.998218]);
-  map.setZoom(19);
+  map.setZoom(20);
   map.setPitch(40);
   map.setRotation(8);
 
@@ -2846,8 +2846,8 @@ function addCodefestBots() {
       id: codefestBotId,
       lastSeen: Date.now() * 1000,
       location: {
-        lat: 54.998429,
-        lon: 82.747358,
+        lat: 54.99835,
+        lon: 82.747035,
         azimuth: 0,
         speed: 0,
         accuracy: 1
@@ -3874,6 +3874,7 @@ function bestRerenderLeaderPreviousHourList(results) {
   for (i = 0; i < results.length; i++) {
 
     if (i == 0) {
+      BEST_WINNER_ID = results[i].user_id;
       bestSetWinnerMarkerClassForId(results[i].user_id);
     }
     HTML += `<tr>`;
