@@ -717,7 +717,7 @@
     .winner-leader-board-ava-container {
       background: #ffffff;
       overflow: hidden;
-      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      box-shadow: 0px 0px 4px 4px rgba(226, 88, 34, 0.8);
       border: 3px solid white;
       /*animation: scale 2s ease-in-out infinite;*/
       border-radius: 200px;
@@ -733,6 +733,18 @@
       color: white;
       font-weight: bold;
       text-align: center;
+    }
+
+    .winner-leader-board-ava-crown {
+      background-image: url("https://rezonx3m.github.io/friends/static/crown.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      margin-top: -18px;
+      margin-left: 16px;
+      transform: rotate(35deg);
     }
 
     .leader-board-ava-container {
@@ -3817,8 +3829,9 @@ function bestGetFirstColumnById(avaUrl, name, position, isLeader = false) {
   const customStyle = position > 3 ? 'style="background-color: #131313;"' : "";
 
   const classAva = isLeader ? "winner-leader-board-ava-container" : "leader-board-ava-container";
+  const winnerCrown = isLeader ? `<div class="winner-leader-board-ava-crown"></div>`: "";
   return `<div>
-      <div class="leader-position" ${customStyle}>${position}</div>
+      <div class="leader-position" ${customStyle}>${position}</div>${winnerCrown}
       <div class="friend">
           <div class="${classAva}" style="${backgroundImage}">${acronym}</div>
       </div>
