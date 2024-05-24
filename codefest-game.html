@@ -906,8 +906,8 @@
       height: 50px;
       min-width: 50px;
       min-height: 50px;
-      animation: emoji-scale 3s ease-in-out;
-      -webkit-animation: emoji-scale 3s ease-in-out;
+      animation: emoji-scale 5s ease-in-out;
+      -webkit-animation: emoji-scale 5s ease-in-out;
     }
 
     .best-emoji-marker-sticker-shot {
@@ -1192,9 +1192,9 @@ var BEST_GAME_CURRENT_ROUND = 0;
 var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
 const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
 const BEST_GAME_TOTAL_ROUNDS = 20; //20
-const BEST_SHOW_RULES_TIMER = 30000; // 45000
+const BEST_SHOW_RULES_TIMER = 30000; // 30000
 const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
-const BEST_GAME_ONE_ROUND_DURATION = 3;
+const BEST_GAME_ONE_ROUND_DURATION = 5; // change with best-emoji-marker-sticke
 const BEST_TIMER = document.querySelector('.best-timer');
 
 
@@ -4172,7 +4172,7 @@ function bestGameProcessCorrectSticker(userId, sticker, sendAt) {
   const deltaTime = (now() - startBestTime - 500) / 1000;
 
   const floorDelta = Math.floor(deltaTime);
-  const points = (3 - floorDelta) > 3 ? 3 : 3 - floorDelta;
+  const points = (BEST_GAME_ONE_ROUND_DURATION - floorDelta) > BEST_GAME_ONE_ROUND_DURATION ? BEST_GAME_ONE_ROUND_DURATION : BEST_GAME_ONE_ROUND_DURATION - floorDelta;
   const additionalScore = points > 0 ? points : 0;
   const key = BEST_GAME_CURRENT_ROUND.toString() + sticker 
 
