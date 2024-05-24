@@ -652,13 +652,21 @@
       top: 34px;
       left: 34px;
       display: none;
-      border-radius: 20px;
-      background-color: white;
+      /*border-radius: 20px;*/
+      /*background-color: white;*/
       max-height: 95%;
       overflow: auto;
       overflow-y: hidden; 
       overflow-x: hidden; 
       opacity: 0.9;
+    }
+
+    #best-current-game-players-previous-hour-leaders, #best-current-game-players-current-hour-leaders, #best-current-game-players-list  {
+      background-color: white;
+      padding: 6px 0px 6px 0px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0px 2px 4px 0px #00000014;
     }
 
     .best-leader-top-header {
@@ -668,12 +676,6 @@
       font-size: 18px;
     }
 
-    .best-hr {
-      width: 89%;
-      margin: auto;
-      margin-top: 15px;
-      margin-bottom: 5px;
-    }
 
     .best-leader-top-second-line {
       font-family: "SB Sans Display Regular";
@@ -1010,13 +1012,11 @@
         </div>
       </div>
       <div id="best-current-game-players-current-hour-leaders">
-        <hr class="best-hr">
         <div class = "best-leader-top-header">Лидеры текущего часа</div>
         <div id="best-current-game-players-current-hour-leaders-container">  
         </div>
       </div>
       <div id="best-current-game-players-list">
-        <hr class="best-hr">
         <div class = "best-leader-top-header">Лидеры текущего раунда</div>
         <div id="best-current-game-players-table-container">  
         </div>
