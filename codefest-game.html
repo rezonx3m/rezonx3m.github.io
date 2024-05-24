@@ -4,13 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
-
+<!-- 
   <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD_march.js"></script>
-  <!-- <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD.js"></script> -->
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD.js"></script> 
 
   <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_green_HD.js"></script>
   <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_red_HD.js"></script>
   <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_blue_HD.js"></script>
+-->
 
   <link rel="stylesheet" href="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.css">
   <script defer src="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.js"></script>
@@ -1196,6 +1197,17 @@ const BEST_SHOW_RULES_TIMER = 30000; // 30000
 const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
 const BEST_GAME_ONE_ROUND_DURATION = 5; // change with best-emoji-marker-sticke
 const BEST_TIMER = document.querySelector('.best-timer');
+
+const BEST_AWAINING_NAMES = [
+  "Ждем тебя",
+  "Тут пока пусто",
+  "Место вакантно",
+  "Заходи сюда",
+  "Шли ГО!",
+  "Мог бы быть ты",
+  "Мы тебя ждем",
+  "Скоро появятся"
+];
 
 
 
@@ -3821,17 +3833,21 @@ function bestGetFirstColumnById(avaUrl, name, position, isLeader = false) {
 
   if (backgroundImage === null) {
     acronym = getAcronymFromName(name);
-    if (acronym == "Жт") {
+    if (BEST_AWAINING_NAMES.includes(name)) {
       acronym = "";
     }
   }
 
+  
+
   const customStyle = position > 3 ? 'style="background-color: #131313;"' : "";
+  const positionHTML = BEST_AWAINING_NAMES.includes(name) ? "" : `<div class="leader-position" ${customStyle}>${position}</div>`
+
 
   const classAva = isLeader ? "winner-leader-board-ava-container" : "leader-board-ava-container";
   const winnerCrown = isLeader ? `<div class="winner-leader-board-ava-crown"></div>`: "";
   return `<div>
-      <div class="leader-position" ${customStyle}>${position}</div>${winnerCrown}
+      ${positionHTML}${winnerCrown}
       <div class="friend">
           <div class="${classAva}" style="${backgroundImage}">${acronym}</div>
       </div>
@@ -3847,7 +3863,7 @@ function bestRerenderCurrentPlayersList() {
                 {
                   avaUrl: null, 
                   id: "codefestbot1",
-                  name: "Ждем тебя",
+                  name: getRandomAwaitingName(),
                   scoresSum: ":)"
                 }
       };
@@ -3893,7 +3909,7 @@ function bestRerenderLeaderCurrentHourList(results) {
     results = [ 
                 {
                   user_ava_path: null, 
-                  user_name: "Ждем тебя",
+                  user_name: getRandomAwaitingName(),
                   max_score: ":)"
                 }
       ]
@@ -4373,6 +4389,11 @@ function restartGame() {
 function getRandomSticker() {
   const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
   return SUPPORTED_EMOJI[stickerN];
+}
+
+function getRandomAwaitingName() {
+  const namesN = Math.floor(Math.random() * BEST_AWAINING_NAMES.length);
+  return BEST_AWAINING_NAMES[namesN];
 }
 
 function getRandomLeftForSticker() {
