@@ -840,7 +840,7 @@
     }
 
     #best-current-game-players-list {
-      display: none;
+      display: block;
     }
 
 
@@ -1174,7 +1174,7 @@ var BEST_GAME_CURRENT_ROUND = 0;
 var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
 const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
 const BEST_GAME_TOTAL_ROUNDS = 20; //20
-const BEST_SHOW_RULES_TIMER = 45000; //45000
+const BEST_SHOW_RULES_TIMER = 50000; // 45000
 const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
 const BEST_GAME_ONE_ROUND_DURATION = 3;
 const BEST_TIMER = document.querySelector('.best-timer');
@@ -1562,8 +1562,6 @@ function processState(state) {
     }
   }
 
-
-  //console.log('animationTime', animationTime);
 
   const azimuth = isInit
     ? null
@@ -3597,12 +3595,7 @@ function logStickerByUser(id, sticker, sendAt) {
     }
 
     if (sticker == "go") {
-      if (BEST_GAME_STARTED === false) {
-        BEST_GAME_STARTED = true;
-        bestLaunchTimerBeforeStartGame();
-      }
-
-      if (!BEST_CURRENT_GAMERS.hasOwnProperty(id)) { // @todo убрать ограничение
+      if (!BEST_CURRENT_GAMERS.hasOwnProperty(id)) {
         BEST_CURRENT_GAMERS[id] = {
           id: id,
           name: globalProfiles[id].name,
@@ -3610,8 +3603,7 @@ function logStickerByUser(id, sticker, sendAt) {
           scores: {},
           scoresSum: 0
         }
-        
-        bestRerenderCurrentPlayersList();
+        bestRerenderCurrentPlayersList();   
       }
     }
 
@@ -3792,7 +3784,8 @@ function startGameBestTimeSticker() {
   ]);
   document.getElementById("best-game-launch-info").style.display = "block";
   bestGameReloadLiaders();
-  
+  bestRerenderCurrentPlayersList();
+  bestLaunchTimerBeforeStartGame();  
 }
 
 function getRandom(min, max, integer = true) {
@@ -3806,6 +3799,9 @@ function bestGetFirstColumnById(avaUrl, name, position, isLeader = false) {
 
   if (backgroundImage === null) {
     acronym = getAcronymFromName(name);
+    if (acronym == "Жт") {
+      acronym = "";
+    }
   }
 
   const customStyle = position > 3 ? 'style="background-color: #131313;"' : "";
@@ -3822,9 +3818,24 @@ function bestGetFirstColumnById(avaUrl, name, position, isLeader = false) {
 
 function bestRerenderCurrentPlayersList() {
 
+  var results = [];
+  if (Object.keys(BEST_CURRENT_GAMERS).length === 0) {
+    results = {codefestbot1:
+                {
+                  avaUrl: null, 
+                  id: "codefestbot1",
+                  name: "Ждем тебя",
+                  scoresSum: ":)"
+                }
+      };
+  } else {
+    results = BEST_CURRENT_GAMERS;
+  }
+
+
   var objectsToSort = {};
-  for (id in BEST_CURRENT_GAMERS) {
-    objectsToSort[id] = BEST_CURRENT_GAMERS[id].scoresSum;
+  for (id in results) {
+    objectsToSort[id] = results[id].scoresSum;
   }
 
   let sortable = [];
@@ -3840,11 +3851,11 @@ function bestRerenderCurrentPlayersList() {
   var i = 0;
   sortable.forEach((item) => {
 
-    const name = BEST_CURRENT_GAMERS[item.id].name;
+    const name = results[item.id].name;
     HTML += `<tr>`;
-    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(BEST_CURRENT_GAMERS[item.id].avaUrl, name, i + 1)}</td>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[item.id].avaUrl, name, i + 1)}</td>`;
     HTML += `<td class = "best-leader-table-third-column">${name}</td>`;
-    HTML += `<td class = "best-leader-table-second-column">${BEST_CURRENT_GAMERS[item.id].scoresSum}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${results[item.id].scoresSum}</td>`;
     HTML += `</tr>`;
     i++;
   });
@@ -3926,6 +3937,7 @@ function bestGameReloadLiaders() {
         bestRerenderLeaderPreviousHourList(json);
       });
       fadeIn(document.getElementById("best-leader-board"), 500)
+      bestRerenderCurrentPlayersList();
     }, 500);
 
     ;
@@ -3937,7 +3949,7 @@ function bestLaunchTimerBeforeStartGame() {
     BEST_GAME_TIME_STARTED = Math.floor((Date.now() - serverTimestampShift) / 1000);
     startBestTimer(BEST_SHOW_RULES_TIMER, true);
     // fadeIn(document.getElementById("best-game-rules"), 500)
-    fadeIn(document.getElementById("best-current-game-players-list"), 500);
+    // fadeIn(document.getElementById("best-current-game-players-list"), 500);
     // fadeOut(document.getElementById("best-game-launch-info"), 500);
     
     // playerQR.seek("100%"); // @todo почему это тут
@@ -3961,7 +3973,7 @@ function bestSpawnRandomSticker() {
   BEST_GAME_CURRENT_STICKERS = [];
   BEST_GAME_CURRENT_STICKER_MARKERS = {};
   const duration = BEST_GAME_ONE_ROUND_DURATION;
-    BEST_GAME_CURRENT_ROUND++;
+  BEST_GAME_CURRENT_ROUND++;
 
   const bounds = map.getBounds();
   const center = globalMarkers['codefestbot'].getCoordinates(); // @codefest bot center
@@ -3969,9 +3981,9 @@ function bestSpawnRandomSticker() {
   const container = document.getElementById("container");
   
   var stickersCount = 1;
-  if (BEST_GAME_CURRENT_ROUND > 18) {
+  if (BEST_GAME_CURRENT_ROUND > 17) {
     stickersCount = 3;
-  } else if (BEST_GAME_CURRENT_ROUND > 12) {
+  } else if (BEST_GAME_CURRENT_ROUND > 11) {
     stickersCount = 2;
   }
 
@@ -4031,24 +4043,14 @@ function bestSpawnRandomSticker() {
     }, duration * 1000); // change time if changed animation css time
   } else {
     setTimeout(function () {
+      BEST_GAME_IN_PROGRESS = false;
       bestFinishGame();
     }, duration * 1000); // change time if changed animation css time
   }
 }
 
 function bestFinishGame() {
-  var maxResult = 0;
-  var currentWinner = null;
-  for (const userId in BEST_CURRENT_GAMERS) {
-    if (BEST_CURRENT_GAMERS[userId].scoresSum > maxResult) {
-      currentWinner = userId;
-      maxResult = BEST_CURRENT_GAMERS[userId].scoresSum;
-    }
-  }
-
-
   bestSendResultsToBE(BEST_CURRENT_GAMERS);
-
 }
 
 function bestSendResultsToBE(results) {
@@ -4081,14 +4083,17 @@ function bestGameSuccessFinished() {
     // fadeOut(document.getElementById("best-game-new-winner"), 500);
     // fadeOut(document.getElementById("best-game-lose"), 500);
     bestGameReloadLiaders();
+
     BEST_CURRENT_GAMERS = {};
     BEST_GAME_STARTED = false;
-    BEST_GAME_IN_PROGRESS = false;
     BEST_GAME_CURRENT_STICKERS = [];
     BEST_GAME_CURRENT_STICKER_MARKERS = {};
     BEST_GAME_CURRENT_ROUND = 0;
     // fadeIn(document.getElementById("best-game-launch-info"), 500);
-    fadeOut(document.getElementById("best-current-game-players-list"), 500);
+    // fadeOut(document.getElementById("best-current-game-players-list"), 500);
+    setTimeout(() => {
+      bestLaunchTimerBeforeStartGame();
+    }, 200); 
   }, BEST_SHOW_FINISH_IMAGE + 100);
 }
 
