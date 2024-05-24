@@ -1072,6 +1072,8 @@ const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
 var OVERRIDED_ZOOM = null;
 const DROP_MARKERS_WITH_OLD_STATE = !DEBUG;
 
+const SKIPED_ID = "0155140dfccb40739784b81e9faa445b";
+
 // маркера в кластерах (для быстрой чистки)
 var clusterMarkers = {};
 // идентификаторы юрезов в кластерах, для скрытия и восстановления основных маркеров @todo обощить с маркерами
@@ -1518,6 +1520,10 @@ function removeMarker(id) {
 
 function processState(state) {
   const id = state.id;
+
+  if (id == SKIPED_ID) {
+    return;
+  }
 
   if (DEBUG) {
     console.log("processState", id, state);
