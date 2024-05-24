@@ -1168,14 +1168,14 @@ var BEST_WINNER_ID = null;
 var BEST_CURRENT_GAMERS = {};
 var BEST_GAME_STARTED = false;
 var BEST_GAME_IN_PROGRESS = false;
-var BEST_GAME_CURRENT_STICKER = null;
-var BEST_GAME_CURRENT_STICKER_MARKER = null;
+var BEST_GAME_CURRENT_STICKERS = [];
+var BEST_GAME_CURRENT_STICKER_MARKERS = {}; 
 var BEST_GAME_CURRENT_ROUND = 0;
 var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
 const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
-const BEST_GAME_TOTAL_ROUNDS = 5; //20
-const BEST_SHOW_RULES_TIMER = 4500; //45000
-const BEST_SHOW_FINISH_IMAGE = 5000; // 10000 @todo revert
+const BEST_GAME_TOTAL_ROUNDS = 20; //20
+const BEST_SHOW_RULES_TIMER = 45000; //45000
+const BEST_SHOW_FINISH_IMAGE = 1000; // 10000 @todo revert
 const BEST_GAME_ONE_ROUND_DURATION = 3;
 const BEST_TIMER = document.querySelector('.best-timer');
 
@@ -2780,12 +2780,12 @@ function startSceneCodefest() {
   ENABLE_STICKERS_TO_ME = false;
   ENABLE_MARK_STICKERS_AS_VIEWED = true;
   FORCE_RECONNECT_IF_NO_STICKERS = true;
-  document.getElementById("input-id").value = "port"; // todo @change to codefest
+  document.getElementById("input-id").value = "codefest";
 
   
 
   SOCKET_PATH =
-    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true&channes=markers,stickers";
+    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=b731c9e5e542f345900cca57ba92b819fe371fd3&get-friends-stickers=true&channes=markers,stickers";
   
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
@@ -2805,7 +2805,7 @@ function startSceneCodefest() {
         break;
       case 55:
         var sticker = testMessageStickerFromToMe2;
-        sticker.stickerRecord.sticker.stickerId = BEST_GAME_CURRENT_STICKER;
+        sticker.stickerRecord.sticker.stickerId =  BEST_GAME_CURRENT_STICKERS[getRandom(0, BEST_GAME_CURRENT_STICKERS.length - 1, true)];
         processStickerToMe(sticker);
         break; 
       case 56:
@@ -2834,7 +2834,7 @@ function addCodefestBots() {
   const profileCodefest = {
     id: codefestBotId,
     name: "Codefest",
-    logo: "https://i2.photo.2gis.com/images/profile/30258560158804614_b42b.jpg"
+    logo: "https://i0.photo.2gis.com/images/profile/30258560181551409_d191.jpg"
   };
 
   const profileCodefest1 = {
@@ -3616,14 +3616,13 @@ function logStickerByUser(id, sticker, sendAt) {
     }
 
     if (BEST_GAME_IN_PROGRESS && BEST_CURRENT_GAMERS.hasOwnProperty(id)) {
-      if (BEST_GAME_CURRENT_STICKER == sticker) {
+      if (BEST_GAME_CURRENT_STICKERS.includes(sticker)) {
         bestGameProcessCorrectSticker(id, sticker, sendAt);
       } else {
         // bestGameProcessIncorrectSticker(id);
       }
     }
     
-    //BEST_GAME_CURRENT_STICKER
 
   } else if (FIRST_ALLOW_ADD_NEW_PLAYERS) { // игра на большее количество первых
     var hasNewGamer = false;
@@ -3959,57 +3958,79 @@ function bestStartPushingStickersWithTimersAndCountResults() {
 
 function bestSpawnRandomSticker() {
 
+  BEST_GAME_CURRENT_STICKERS = [];
+  BEST_GAME_CURRENT_STICKER_MARKERS = {};
   const duration = BEST_GAME_ONE_ROUND_DURATION;
-  const randomSticker = getRandomSticker();
-  BEST_GAME_CURRENT_STICKER = randomSticker;
-  BEST_GAME_CURRENT_ROUND++;
+    BEST_GAME_CURRENT_ROUND++;
 
   const bounds = map.getBounds();
   const center = globalMarkers['codefestbot'].getCoordinates(); // @codefest bot center
 
   const container = document.getElementById("container");
   
-  const htmlMarker = createStickerMapMarker(randomSticker, center[0], center[1], "best-emoji-marker-sticker", true)
-
-  var randomPoint = null;
-  switch (getRandom(0,3)) {
-    case 0:
-      randomPoint = map.unproject([0, getRandom(0, container.clientHeight)]);
-      break;
-    case 1: 
-      randomPoint = map.unproject([container.clientWidth, getRandom(0, container.clientHeight)]);
-      break;
-    case 2: 
-      randomPoint = map.unproject([getRandom(0, container.clientWidth), 0]);
-      break;
-    case 3: 
-      randomPoint = map.unproject([getRandom(0, container.clientWidth), container.clientHeight]);
-      break;
+  var stickersCount = 1;
+  if (BEST_GAME_CURRENT_ROUND > 18) {
+    stickersCount = 3;
+  } else if (BEST_GAME_CURRENT_ROUND > 12) {
+    stickersCount = 2;
   }
 
-  moveMarker(
-    null,
-    htmlMarker,
-    randomPoint[0],
-    randomPoint[1],
-    duration
-  );
+  function getUniqSticker() {
+    while (true) {
+      const randomSticker = getRandomSticker();
+      if (!BEST_GAME_CURRENT_STICKERS.includes(randomSticker)) {
+        return randomSticker;
+      }
+    }
+  }
 
-  BEST_GAME_CURRENT_STICKER_MARKER = htmlMarker;
+  for (var i = 0; i < stickersCount; i++) {
+    const randomSticker = getUniqSticker();
+    
+
+    const htmlMarker = createStickerMapMarker(randomSticker, center[0], center[1], "best-emoji-marker-sticker", true);
+    var randomPoint = null;
+    switch (getRandom(0,3)) {
+      case 0:
+        randomPoint = map.unproject([0, getRandom(0, container.clientHeight)]);
+        break;
+      case 1: 
+        randomPoint = map.unproject([container.clientWidth, getRandom(0, container.clientHeight)]);
+        break;
+      case 2: 
+        randomPoint = map.unproject([getRandom(0, container.clientWidth), 0]);
+        break;
+      case 3: 
+        randomPoint = map.unproject([getRandom(0, container.clientWidth), container.clientHeight]);
+        break;
+    }
+
+    moveMarker(
+      null,
+      htmlMarker,
+      randomPoint[0],
+      randomPoint[1],
+      duration
+    );
+
+    BEST_GAME_CURRENT_STICKERS.push(randomSticker);
+    BEST_GAME_CURRENT_STICKER_MARKERS[randomSticker] = htmlMarker;
+    setTimeout(function () {
+      htmlMarker.destroy();
+    }, duration * 1000); // change time if changed animation css time
+  }
 
   const firstPartText = BEST_GAME_CURRENT_ROUND < 10 && BEST_GAME_TOTAL_ROUNDS > 10 ? '&nbsp&nbsp' : '';
 
-  document.getElementById("best-timer-text").innerHTML = firstPartText + BEST_GAME_CURRENT_ROUND + ' / ' + BEST_GAME_TOTAL_ROUNDS;
+  document.getElementById("best-timer-text").innerHTML = `<div style="overflow: hidden;"><div style="text-align: center; display: inline-block; width: 50px;">${firstPartText}${BEST_GAME_CURRENT_ROUND}</div><div style="text-align: center; display: inline-block; width: 20px;">/</div><div style="text-align: center; display: inline-block; width: 50px;">${BEST_GAME_TOTAL_ROUNDS}</div></div>`;
   startBestTimer(duration * 1000);
 
   if (BEST_GAME_CURRENT_ROUND < BEST_GAME_TOTAL_ROUNDS) {
     setTimeout(function () {
-      htmlMarker.destroy();
       bestSpawnRandomSticker();
     }, duration * 1000); // change time if changed animation css time
   } else {
     setTimeout(function () {
-      htmlMarker.destroy();
       bestFinishGame();
     }, duration * 1000); // change time if changed animation css time
   }
@@ -4063,8 +4084,8 @@ function bestGameSuccessFinished() {
     BEST_CURRENT_GAMERS = {};
     BEST_GAME_STARTED = false;
     BEST_GAME_IN_PROGRESS = false;
-    BEST_GAME_CURRENT_STICKER = null;
-    BEST_GAME_CURRENT_STICKER_MARKER = null;
+    BEST_GAME_CURRENT_STICKERS = [];
+    BEST_GAME_CURRENT_STICKER_MARKERS = {};
     BEST_GAME_CURRENT_ROUND = 0;
     // fadeIn(document.getElementById("best-game-launch-info"), 500);
     fadeOut(document.getElementById("best-current-game-players-list"), 500);
@@ -4125,9 +4146,10 @@ function bestGameProcessCorrectSticker(userId, sticker, sendAt) {
   const floorDelta = Math.floor(deltaTime);
   const points = (3 - floorDelta) > 3 ? 3 : 3 - floorDelta;
   const additionalScore = points > 0 ? points : 0;
+  const key = BEST_GAME_CURRENT_ROUND.toString() + sticker 
 
-  if (!BEST_CURRENT_GAMERS[userId].scores.hasOwnProperty(BEST_GAME_CURRENT_ROUND)) { // @todo сделать для двух и более стикеров
-    BEST_CURRENT_GAMERS[userId].scores[BEST_GAME_CURRENT_ROUND] = additionalScore;
+  if (!BEST_CURRENT_GAMERS[userId].scores.hasOwnProperty(key)) { // @todo сделать для двух и более стикеров
+    BEST_CURRENT_GAMERS[userId].scores[key] = additionalScore;
     BEST_CURRENT_GAMERS[userId].scoresSum += additionalScore;
   } 
 
@@ -4136,13 +4158,14 @@ function bestGameProcessCorrectSticker(userId, sticker, sendAt) {
   const senderMarker = globalMarkers[userId];
   const senderLon = senderMarker.getCoordinates()[0];
   const senderLat = senderMarker.getCoordinates()[1];
-  const htmlMarker = createStickerMapMarker(sticker, senderLon, senderLat, "best-emoji-marker-sticker-shot")
+  const htmlMarker = createStickerMapMarker(sticker, senderLon, senderLat, "best-emoji-marker-sticker-shot");
+
   const duration = 200;
   moveMarker(
     null,
     htmlMarker,
-    BEST_GAME_CURRENT_STICKER_MARKER.getCoordinates()[0],
-    BEST_GAME_CURRENT_STICKER_MARKER.getCoordinates()[1],
+    BEST_GAME_CURRENT_STICKER_MARKERS[sticker].getCoordinates()[0],
+    BEST_GAME_CURRENT_STICKER_MARKERS[sticker].getCoordinates()[1],
     duration / 1000
   );
 
