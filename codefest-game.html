@@ -609,6 +609,22 @@
       margin-bottom: 12px;
       margin-top: 7px;
       margin-right: 10px;
+      z-index: 50;
+    }
+
+    .leader-position {
+      width: 24px;
+      height: 18px;
+      padding: 2px 0px 0px 0px;
+      border-radius: 10px 10px 10px 10px;
+      background-color: #19AA1E;
+      text-align: center;
+      font-size: 12px;
+      color: #FFFFFF;
+      z-index: 100;
+      position: absolute;
+      margin-top: -10px;
+      margin-left: -10px;
     }
 
     .friends-table table,
@@ -680,6 +696,7 @@
     .best-leader-table-first-column {
       width: 52px;
       text-align: left;
+      padding-left: 10px;
     }
 
     .best-leader-table-second-column {
@@ -689,7 +706,7 @@
     }
 
     .best-leader-table-third-column {
-      width: 200px;
+      width: 190px;
       text-align: left;
     }
 
@@ -698,7 +715,7 @@
       overflow: hidden;
       box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
       border: 3px solid white;
-      animation: scale 2s ease-in-out infinite;
+      /*animation: scale 2s ease-in-out infinite;*/
       border-radius: 200px;
       display: flex;
       align-items: center;
@@ -719,7 +736,7 @@
       overflow: hidden;
       box-shadow: 0px 0px 2px 2px rgba(38, 38, 38, 0.5);
       border: 3px solid white;
-      animation: scale 2s ease-in-out infinite;
+      /*aanimation: scale 2s ease-in-out infinite;*/
       border-radius: 200px;
       display: flex;
       align-items: center;
@@ -749,6 +766,7 @@
       overflow: hidden;
       border: 3px solid white;
       animation: scale 2s ease-in-out infinite;
+      z-index: 1000;
     }
 
     .winner-ava-container {
@@ -1155,9 +1173,9 @@ var BEST_GAME_CURRENT_STICKER_MARKER = null;
 var BEST_GAME_CURRENT_ROUND = 0;
 var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
 const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
-const BEST_GAME_TOTAL_ROUNDS = 20; //20
-const BEST_SHOW_RULES_TIMER = 60000; //15000
-const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
+const BEST_GAME_TOTAL_ROUNDS = 5; //20
+const BEST_SHOW_RULES_TIMER = 4500; //45000
+const BEST_SHOW_FINISH_IMAGE = 5000; // 10000 @todo revert
 const BEST_GAME_ONE_ROUND_DURATION = 3;
 const BEST_TIMER = document.querySelector('.best-timer');
 
@@ -2748,13 +2766,13 @@ function startScenePort() {
 
 
 function startSceneCodefest() {
-  currentScene = "port";
+  currentScene = "codefest";
   //OVERRIDED_ZOOM = 100;
   
   map.setCenter([82.747614, 54.998218]);
-  map.setZoom(20);
-  map.setPitch(40);
-  map.setRotation(8);
+  map.setZoom(19.68);
+  map.setPitch(30);
+  map.setRotation(40.84);
 
   //const snow = new mapglSnow.Snow(map);
   ENABLE_CLUSTERS = false;
@@ -2785,14 +2803,11 @@ function startSceneCodefest() {
       case 48:
         window.location.reload();;
         break;
-
-
       case 55:
-        var sticker = testMessageStickerFromToMe;
+        var sticker = testMessageStickerFromToMe2;
         sticker.stickerRecord.sticker.stickerId = BEST_GAME_CURRENT_STICKER;
         processStickerToMe(sticker);
         break; 
-
       case 56:
         processStickerToMe(testMessageStickerFromToMe2);
         break;
@@ -2868,10 +2883,10 @@ function addCodefestBots() {
       id: codefestBotId1,
       lastSeen: Date.now() * 1000,
       location: {
-        lat: 54.998506,
-        lon: 82.746942,
+        lat: 54.998436,
+        lon: 82.746965,
         azimuth: 206.91267,
-        speed: 1.5,
+        speed: 0.8,
         accuracy: 17.823999404907227
       },
       battery: {
@@ -2890,8 +2905,8 @@ function addCodefestBots() {
       id: codefestBotId2,
       lastSeen: Date.now() * 1000,
       location: {
-        lat: 54.997792,
-        lon: 82.747533,
+        lat: 54.99804,
+        lon: 82.747539,
         azimuth: 206.91267,
         speed: 160,
         accuracy: 17.823999404907227
@@ -2936,19 +2951,7 @@ function addCodefestBots() {
   processMessage(profileState2);
   processMessage(profileState3);
 
-  bot1movements = [
-    [82.746942, 54.998506],
-    [82.746955, 54.998449],
-    [82.746971, 54.998386],
-    [82.746987, 54.998326],
-    [82.747004, 54.998262],
-    [82.747021, 54.998203],
-    [82.747074, 54.998157],
-    [82.747176, 54.998128],
-    [82.74728, 54.99812],
-    [82.747404, 54.998129],
-    [82.747513, 54.99814]
-  ];
+  bot1movements = [[82.746965,54.998436],[82.746975,54.998399],[82.746985,54.998353],[82.746995,54.998315],[82.747005,54.998276],[82.747071,54.998278],[82.747137,54.998275],[82.747149,54.998239],[82.747158,54.998206],[82.747171,54.998167],[82.747176,54.998126],[82.747235,54.998106],[82.747301,54.998111],[82.747365,54.998115],[82.74743,54.998122],[82.747494,54.998127],[82.747563,54.998133],[82.74763,54.998139],[82.747682,54.998158],[82.747686,54.998195],[82.747672,54.998232],[82.747666,54.998269],[82.747657,54.998306],[82.747645,54.998344],[82.74764,54.99838],[82.74763,54.998414],[82.747619,54.998452],[82.74765,54.99848],[82.747718,54.998486]];
   if (CODEFEST_BOTS_STARTED === false) {
     moveBot(bot1movements, true, 0, 5000);
     CODEFEST_BOTS_STARTED = true;
@@ -3732,14 +3735,19 @@ var startBestTime = 0;
 const now = () => performance.now();
 
 
-function startBestTimer(duration) {
+function startBestTimer(duration, showSec = false) {
   BEST_TIMER.style.display = "block";
   var duration;
+  var showSec;
   
   const update = () => {
     const delta = now() - startBestTime;
     const difference = duration - delta;
     const percent = Math.max(0, Math.min(100, (difference / duration) * 100));
+    if (showSec) {
+      const sec = Math.floor(difference / 1000);
+      document.getElementById("best-timer-text").innerHTML = sec;
+    }
     
     BEST_TIMER.style.setProperty('--progress', percent);
     
@@ -3778,7 +3786,11 @@ function startGameBestTimeSticker() {
   // warmup
   document.getElementById("best-leader-board").style.display = "block";
   map.invalidateSize();
-  goMapCenterToId("codefestbot");
+  map.setCenter(
+    [
+      globalMarkers["codefestbot"].getCoordinates()[0] + 0.0005,
+      globalMarkers["codefestbot"].getCoordinates()[1] - 0.0001
+  ]);
   document.getElementById("best-game-launch-info").style.display = "block";
   bestGameReloadLiaders();
   
@@ -3788,7 +3800,7 @@ function getRandom(min, max, integer = true) {
   return integer ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min) + min;
 }
 
-function bestGetFirstColumnById(avaUrl, name, isLeader = false) {
+function bestGetFirstColumnById(avaUrl, name, position, isLeader = false) {
   var acronym = "";
   
   const backgroundImage = getBackgroundImageForAva(avaUrl);
@@ -3797,8 +3809,15 @@ function bestGetFirstColumnById(avaUrl, name, isLeader = false) {
     acronym = getAcronymFromName(name);
   }
 
+  const customStyle = position > 3 ? 'style="background-color: #131313;"' : "";
+
   const classAva = isLeader ? "winner-leader-board-ava-container" : "leader-board-ava-container";
-  return `<div class="friend"><div class="${classAva}" style="${backgroundImage}">${acronym}</div></div>`;
+  return `<div>
+      <div class="leader-position" ${customStyle}>${position}</div>
+      <div class="friend">
+          <div class="${classAva}" style="${backgroundImage}">${acronym}</div>
+      </div>
+    </div>`;
 
 }
 
@@ -3819,14 +3838,16 @@ function bestRerenderCurrentPlayersList() {
   });
 
   var HTML = `<table class = "best-leader-top-table">`;
-
+  var i = 0;
   sortable.forEach((item) => {
+
     const name = BEST_CURRENT_GAMERS[item.id].name;
     HTML += `<tr>`;
-    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(BEST_CURRENT_GAMERS[item.id].avaUrl, name)}</td>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(BEST_CURRENT_GAMERS[item.id].avaUrl, name, i + 1)}</td>`;
     HTML += `<td class = "best-leader-table-third-column">${name}</td>`;
     HTML += `<td class = "best-leader-table-second-column">${BEST_CURRENT_GAMERS[item.id].scoresSum}</td>`;
     HTML += `</tr>`;
+    i++;
   });
   HTML += `</table>`;
 
@@ -3848,7 +3869,7 @@ function bestRerenderLeaderCurrentHourList(results) {
   var HTML = `<table class = "best-leader-top-table">`;
   for (i = 0; i < results.length; i++) {
     HTML += `<tr>`;
-    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name)}</td>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name, i + 1)}</td>`;
     HTML += `<td class = "best-leader-table-third-column">${results[i].user_name}</td>`;
     HTML += `<td class = "best-leader-table-second-column">${results[i].max_score}</td>`;
     HTML += `</tr>`;
@@ -3878,7 +3899,7 @@ function bestRerenderLeaderPreviousHourList(results) {
       bestSetWinnerMarkerClassForId(results[i].user_id);
     }
     HTML += `<tr>`;
-    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name, i == 0)}</td>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name, i + 1, i == 0)}</td>`;
     HTML += `<td class = "best-leader-table-third-column">${results[i].user_name}</td>`;
     HTML += `<td class = "best-leader-table-second-column">${results[i].max_score}</td>`;
     HTML += `</tr>`;
@@ -3890,24 +3911,32 @@ function bestRerenderLeaderPreviousHourList(results) {
 
 function bestGameReloadLiaders() {
 
-    const tsNow = Math.floor((Date.now() - serverTimestampShift) / 1000)
-    $.getJSON( `https://offline-zond.api.2gis.com/codefest/getLeaders?timestamp=${tsNow}&limit=5`, function( json ) {
-      bestRerenderLeaderCurrentHourList(json);
-    });
+    fadeOut(document.getElementById("best-leader-board"), 500);
 
-    const d = new Date();
-    const time = Math.floor((d.setHours(d.getHours() - 1) - serverTimestampShift) / 1000);
 
-    $.getJSON( `https://offline-zond.api.2gis.com/codefest/getLeaders?timestamp=${time}&limit=3`, function( json ) {
-      bestRerenderLeaderPreviousHourList(json);
-    });
+    setTimeout(() => {
+      const tsNow = Math.floor((Date.now() - serverTimestampShift) / 1000)
+      $.getJSON( `https://offline-zond.api.2gis.com/codefest/getLeaders?timestamp=${tsNow}&limit=5`, function( json ) {
+        bestRerenderLeaderCurrentHourList(json);
+      });
+
+      const d = new Date();
+      const time = Math.floor((d.setHours(d.getHours() - 1) - serverTimestampShift) / 1000);
+
+      $.getJSON( `https://offline-zond.api.2gis.com/codefest/getLeaders?timestamp=${time}&limit=3`, function( json ) {
+        bestRerenderLeaderPreviousHourList(json);
+      });
+      fadeIn(document.getElementById("best-leader-board"), 500)
+    }, 500);
+
+    ;
 }
 
 
 function bestLaunchTimerBeforeStartGame() {
     BEST_GAME_CURRENT_ID = CryptoJS.MD5(Date.now().toString()).toString();
     BEST_GAME_TIME_STARTED = Math.floor((Date.now() - serverTimestampShift) / 1000);
-    startBestTimer(BEST_SHOW_RULES_TIMER);
+    startBestTimer(BEST_SHOW_RULES_TIMER, true);
     // fadeIn(document.getElementById("best-game-rules"), 500)
     fadeIn(document.getElementById("best-current-game-players-list"), 500);
     // fadeOut(document.getElementById("best-game-launch-info"), 500);
@@ -3920,7 +3949,7 @@ function bestLaunchTimerBeforeStartGame() {
       // fadeOut(document.getElementById("best-game-rules"), 500);
       BEST_GAME_IN_PROGRESS = true;
       bestStartPushingStickersWithTimersAndCountResults();
-    }, BEST_SHOW_RULES_TIMER);
+    }, BEST_SHOW_RULES_TIMER + 100);
 }
 
 
@@ -4026,7 +4055,7 @@ function bestSendResultsToBE(results) {
 
 function bestGameSuccessFinished() {
   document.getElementById("best-timer-text").innerHTML = "";
-  startBestTimer(BEST_SHOW_FINISH_IMAGE);
+  startBestTimer(BEST_SHOW_FINISH_IMAGE, true);
   setTimeout(() => {
     // fadeOut(document.getElementById("best-game-new-winner"), 500);
     // fadeOut(document.getElementById("best-game-lose"), 500);
@@ -4039,7 +4068,7 @@ function bestGameSuccessFinished() {
     BEST_GAME_CURRENT_ROUND = 0;
     // fadeIn(document.getElementById("best-game-launch-info"), 500);
     fadeOut(document.getElementById("best-current-game-players-list"), 500);
-  }, BEST_SHOW_FINISH_IMAGE);
+  }, BEST_SHOW_FINISH_IMAGE + 100);
 }
 
 
