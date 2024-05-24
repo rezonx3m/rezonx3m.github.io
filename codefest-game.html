@@ -3752,12 +3752,12 @@ function startBestTimer(duration, showSec = false) {
     setTimeout(() => {BEST_TIMER.style.display = "none"}, duration);
 };
 
-const fadeIn = (el, timeout) => {
+const fadeIn = (el, timeout, opacity = 1) => {
   el.style.opacity = 0;
   el.style.display = 'block';
   el.style.transition = `opacity ${timeout}ms`;
   setTimeout(() => {
-    el.style.opacity = 1;
+    el.style.opacity = opacity;
   }, 10);
 };
 
@@ -3936,7 +3936,7 @@ function bestGameReloadLiaders() {
       $.getJSON( `https://offline-zond.api.2gis.com/codefest/getLeaders?timestamp=${time}&limit=3`, function( json ) {
         bestRerenderLeaderPreviousHourList(json);
       });
-      fadeIn(document.getElementById("best-leader-board"), 500)
+      fadeIn(document.getElementById("best-leader-board"), 500, 0.9)
       bestRerenderCurrentPlayersList();
     }, 500);
 
