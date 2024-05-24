@@ -1174,7 +1174,7 @@ var BEST_GAME_CURRENT_ROUND = 0;
 var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
 const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
 const BEST_GAME_TOTAL_ROUNDS = 20; //20
-const BEST_SHOW_RULES_TIMER = 50000; // 45000
+const BEST_SHOW_RULES_TIMER = 60000; // 45000
 const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
 const BEST_GAME_ONE_ROUND_DURATION = 3;
 const BEST_TIMER = document.querySelector('.best-timer');
@@ -4078,7 +4078,7 @@ function bestSendResultsToBE(results) {
 
 function bestGameSuccessFinished() {
   document.getElementById("best-timer-text").innerHTML = "";
-  startBestTimer(BEST_SHOW_FINISH_IMAGE, true);
+  //startBestTimer(BEST_SHOW_FINISH_IMAGE, true);
   setTimeout(() => {
     // fadeOut(document.getElementById("best-game-new-winner"), 500);
     // fadeOut(document.getElementById("best-game-lose"), 500);
