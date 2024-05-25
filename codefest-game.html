@@ -806,7 +806,7 @@
       left: 50%;
       transform: translate(-50%, 0px);
       display: none;
-      background-image: url("https://rezonx3m.github.io/friends/static/best-game-launch-codefest.png");
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-launch-codefest2.png");
       background-size: contain;
       background-repeat: no-repeat;
       opacity: 0.9;
@@ -865,8 +865,8 @@
       --progress: 100;
       display: none;
       position: absolute;
-      top: 34px;
-      right: 34px;
+      top: 220px;
+      left: 985px;
       
       width: 150px;
       height: 150px;
@@ -2171,12 +2171,17 @@ function processStickerFromTo(payload) {
   const senderId = payload.senderId;
   const stickerId = payload.stickerRecord.sticker.stickerId;
   const stickersCount = payload.stickerRecord.sticker.count;
+  const recipientId = payload.recipientId;
+  console.log(payload);
   const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
   if (htmlMarker === null) {
     console.log("can't find globalMarker for markerId", senderId);
     return;
   }
   const coordinates = htmlMarker.getCoordinates();
+  if (!globalStates.hasOwnProperty(recipientId)) {
+    return;
+  }
   const nextLon = globalStates[recipientId]["lon"];
   const nextLat = globalStates[recipientId]["lat"];
 
@@ -3811,8 +3816,8 @@ function startGameBestTimeSticker() {
   map.invalidateSize();
   map.setCenter(
     [
-      globalMarkers["codefestbot"].getCoordinates()[0] + 0.0005,
-      globalMarkers["codefestbot"].getCoordinates()[1] - 0.0001
+      globalMarkers["codefestbot"].getCoordinates()[0] + 0.00012,
+      globalMarkers["codefestbot"].getCoordinates()[1] - 0.00008
   ]);
   document.getElementById("best-game-launch-info").style.display = "block";
   bestGameReloadLiaders();
