@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<style>
+			.btn-new {
+			    border: none;
+			    border-radius: 5px;
+			    text-decoration: none;
+			    color: white;
+			    background: #0B63F6;
+			    box-shadow: 0 2px 0 #003CC5;
+			    height: 20px;
+			}
+
+			.btn-new:hover {
+			    background: #003CC5;
+			    box-shadow: none;
+			    position: relative;
+			    top: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<button class="btn-new">Включить онбординг</button>
+
+		<script>
+			var clickButton = function(e) {
+			  window.open('dgis://2gis.ru/mapfriends/invite');
+
+			};
+
+			var buttons = document.getElementsByClassName("btn-new");
+
+			for (var i = 0; i < buttons.length; i++) {
+			  buttons[i].addEventListener('click', clickButton, false);
+			}
+		</script>
+	</body>
+</html>
+
