@@ -20,14 +20,14 @@
 		</style>
 	</head>
 	<body>
-		<button class="btn-new" id="btn-onboarding">Включить онбординг</button>
+		<button class="btn-new" id="btn-onboarding">Перейти на dgis://2gis.ru/mapfriends/invite</button>
 	    </br>
 	    </br>
-		<button class="btn-new" id="btn-close-deep">Закрыть через closeThisWindow</button>
+		<button class="btn-new" id="btn-close-deep">Перейти на dgis://2gis.ru/closeThisWindow</button>
 
 	    </br>
 	    </br>
-		<button class="btn-new" id="btn-close-arg">Закрыть через ?action=close</button>
+		<button class="btn-new" id="btn-close-arg">Добавить в location "?action=close"</button>
 
 		<script>
 			var clickButtonOnboarding = function(e) {
@@ -36,7 +36,7 @@
 			};
 
 			var clickButtonCloseDeep = function(e) {
-			  window.open('dgis://2gis.ru/closeThisWindow.', "_self");
+			  window.open('dgis://2gis.ru/closeThisWindow', "_self");
 
 			};
 
