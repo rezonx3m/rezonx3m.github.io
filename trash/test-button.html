@@ -18,6 +18,13 @@
 			    top: 5px;
 			}
 		</style>
+		<script type="text/javascript">
+			function getCookie(name) {
+			  const value = `; ${document.cookie}`;
+			  const parts = value.split(`; ${name}=`);
+			  if (parts.length === 2) return parts.pop().split(';').shift();
+			}
+		</script>
 	</head>
 	<body>
 		<button class="btn-new" id="btn-onboarding">Перейти на dgis://2gis.ru/mapfriends/invite</button>
@@ -28,6 +35,10 @@
 	    </br>
 	    </br>
 		<button class="btn-new" id="btn-close-arg">Добавить в location "?action=close"</button>
+
+		</br>
+	    </br>
+		<button class="btn-new" id="btn-cookie-test">Вывести все cookie</button>
 
 		<script>
 			var clickButtonOnboarding = function(e) {
@@ -44,7 +55,10 @@
 			  const urlParams = new URLSearchParams(window.location.search);
      		  urlParams.set('action', 'close');
 			  window.location.search = urlParams;
+			};
 
+			var clickButtonReadCookie = function(e) {
+			  alert('Результат:' + document.cookie);
 			};
 
 			var buttonOnboarding = document.getElementById("btn-onboarding");
@@ -53,8 +67,11 @@
 			var buttonClose = document.getElementById("btn-close-deep");
 			buttonClose.addEventListener('click', clickButtonCloseDeep, false);
 
-			var buttonClose = document.getElementById("btn-close-arg");
-			buttonClose.addEventListener('click', clickButtonCloseArg, false);
+			var buttonCloseArg = document.getElementById("btn-close-arg");
+			buttonCloseArg.addEventListener('click', clickButtonCloseArg, false);
+
+			var buttonCookieTest = document.getElementById("btn-cookie-test");
+			buttonCookieTest.addEventListener('click', clickButtonReadCookie, false);
 
 			
 		</script>
