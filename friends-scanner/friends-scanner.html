@@ -320,12 +320,12 @@
                     } else if (data.message.includes("duplicate")) {
                         showPupupOneButton("Ошибка! Повторная регистрация пользователя!", "Продолжить сканирование", true);
                     } else {
-                        showPupupOneButton("Техническая ошибка при добавлении", "Продолжить сканирование", true);
+                        showPupupOneButton("Техническая ошибка при добавлении: " + data.toString(), "Продолжить сканирование", true);
                         console.log(data)
                     }
                 },
                 error: function (error) {
-                  showPupupOneButton("Техническая ошибка при отправке запроса", "Продолжить сканирование", true);
+                  showPupupOneButton("Техническая ошибка при отправке запроса: " + error.toString();, "Продолжить сканирование", true);
                   console.log(error)
                 }
             })
