@@ -3,218 +3,305 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>QR Scanner Demo</title>
-</head>
-<body>
-<h1>Scan from WebCam:</h1>
-<div id="video-container">
-    <video id="qr-video"></video>
-</div>
-<div>
-    <label>
-        Highlight Style
-        <select id="scan-region-highlight-style-select">
-            <option value="default-style">Default style</option>
-            <option value="example-style-1">Example custom style 1</option>
-            <option value="example-style-2">Example custom style 2</option>
-        </select>
-    </label>
-    <label>
-        <input id="show-scan-region" type="checkbox">
-        Show scan region canvas
-    </label>
-</div>
-<div>
-    <select id="inversion-mode-select">
-        <option value="original">Scan original (dark QR code on bright background)</option>
-        <option value="invert">Scan with inverted colors (bright QR code on dark background)</option>
-        <option value="both">Scan both</option>
-    </select>
-    <br>
-</div>
-<b>Device has camera: </b>
-<span id="cam-has-camera"></span>
-<br>
-<div>
-    <b>Preferred camera:</b>
-    <select id="cam-list">
-        <option value="environment" selected>Environment Facing (default)</option>
-        <option value="user">User Facing</option>
-    </select>
-</div>
-<b>Camera has flash: </b>
-<span id="cam-has-flash"></span>
-<div>
-    <button id="flash-toggle">📸 Flash: <span id="flash-state">off</span></button>
-</div>
-<br>
-<b>Detected QR code: </b>
-<span id="cam-qr-result">None</span>
-<br>
-<b>Last detected at: </b>
-<span id="cam-qr-result-timestamp"></span>
-<br>
-<button id="start-button">Start</button>
-<button id="stop-button">Stop</button>
-<hr>
+    <title>Friends QR Scanner Demo</title>
+    <style>
 
-<h1>Scan from File:</h1>
-<input type="file" id="file-selector">
-<b>Detected QR code: </b>
-<span id="file-qr-result">None</span>
-
-<!--<script src="../qr-scanner.umd.min.js"></script>-->
-<!--<script src="../qr-scanner.legacy.min.js"></script>-->
-<script type="module">
-    import QrScanner from "https://rezonx3m.github.io/friends-scanner/qr-scanner.min.js";
-
-    const video = document.getElementById('qr-video');
-    const videoContainer = document.getElementById('video-container');
-    const camHasCamera = document.getElementById('cam-has-camera');
-    const camList = document.getElementById('cam-list');
-    const camHasFlash = document.getElementById('cam-has-flash');
-    const flashToggle = document.getElementById('flash-toggle');
-    const flashState = document.getElementById('flash-state');
-    const camQrResult = document.getElementById('cam-qr-result');
-    const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
-    const fileSelector = document.getElementById('file-selector');
-    const fileQrResult = document.getElementById('file-qr-result');
-
-    function setResult(label, result) {
-        console.log(result.data);
-        label.textContent = result.data;
-        camQrResultTimestamp.textContent = new Date().toString();
-        label.style.color = 'teal';
-        clearTimeout(label.highlightTimeout);
-        label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 100);
-    }
-
-    // ####### Web Cam Scanning #######
-
-    const scanner = new QrScanner(video, result => setResult(camQrResult, result), {
-        onDecodeError: error => {
-            camQrResult.textContent = error;
-            camQrResult.style.color = 'inherit';
-        },
-        highlightScanRegion: true,
-        highlightCodeOutline: true,
-    });
-
-    const updateFlashAvailability = () => {
-        scanner.hasFlash().then(hasFlash => {
-            camHasFlash.textContent = hasFlash;
-            flashToggle.style.display = hasFlash ? 'inline-block' : 'none';
-        });
-    };
-
-    scanner.start().then(() => {
-        updateFlashAvailability();
-        // List cameras after the scanner started to avoid listCamera's stream and the scanner's stream being requested
-        // at the same time which can result in listCamera's unconstrained stream also being offered to the scanner.
-        // Note that we can also start the scanner after listCameras, we just have it this way around in the demo to
-        // start the scanner earlier.
-        QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => {
-            const option = document.createElement('option');
-            option.value = camera.id;
-            option.text = camera.label;
-            camList.add(option);
-        }));
-    });
-
-    QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
-
-    // for debugging
-    window.scanner = scanner;
-
-    document.getElementById('scan-region-highlight-style-select').addEventListener('change', (e) => {
-        videoContainer.className = e.target.value;
-        scanner._updateOverlay(); // reposition the highlight because style 2 sets position: relative
-    });
-
-    document.getElementById('show-scan-region').addEventListener('change', (e) => {
-        const input = e.target;
-        const label = input.parentNode;
-        label.parentNode.insertBefore(scanner.$canvas, label.nextSibling);
-        scanner.$canvas.style.display = input.checked ? 'block' : 'none';
-    });
-
-    document.getElementById('inversion-mode-select').addEventListener('change', event => {
-        scanner.setInversionMode(event.target.value);
-    });
-
-    camList.addEventListener('change', event => {
-        scanner.setCamera(event.target.value).then(updateFlashAvailability);
-    });
-
-    flashToggle.addEventListener('click', () => {
-        scanner.toggleFlash().then(() => flashState.textContent = scanner.isFlashOn() ? 'on' : 'off');
-    });
-
-    document.getElementById('start-button').addEventListener('click', () => {
-        scanner.start();
-    });
-
-    document.getElementById('stop-button').addEventListener('click', () => {
-        scanner.stop();
-    });
-
-    // ####### File Scanning #######
-
-    fileSelector.addEventListener('change', event => {
-        const file = fileSelector.files[0];
-        if (!file) {
-            return;
+        body {
+            overflow-x: hidden;
         }
-        QrScanner.scanImage(file, { returnDetailedScanResult: true })
-            .then(result => setResult(fileQrResult, result))
-            .catch(e => setResult(fileQrResult, { data: e || 'No QR code found.' }));
-    });
-</script>
 
-<style>
-    div {
-        margin-bottom: 16px;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-    #video-container {
-        line-height: 0;
-    }
+ 
+        #video-container {
+            display: flex;
+            overflow: hidden;
+        }
 
-    #video-container.example-style-1 .scan-region-highlight-svg,
-    #video-container.example-style-1 .code-outline-highlight {
-        stroke: #64a2f3 !important;
-    }
+        #video-container-inner {
+            width: 100%;
+            margin: auto;
+        }
 
-    #video-container.example-style-2 {
-        position: relative;
-        width: max-content;
-        height: max-content;
-        overflow: hidden;
-    }
-    #video-container.example-style-2 .scan-region-highlight {
-        border-radius: 30px;
-        outline: rgba(0, 0, 0, .25) solid 50vmax;
-    }
-    #video-container.example-style-2 .scan-region-highlight-svg {
-        display: none;
-    }
-    #video-container.example-style-2 .code-outline-highlight {
-        stroke: rgba(255, 255, 255, .5) !important;
-        stroke-width: 15 !important;
-        stroke-dasharray: none !important;
-    }
+        #qr-video {
+            width: 100%;
+            margin: auto;
+        }
 
-    #flash-toggle {
-        display: none;
-    }
+        #video-container.example-style-1 .scan-region-highlight-svg,
+        #video-container.example-style-1 .code-outline-highlight {
+            stroke: #64a2f3 !important;
+        }
 
-    hr {
-        margin-top: 32px;
-    }
-    input[type="file"] {
-        display: block;
-        margin-bottom: 16px;
-    }
-</style>
+        #video-container.example-style-2 {
+            position: relative;
+            width: max-content;
+            height: max-content;
+            overflow: hidden;
+        }
+        #video-container.example-style-2 .scan-region-highlight {
+            border-radius: 30px;
+            outline: rgba(0, 0, 0, .25) solid 50vmax;
+        }
+        #video-container.example-style-2 .scan-region-highlight-svg {
+            display: none;
+        }
+        #video-container.example-style-2 .code-outline-highlight {
+            stroke: rgba(255, 255, 255, .5) !important;
+            stroke-width: 15 !important;
+            stroke-dasharray: none !important;
+        }
+
+        button {
+          padding: 15px 20px;
+          border-radius: 5px;
+          border: none;
+          background-color: #1c87c9;
+          color: #fff;
+          font-size: 16px;
+          cursor: pointer;
+        }
+
+        .popup {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          padding: 20px;
+          border-radius: 5px;
+          background-color: #fff;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+          z-index: 9999;
+          display: none;
+        }
+
+        .popup__content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .popup__title {
+          margin: 0 0 20px;
+          font-size: 18px;
+          font-weight: 600;
+          text-align: center;
+        }
+
+        .popup__button {
+          padding: 15px 60px;
+          border-radius: 5px;
+          border: none;
+          background-color: #1c87c9;
+          color: #fff;
+          font-size: 16px;
+          cursor: pointer;
+          /*     margin-right: 10px; */
+        }
+
+        #yes-btn {
+          background-color: transparent;
+          color: #1c87c9;
+          border: 1px solid #1c87c9;
+          border-radius: 5px;
+        }
+
+        #yes-btn:hover {
+          background-color: #1c87c9;
+          color: #fff;
+        }
+
+        #overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 9998;
+          display: none;
+        }
+
+        #overlay.show {
+          display: block;
+        }
+
+
+        
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+</head>
+
+<body>
+    <div id="overlay"></div>
+    <div id="video-container">
+            <video id="qr-video"></video>
+    </div>
+
+
+
+    <!-- Модальное окно -->
+    <div id="popup" class="popup">
+        <div class="popup__content">
+            <h2 id="popup-header" class="popup__title">
+                
+            </h2>
+
+            <div class="btn-container">
+                <button id="no-btn" class="popup__button">
+                    Нет
+                </button>
+                <button id="yes-btn" class="popup__button">
+                    Да
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="popup-one-button" class="popup">
+        <div class="popup__content">
+            <h2 id="popup-one-button-header" class="popup__title">
+                
+            </h2>
+            <button id="popup-one-button-btn" class="popup__button">
+                
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import QrScanner from "https://rezonx3m.github.io/friends-scanner/qr-scanner.min.js";
+
+        const video = document.getElementById('qr-video');
+        const videoContainer = document.getElementById('video-container');
+        //const camHasCamera = document.getElementById('cam-has-camera');
+        //const camList = document.getElementById('cam-list');
+
+        var currentUserId = null;
+
+        function setResult(result) {
+            if (!POPUP_SHOWED == true) {
+                console.log(result.data); 
+                const regexp = /\/user\/([a-z0-9]+)/g;
+                var res = "";
+                for (const match of result.data.matchAll(regexp)) {
+                    res = match[1];
+                    showResultPopup(res);
+                }
+                if (res == "") {
+                    currentUserId = null;
+                    showPupupOneButton("Некорректный QR", "Продолжить сканирование")  
+                }
+            }
+        }
+
+        
+
+        // ####### Web Cam Scanning #######
+
+        const scanner = new QrScanner(video, result => setResult(result), {
+            onDecodeError: error => {
+                //camQrResult.textContent = error;
+                //camQrResult.style.color = 'inherit';
+            },
+            highlightScanRegion: true,
+            highlightCodeOutline: true,
+        });
+
+
+        scanner.start().then(() => {
+            //updateFlashAvailability();
+            // List cameras after the scanner started to avoid listCamera's stream and the scanner's stream being requested
+            // at the same time which can result in listCamera's unconstrained stream also being offered to the scanner.
+            // Note that we can also start the scanner after listCameras, we just have it this way around in the demo to
+            // start the scanner earlier.
+            // QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => {
+            //     const option = document.createElement('option');
+            //     option.value = camera.id;
+            //     option.text = camera.label;
+            //     camList.add(option);
+            // }));
+        });
+
+        // QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
+
+        // for debugging
+        window.scanner = scanner;
+
+        // ####### File Scanning #######
+
+    </script>
+
+     <script type="text/javascript">
+
+        // выравнивание видео
+        const win = window,
+        doc = document,
+        docElem = doc.documentElement,
+        body = doc.getElementsByTagName('body')[0],
+        x = win.innerWidth || docElem.clientWidth || body.clientWidth,
+        y = win.innerHeight|| docElem.clientHeight|| body.clientHeight;
+
+        const video_container = document.getElementById("video-container");
+        video_container.style.width = x + "px";
+        video_container.style.height = y + "px";
+
+
+
+        const popup = document.getElementById("popup");
+        const noBtn = document.getElementById("no-btn");
+        const yesBtn = document.getElementById("yes-btn");
+        const pupupOneButton = document.getElementById("popup-one-button");
+        const popupOneButtonBtn = document.getElementById("popup-one-button-btn");
+        const overlay = document.getElementById("overlay");
+
+        var POPUP_SHOWED = false;
+
+        function showResultPopup(result) {
+            POPUP_SHOWED = true;
+            popup.style.display = "block";
+            overlay.classList.add("show");
+            document.getElementById("popup-header").textContent = "Добавить пользователя с id" + result + "?";
+        }
+
+        function showPupupOneButton(headerText, buttonText) {
+            POPUP_SHOWED = true;
+            popup.style.display = "none";
+            overlay.classList.add("show");
+
+            document.getElementById("popup-one-button-header").textContent = headerText;
+            document.getElementById("popup-one-button-btn").textContent = buttonText;
+
+            pupupOneButton.style.display = "block";
+        }
+
+        noBtn.addEventListener("click", () => {
+            POPUP_SHOWED = false;
+            popup.style.display = "none";
+            overlay.classList.remove("show");
+        });
+
+        yesBtn.addEventListener("click", () => {
+            POPUP_SHOWED = false;
+            popup.style.display = "none";
+            pupupOneButton.style.display = "block";
+            showPupupOneButton("Пользователь успешно добавлен", "Продолжить сканирование");
+            overlay.classList.add("show");
+        });
+
+        popupOneButtonBtn.addEventListener("click", () => {
+            POPUP_SHOWED = false;
+            pupupOneButton.style.display = "none";
+            overlay.classList.remove("show");
+        });
+
+
+    </script>
+
+
 </body>
 </html>
