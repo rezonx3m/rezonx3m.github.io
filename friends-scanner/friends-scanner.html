@@ -181,8 +181,6 @@
         //const camHasCamera = document.getElementById('cam-has-camera');
         //const camList = document.getElementById('cam-list');
 
-        var currentUserId = null;
-
         function setResult(result) {
             if (!POPUP_SHOWED == true) {
                 console.log(result.data); 
@@ -190,11 +188,12 @@
                 var res = "";
                 for (const match of result.data.matchAll(regexp)) {
                     res = match[1];
+                    currentUserId = res;
                     showResultPopup(res);
                 }
                 if (res == "") {
                     currentUserId = null;
-                    showPupupOneButton("Некорректный QR", "Продолжить сканирование")  
+                    showPupupOneButton("Некорректный QR", "Продолжить сканирование", true)  
                 }
             }
         }
@@ -238,6 +237,12 @@
 
      <script type="text/javascript">
 
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const getParamEventId = ? urlParams.get("event_id") ? urlParams.get("event_id") ? "default";
+
+        var currentUserId = null;
+
         // выравнивание видео
         const win = window,
         doc = document,
@@ -268,7 +273,7 @@
             document.getElementById("popup-header").textContent = "Добавить пользователя с id" + result + "?";
         }
 
-        function showPupupOneButton(headerText, buttonText) {
+        function showPupupOneButton(headerText, buttonText, isError = false) {
             POPUP_SHOWED = true;
             popup.style.display = "none";
             overlay.classList.add("show");
@@ -276,7 +281,17 @@
             document.getElementById("popup-one-button-header").textContent = headerText;
             document.getElementById("popup-one-button-btn").textContent = buttonText;
 
+            if (isError) {
+                pupupOneButton.style.borderColor = "#ef8080";
+                pupupOneButton.style.borderStyle = "solid";
+                pupupOneButton.style.borderWidth = "40px";
+            } else {
+                pupupOneButton.style.borderColor = "#80ef80";
+                pupupOneButton.style.borderStyle = "solid";
+                pupupOneButton.style.borderWidth = "40px";
+            }
             pupupOneButton.style.display = "block";
+
         }
 
         noBtn.addEventListener("click", () => {
@@ -289,7 +304,33 @@
             POPUP_SHOWED = false;
             popup.style.display = "none";
             pupupOneButton.style.display = "block";
-            showPupupOneButton("Пользователь успешно добавлен", "Продолжить сканирование");
+
+            json = {
+                user_id: currentUserId,
+                event_id: getParamEventId
+            }
+
+            $.ajax("http://friends-scanner.rezon.webapi-dnd.os-n3.hw/friendsScanner/postData", {
+                data : JSON.stringify(json),
+                contentType : 'application/json',
+                type : 'POST',
+                success: function (data) {
+                    if (data.message == "ok") {
+                        showPupupOneButton("Пользователь успешно зарегистрирован", "Продолжить сканирование");
+                    } else if (data.message.includes("duplicate")) {
+                        showPupupOneButton("Ошибка! Повторная регистрация пользователя!", "Продолжить сканирование", true);
+                    } else {
+                        showPupupOneButton("Техническая ошибка при добавлении", "Продолжить сканирование", true);
+                        console.log(data)
+                    }
+                },
+                error: function (error) {
+                  showPupupOneButton("Техническая ошибка при добавлении", "Продолжить сканирование", true);
+                  console.log(error)
+                }
+            })
+
+            
             overlay.classList.add("show");
         });
 
