@@ -239,7 +239,7 @@
 
         const urlParams = new URLSearchParams(window.location.search);
 
-        const getParamEventId = ? urlParams.get("event_id") ? urlParams.get("event_id") ? "default";
+        const getParamEventId = urlParams.get("event_id") ? urlParams.get("event_id") : "default";
 
         var currentUserId = null;
 
