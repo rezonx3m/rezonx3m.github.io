@@ -270,7 +270,7 @@
             POPUP_SHOWED = true;
             popup.style.display = "block";
             overlay.classList.add("show");
-            document.getElementById("popup-header").textContent = "Добавить пользователя с id" + result + "?";
+            document.getElementById("popup-header").textContent = "Добавить пользователя с id " + result + "?";
         }
 
         function showPupupOneButton(headerText, buttonText, isError = false) {
@@ -310,7 +310,7 @@
                 event_id: getParamEventId
             }
 
-            $.ajax("https://friends-scanner.rezon.webapi-dnd.os-n3.hw/friendsScanner/postData", {
+            $.ajax("https://friends-scanner.rezon.webapi-dnd.os-n3.hfasfw/friendsScanner/postData", {
                 data : JSON.stringify(json),
                 contentType : 'application/json',
                 type : 'POST',
