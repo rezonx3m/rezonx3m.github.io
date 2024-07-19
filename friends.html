@@ -4,23 +4,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
-
+<!-- 
   <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD_march.js"></script>
-  <!-- <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD.js"></script> -->
+  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD.js"></script> 
 
   <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_green_HD.js"></script>
   <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_red_HD.js"></script>
   <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_blue_HD.js"></script>
+-->
 
   <link rel="stylesheet" href="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.css">
   <script defer src="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.js"></script>
 
-  <script src="https://unpkg.com/mapgl-snow"></script>
+  <!-- <script src="https://unpkg.com/mapgl-snow"></script> -->
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://d-assets.2gis.ru/vendor.48c43c73384d52df9da5.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
 
-  <style>
+  
+
+
+<style>
 
     @font-face {
       font-family: SB Sans Display Regular;
@@ -70,7 +77,7 @@
     #connect-indi {
       background-color: #ff8f8f;
       position: absolute;
-      left: 2px;
+      right: 2px;
       top: 2px;
       width: 8px;
       height: 8px;
@@ -248,6 +255,50 @@
     .emogi-nav {
       background-image: url("https://cachizer2.2gis.com/common/e213fd69-105d-441c-8fe9-426c42b39d7c.png?w=200&h=200");
     }
+
+    .emogi-cupid {
+      background-image: url("https://cachizer1.2gis.com/common/f600e309-6d08-4ab9-a022-fc0857d6d5c1.png?w=200&h=200");
+    }
+
+    .emogi-lips {
+      background-image: url("https://cachizer3.2gis.com/common/64cb03c3-f4c9-44e8-a3b5-308785febde2.png?w=200&h=200");
+    }
+
+    .emogi-tulip {
+      background-image: url("https://cachizer1.2gis.com/common/2ffaef56-9f7d-4998-9505-2fa6a0db5a43.png?w=200&h=200");
+    }
+
+    .emogi-dyson {
+      background-image: url("https://cachizer3.2gis.com/common/a5fd7c24-0e53-4720-98a1-1120768dd4f8.png?w=200&h=200");
+    }
+
+    .emogi-koffee {
+      background-image: url("https://cachizer1.2gis.com/common/26cd2ec3-c16a-46fa-8c03-fc1a6162507f.png?w=200&h=200");
+    }
+
+    .emogi-hotdog {
+      background-image: url("https://cachizer3.2gis.com/achieves/8dc24faf-5f22-440b-b29e-4e3a5fc6a3d0.png?w=200&h=200");
+    }
+
+    .emogi-cake {
+      background-image: url("https://cachizer3.2gis.com/common/717d61dd-513c-46b4-aa42-7911cb01b7a1.png?w=200&h=200");
+    }
+
+    .emogi-kebab {
+      background-image: url("https://cachizer2.2gis.com/common/0d82a11e-9df7-44ee-abdf-713333564154.png?w=200&h=200");
+    }
+
+    .emogi-beer {
+      background-image: url("https://cachizer1.2gis.com/common/b006e22f-d8a7-43ff-a09c-8b89a2ce82b5.png?w=200&h=200");
+    }
+
+    .emogi-battery {
+      background-image: url("https://cachizer3.2gis.com/common/6ff114a3-ee18-4feb-9dfd-30dbec3db9b6.png?w=200&h=200");
+    }
+
+    
+
+    
 
     /* fade in out */
     /* todo удалить нахрен, так как теперь лотти /*
@@ -571,6 +622,22 @@
       margin-bottom: 12px;
       margin-top: 7px;
       margin-right: 10px;
+      z-index: 50;
+    }
+
+    .leader-position {
+      width: 22px;
+      height: 16px;
+      padding: 1px 0px 0px 0px;
+      border-radius: 10px 10px 10px 10px;
+      background-color: #19AA1E;
+      text-align: center;
+      font-size: 12px;
+      color: #FFFFFF;
+      z-index: 100;
+      position: absolute;
+      margin-top: -2px;
+      margin-left: -14px;
     }
 
     .friends-table table,
@@ -592,27 +659,48 @@
     /* styles for best time game */
 
     #best-leader-board {
-      min-width: 310px;
+      min-width: 320px;
       min-height: 110px;
       position: absolute;
       top: 34px;
       left: 34px;
       display: none;
-      border-radius: 20px;
+      /*border-radius: 20px;*/
+      /*background-color: white;*/
+      max-height: 95%;
+      overflow: auto;
+      overflow-y: hidden; 
+      overflow-x: hidden; 
+      opacity: 0.9;
+    }
+
+    #best-current-game-players-previous-hour-leaders, #best-current-game-players-current-hour-leaders, #best-current-game-players-list  {
       background-color: white;
+      padding: 6px 0px 6px 0px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0px 2px 4px 0px #00000014;
     }
 
     .best-leader-top-header {
       font-family: "SB Sans Display Semibold";
       padding-left: 21px;
-      padding-top: 17px;
+      padding-top: 10px;
       font-size: 18px;
+    }
+
+
+    .best-leader-top-second-line {
+      font-family: "SB Sans Display Regular";
+      padding-left: 21px;
+      font-size: 14px;
+      color: #FE6125;
     }
 
     .best-leader-top-table {
       font-family: "SB Sans Display Regular";
       padding-left : 21px;
-      padding-top: 24px;
+      padding-top: 8px;
       font-family: "Sans";
       text-align: left;
       border-spacing: 0px;
@@ -621,26 +709,28 @@
     }
 
     .best-leader-table-first-column {
-      width: 44px;
+      width: 52px;
       text-align: left;
+      padding-left: 12px;
     }
 
     .best-leader-table-second-column {
-      width: 37px;
+      width: 32px;
       text-align: center;
+      font-family: SB Sans Display Semibold;
     }
 
     .best-leader-table-third-column {
-      width: 172px;
+      width: 190px;
       text-align: left;
     }
 
     .winner-leader-board-ava-container {
       background: #ffffff;
       overflow: hidden;
-      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      box-shadow: 0px 0px 4px 4px rgba(226, 88, 34, 0.8);
       border: 3px solid white;
-      animation: scale 2s ease-in-out infinite;
+      /*animation: scale 2s ease-in-out infinite;*/
       border-radius: 200px;
       display: flex;
       align-items: center;
@@ -656,12 +746,24 @@
       text-align: center;
     }
 
+    .winner-leader-board-ava-crown {
+      background-image: url("https://rezonx3m.github.io/friends/static/crown.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      margin-top: -18px;
+      margin-left: 16px;
+      transform: rotate(35deg);
+    }
+
     .leader-board-ava-container {
       background: #ffffff;
       overflow: hidden;
       box-shadow: 0px 0px 2px 2px rgba(38, 38, 38, 0.5);
       border: 3px solid white;
-      animation: scale 2s ease-in-out infinite;
+      /*aanimation: scale 2s ease-in-out infinite;*/
       border-radius: 200px;
       display: flex;
       align-items: center;
@@ -691,6 +793,7 @@
       overflow: hidden;
       border: 3px solid white;
       animation: scale 2s ease-in-out infinite;
+      z-index: 1000;
     }
 
     .winner-ava-container {
@@ -706,14 +809,17 @@
     }
 
     #best-game-launch-info {
-      width: 504px;
-      height: 184px;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translate(-50%, 0px);
+      width: 786px;
+      height: 203px;
+      position: absolute;
+      top: 10px;
+      left: 380px;
+      
       display: none;
-      background-image: url("https://rezonx3m.github.io/friends/static/best-game-launch.png");
+      background-image: url("https://rezonx3m.github.io/friends/static/best-game-launch-codefest2.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.9;
     }
 
     #best-game-rules {
@@ -761,17 +867,17 @@
     }
 
     #best-current-game-players-list {
-      display: none;
+      display: block;
     }
 
 
     .best-timer {
       --progress: 100;
       display: none;
-      position: fixed;
-      top: 120px;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      position: absolute;
+      top: 220px;
+      left: 985px;
+      
       width: 150px;
       height: 150px;
       justify-content: center;
@@ -811,8 +917,8 @@
       height: 50px;
       min-width: 50px;
       min-height: 50px;
-      animation: emoji-scale 3s ease-in-out;
-      -webkit-animation: emoji-scale 3s ease-in-out;
+      animation: emoji-scale 5s ease-in-out;
+      -webkit-animation: emoji-scale 5s ease-in-out;
     }
 
     .best-emoji-marker-sticker-shot {
@@ -824,13 +930,6 @@
       min-width: 40px;
       min-height: 40px;
     }
-      
-    
-  
-}
-
-
-
   </style>
 </head>
 
@@ -933,18 +1032,20 @@
 
     <!-- best time game html -->
     <div id="best-leader-board">
-      <div class = "best-leader-top-header">Рекорсдмен на карте Друзей</div>
-      <table class = "best-leader-top-table">
-        <tr>
-          <td class = "best-leader-table-first-column" id="best-leader-table-first-column">one</td>
-          <td class = "best-leader-table-second-column" id = "best-leader-table-second-column">two</td>
-          <td class = "best-leader-table-third-column" id = "best-leader-table-third-column">three</td>
-        </tr>
-      </table>
+      <div id="best-current-game-players-previous-hour-leaders">
+        <div class = "best-leader-top-header">Лидеры предыдущего часа</div>
+        <div class = "best-leader-top-second-line">Приходи за призами</div>
+        <div id="best-current-game-players-previous-hour-leaders-container">
+        </div>
+      </div>
+      <div id="best-current-game-players-current-hour-leaders">
+        <div class = "best-leader-top-header">Лидеры текущего часа</div>
+        <div id="best-current-game-players-current-hour-leaders-container">  
+        </div>
+      </div>
       <div id="best-current-game-players-list">
-        <div class = "best-leader-top-header">Игроки текущего раунда</div>
-        <div id="best-current-game-players-table-container">
-          
+        <div class = "best-leader-top-header">Лидеры текущего раунда</div>
+        <div id="best-current-game-players-table-container">  
         </div>
       </div>
     </div>
@@ -992,10 +1093,13 @@ const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
 const ENABLE_AUTO_RECONNECT = true;
 var ENABLE_CLUSTERS = false;
 var ENABLE_STICKERS = true;
+var ENABLE_STICKERS_TO_ME = true;
 var ENABLE_MARK_STICKERS_AS_VIEWED = false || getParamMarkStickersAsViewd == "true";
 const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
 var OVERRIDED_ZOOM = null;
 const DROP_MARKERS_WITH_OLD_STATE = !DEBUG;
+
+const SKIPED_ID = "0155140dfccb40739784b81e9faa445b";
 
 // маркера в кластерах (для быстрой чистки)
 var clusterMarkers = {};
@@ -1029,14 +1133,23 @@ if (getParamHideStatus == "true") {
 const SUPPORTED_EMOJI = [
   "fire",
   "greenheart",
-  "snowball",
   "poop",
   "wavinghand",
   "angry",
   "eyes",
   "party",
   "go",
-  "nav"
+  "nav",
+  "cupid",
+  "lips",
+  "tulip",
+  "dyson",
+  "koffee",
+  "hotdog",
+  "cake",
+  "kebab",
+  "battery",
+  "beer"
 ];
 
 // scenes params
@@ -1079,24 +1192,34 @@ var FIRST_GAME_FINISHED = false;
 
 // params for game best time send sticker
 
+var BEST_GAME_CURRENT_ID = null;
+var BEST_GAME_TIME_STARTED = null;
 var BEST_LOG_LAST_STICKERS_TO_ME = false;
 var BEST_WINNER_ID = null;
-var BEST_CURRENT_GAMERS = [];
-var BEST_CURRENT_GAMERS_SCORES = {};
-var BEST_CURRENT_GAMERS_SCORES_SUM = {};
+var BEST_CURRENT_GAMERS = {};
 var BEST_GAME_STARTED = false;
 var BEST_GAME_IN_PROGRESS = false;
-var BEST_GAME_CURRENT_STICKER = null;
-var BEST_GAME_CURRENT_STICKER_MARKER = null;
+var BEST_GAME_CURRENT_STICKERS = [];
+var BEST_GAME_CURRENT_STICKER_MARKERS = {}; 
 var BEST_GAME_CURRENT_ROUND = 0;
-var BEST_GAME_BEST_RESULT = 0;
 var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
 const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
-const BEST_GAME_TOTAL_ROUNDS = 20;
-const BEST_SHOW_RULES_TIMER = 15000;
-const BEST_SHOW_FINISH_IMAGE = 5000; 
-const BEST_GAME_ONE_ROUND_DURATION = 3;
+const BEST_GAME_TOTAL_ROUNDS = 20; //20
+const BEST_SHOW_RULES_TIMER = 30000; // 30000
+const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
+const BEST_GAME_ONE_ROUND_DURATION = 5; // change with best-emoji-marker-sticke
 const BEST_TIMER = document.querySelector('.best-timer');
+
+const BEST_AWAINING_NAMES = [
+  "Ждем тебя",
+  "Тут пока пусто",
+  "Место вакантно",
+  "Заходи сюда",
+  "Шли ГО!",
+  "Мог бы быть ты",
+  "Мы тебя ждем",
+  "Скоро появятся"
+];
 
 
 
@@ -1105,14 +1228,20 @@ const map = new mapgl.Map("container", {
   center: [82.963483, 55.039882],
   zoom: 12,
   key: "2a5f353b-5172-411f-b1a2-8ea58b3f290c",
-  //style: "0ef2bf0f-abf0-401d-ae21-d28753fbbea9",
-  floorsEnabled: false,
+  //style: "b16cfd38-28d4-401c-a8a0-4942de84ce3a",
+  floorsEnabled: true,
   minZoom: 2,
   maxZoom: 20,
   minPitch: 0,
   maxPitch: 70,
   lowZoomMaxPitch: 45,
   zoomControl: false
+});
+
+map.on('floorplanshow', (e) => {
+    const length = e.floorLevels.length;
+    const { floorLevelIndex } = e.floorLevels[length - 1];
+    map.setFloorPlanLevel(e.floorPlanId, floorLevelIndex);
 });
 
 // фиксим рамер карты при ресайзе
@@ -1432,6 +1561,10 @@ function removeMarker(id) {
 function processState(state) {
   const id = state.id;
 
+  if (id == SKIPED_ID) {
+    return;
+  }
+
   if (DEBUG) {
     console.log("processState", id, state);
   }
@@ -1453,13 +1586,29 @@ function processState(state) {
   const marker = isInit ? null : globalMarkers[id];
   const lastLon = isInit ? null : globalStates[id]["lon"];
   const lastLat = isInit ? null : globalStates[id]["lat"];
+  const lastLastSeen = isInit ? null : globalStates[id]["lastSeen"];
 
-  const locationSpeed = state.location.hasOwnProperty("speed")
+  const animationTimeByDiffSeenTime =  isInit
+    ? BASE_ANIMATION_TIME :(lastSeen - lastLastSeen) / 1000;
+
+  var animationTime = BASE_ANIMATION_TIME;
+  if (animationTimeByDiffSeenTime >= 0 && animationTimeByDiffSeenTime < 25) {
+    animationTime = animationTimeByDiffSeenTime
+  } else {
+    const locationSpeed = state.location.hasOwnProperty("speed")
     ? state.location.speed
     : BASE_SPEED;
-  const animationTime = isInit
-    ? BASE_ANIMATION_TIME
-    : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
+
+    const tmpAnimationTime = isInit
+      ? BASE_ANIMATION_TIME
+      : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
+
+    if (tmpAnimationTime >= 0 && tmpAnimationTime < 25) {
+      animationTime = tmpAnimationTime
+    }
+  }
+
+
   const azimuth = isInit
     ? null
     : bearing(marker.getCoordinates()[1], marker.getCoordinates()[0], lat, lon);
@@ -1475,6 +1624,10 @@ function processState(state) {
       : false;
   const isMoving =
     state.movement.status == STATE_MOVING && !isOldMovingData ? true : false;
+
+if (globalProfiles[id] === undefined) {
+  console.log('id not found', id)
+}
 
   const avaUrl = globalProfiles[id].logo;
   const name = globalProfiles[id].name;
@@ -1554,6 +1707,7 @@ function processState(state) {
   globalStates[id]["lat"] = lat;
   globalStates[id]["azimuth"] = azimuth;
   globalStates[id]["lastUpdate"] = Date.now();
+  globalStates[id]["lastSeen"] = lastSeen;
 
   // кусок от победителя игры
   if (BEST_WINNER_ID == id) {
@@ -1827,8 +1981,13 @@ async function moveOn(track, marker, userId) {
 
   while (
     next &&
-    (userId == null ||
-      globalStates[userId]["animationRandomNumber"] == animationRandomNumber)
+    (userId == null || 
+      (
+        globalStates.hasOwnProperty(userId) 
+        && 
+        globalStates[userId].hasOwnProperty("animationRandomNumber") 
+        && 
+        globalStates[userId]["animationRandomNumber"] == animationRandomNumber))
   ) {
     // time from start, ms
     const dt = (performance.now() - start) / 1000;
@@ -1962,20 +2121,25 @@ function processStickerToMe(payload) {
   const stickerId = payload.stickerRecord.sticker.stickerId;
   const sendAt = payload.stickerRecord.sentAt
   const stickersCount = payload.stickerRecord.sticker.count;
-  const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
-  if (htmlMarker === null) {
-    console.log("can't find globalMarker for markerId", senderId);
-    return;
-  }
 
-  if (DEBUG && (FIRST_LOG_LAST_STICKERS_TO_ME || BEST_LOG_LAST_STICKERS_TO_ME)) {
-    console.log(senderId, stickerId);
+  if (ENABLE_STICKERS_TO_ME) {
+    const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+    if (htmlMarker === null) {
+      console.log("can't find globalMarker for markerId", senderId);
+      return;
+    }
+
+    if (DEBUG && (FIRST_LOG_LAST_STICKERS_TO_ME || BEST_LOG_LAST_STICKERS_TO_ME)) {
+      console.log(senderId, stickerId);
+    }
+
+    
+    setTimeout(function () {
+      htmlMarker.destroy();
+    }, 1000); // change time if changed animation css time
   }
 
   logStickerByUser(senderId, stickerId, sendAt);
-  setTimeout(function () {
-    htmlMarker.destroy();
-  }, 1000); // change time if changed animation css time
 }
 
 function spawnEmoji(senderId, stickerId, stickersCount) {
@@ -2019,12 +2183,17 @@ function processStickerFromTo(payload) {
   const senderId = payload.senderId;
   const stickerId = payload.stickerRecord.sticker.stickerId;
   const stickersCount = payload.stickerRecord.sticker.count;
+  const recipientId = payload.recipientId;
+  console.log(payload);
   const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
   if (htmlMarker === null) {
     console.log("can't find globalMarker for markerId", senderId);
     return;
   }
   const coordinates = htmlMarker.getCoordinates();
+  if (!globalStates.hasOwnProperty(recipientId)) {
+    return;
+  }
   const nextLon = globalStates[recipientId]["lon"];
   const nextLat = globalStates[recipientId]["lat"];
 
@@ -2465,8 +2634,6 @@ function prewarm() {
   elemDiv.innerHTML = `<div>
         <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 0px; height: 0px;">
         </dotlottie-player>
- <!--       <dotlottie-player src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR.json" background="transparent" speed="1" style="width: 0px; height: 0px">
-        </dotlottie-player> -->
         
         </div>
         
@@ -2489,22 +2656,62 @@ switch (getParamScene) {
     startScenePort();
     break;
   }
+
+case "codefest": {
+    startSceneCodefest();
+    break;
+  }
 }
 
 function startScene2fest() {
   currentScene = "2fest";
   //OVERRIDED_ZOOM = 100;
-  map.setCenter([82.9145, 55.0295]);
+
+  map.setCenter([82.898612, 54.980413]);
   map.setZoom(17.5);
-  map.setPitch(50);
-  map.setRotation(-170.85);
-  document.getElementById("input-id").value = "2fest";
-  startGameFirstSendSticker();
+  map.setPitch(45.51);
+  map.setRotation(-43.33);
+  //document.getElementById("input-id").value = "2fest";
+  //document.getElementById("best-game-launch-info").style.backgroundImage = "url('https://rezonx3m.github.io/friends/static/best-game-launch-2fest.png')";
+  
+
+  document.getElementById("input-id").value = "port";
+
+  
+
   SOCKET_PATH =
     "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
+
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
+
+  ENABLE_CLUSTERS = false;
+  ENABLE_STICKERS = true;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+
+  setTimeout(startGameBestTimeSticker, 1500);
+  //startGameFirstSendSticker();
+  
+}
+
+function startSceneZEM() {
+  currentScene = "ZEM";
+  //OVERRIDED_ZOOM = 100;
+  map.setCenter([82.9145, 55.0295]);
+  //map.setZoom(17.5);
+  //map.setPitch(50);
+  //map.setRotation(-170.85);
+  document.getElementById("input-id").value = "ZEM";
+  //startGameFirstSendSticker();
+  SOCKET_PATH =
+    "ws://zem.rezon.webapi-dnd.os-n3.hw/api/1.1/user/ws";
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+
 }
 
 function startScenePort() {
@@ -2603,6 +2810,252 @@ function startScenePort() {
 
   //showScenePushButtonAnimation();
 }
+
+
+function startSceneCodefest() {
+  currentScene = "codefest";
+  //OVERRIDED_ZOOM = 100;
+  
+  map.setCenter([82.747155, 54.99827]);
+  map.setZoom(19.68);
+  map.setPitch(30);
+  map.setRotation(40.84);
+  //const snow = new mapglSnow.Snow(map);
+  ENABLE_CLUSTERS = true;
+  ENABLE_STICKERS = true;
+  ENABLE_STICKERS_TO_ME = false;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+  document.getElementById("input-id").value = "codefest";
+
+  
+
+  SOCKET_PATH =
+    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=b731c9e5e542f345900cca57ba92b819fe371fd3&get-friends-stickers=true&channes=markers,stickers";
+  
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+  setTimeout(addCodefestBots, 1000);
+  ON_CONNECT_FUNCTION = addCodefestBots;
+
+
+  var gameStarted = false;
+  var positionSelected = false;
+
+  function getActionToStart() {
+    const d = new Date();
+    let hour = d.getHours();
+    if (positionSelected == false) {
+      positionSelected = true;
+      map.setCenter([82.812694, 54.995315]);
+      map.setZoom(13.15);
+      map.setPitch(45);
+      map.setRotation(-52.94);
+    } else if (hour >= 10 && gameStarted == false) {
+      map.setCenter([82.747155, 54.99827]);
+      map.setZoom(19.68);
+      map.setPitch(30);
+      map.setRotation(40.84);
+      gameStarted = true;
+      setTimeout(startGameBestTimeSticker, 1500);
+    }
+
+  }
+
+  setInterval(getActionToStart, 3000);
+  
+  
+
+  document.onkeypress = function (e) {
+    e = e || window.event;
+    switch (e.keyCode) {
+
+      case 49:
+        perfTest();
+        break;
+
+
+      case 48:
+        window.location.reload();;
+        break;
+      case 55:
+        var sticker = testMessageStickerFromToMe2;
+        sticker.stickerRecord.sticker.stickerId =  BEST_GAME_CURRENT_STICKERS[getRandom(0, BEST_GAME_CURRENT_STICKERS.length - 1, true)];
+        processStickerToMe(sticker);
+        break; 
+      case 56:
+        processStickerToMe(testMessageStickerFromToMe2);
+        break;
+
+      case 57:
+        processStickerToMe(testMessageStickerFromToMe);
+        break;
+        
+    }
+  };
+
+  //showScenePushButtonAnimation();
+}
+
+
+var CODEFEST_BOTS_STARTED = false;
+
+function addCodefestBots() {
+  const codefestBotId = "codefestbot";
+  const codefestBotId1 = "codefestbot1";
+  const codefestBotId2 = "codefestbot2";
+  const codefestBotId3 = "codefestbot3";
+
+  const profileCodefest = {
+    id: codefestBotId,
+    name: "Codefest",
+    logo: "https://i0.photo.2gis.com/images/profile/30258560181551409_d191.jpg"
+  };
+
+  const profileCodefest1 = {
+    id: codefestBotId1,
+    name: "Алиса Кюнтиева",
+    logo: "https://rezonx3m.github.io/friends/static/bot1.JPG"
+  };
+
+  const profileCodefest2 = {
+    id: codefestBotId2,
+    name: "Какоето Имя",
+    logo: "https://rezonx3m.github.io/friends/static/bot2.JPG"
+  };
+
+  const profileCodefest3 = {
+    id: codefestBotId3,
+    name: "Еще Фамилия",
+    logo: "https://rezonx3m.github.io/friends/static/bot3.JPG"
+  };
+
+  const profileState = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.99835,
+        lon: 82.747035,
+        azimuth: 0,
+        speed: 0,
+        accuracy: 1
+      },
+      battery: {
+        level: 1
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  var profileState1 = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId1,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.998436,
+        lon: 82.746965,
+        azimuth: 206.91267,
+        speed: 0.8,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "moving",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  const profileState2 = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId2,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.99804,
+        lon: 82.747539,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  const profileState3 = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId3,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.998515,
+        lon: 82.74775,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+  addProfile(profileCodefest, true);
+  addProfile(profileCodefest1, true);
+  addProfile(profileCodefest2, true);
+  addProfile(profileCodefest3, true);
+  processMessage(profileState);
+  processMessage(profileState1);
+  processMessage(profileState2);
+  processMessage(profileState3);
+
+  bot1movements = [[82.746965,54.998436],[82.746975,54.998399],[82.746985,54.998353],[82.746995,54.998315],[82.747005,54.998276],[82.747071,54.998278],[82.747137,54.998275],[82.747149,54.998239],[82.747158,54.998206],[82.747171,54.998167],[82.747176,54.998126],[82.747235,54.998106],[82.747301,54.998111],[82.747365,54.998115],[82.74743,54.998122],[82.747494,54.998127],[82.747563,54.998133],[82.74763,54.998139],[82.747682,54.998158],[82.747686,54.998195],[82.747672,54.998232],[82.747666,54.998269],[82.747657,54.998306],[82.747645,54.998344],[82.74764,54.99838],[82.74763,54.998414],[82.747619,54.998452],[82.74765,54.99848],[82.747718,54.998486]];
+  if (CODEFEST_BOTS_STARTED === false) {
+    moveBot(bot1movements, true, 0, 5000);
+    CODEFEST_BOTS_STARTED = true;
+  }
+
+  function moveBot(path, isForwardDirection, position, animationTime) {
+    if (position == 0) {
+      isForwardDirection = true;
+    } else if (position == path.length - 1) {
+      isForwardDirection = false;
+    }
+    // console.log("position", position);
+    const nextPosition = path[position];
+
+    profileState1.payload.location.lat = nextPosition[1];
+    profileState1.payload.location.lon = nextPosition[0];
+    profileState1.payload.lastSeen = Date.now() * 1000;
+    processMessage(profileState1);
+
+    currentPosition = isForwardDirection ? position++ : position--;
+    setTimeout(function () {
+      moveBot(path, isForwardDirection, position, animationTime);
+    }, animationTime);
+  }
+}
+
+//-----------------------------------//
 
 var PORT_BOTS_STARTED = false;
 
@@ -2967,7 +3420,7 @@ function perfTest() {
   testMessage.payload.location.lon = map.getCenter()[0];
   map.setZoom(11.5);
 
-  const maxI = 100;
+  const maxI = 1000;
   const floor = Math.floor(Math.sqrt(maxI));
   for (i = 1; i <= maxI; i++) {
     testProfile.id = "test-" + i;
@@ -3007,7 +3460,7 @@ var testMessageStickerFromTo = {
 };
 
 var testMessageStickerFromToMe = {
-  senderId: 'portbot1',
+  senderId: 'codefestbot1',
   stickerRecord: {
     sticker: {
       stickerId: "go",
@@ -3017,7 +3470,7 @@ var testMessageStickerFromToMe = {
 };
 
 var testMessageStickerFromToMe2 = {
-  senderId: 'portbot1',
+  senderId: 'codefestbot1',
   stickerRecord: {
     sticker: {
       stickerId: "poop",
@@ -3221,28 +3674,26 @@ function logStickerByUser(id, sticker, sendAt) {
     }
 
     if (sticker == "go") {
-      if (BEST_GAME_STARTED === false) {
-        BEST_GAME_STARTED = true;
-        bestLaunchTimerBeforeStartGame();
-      }
-
-      if (BEST_GAME_IN_PROGRESS == false && BEST_CURRENT_GAMERS.indexOf(id) === -1 && BEST_CURRENT_GAMERS.length <= 10) {
-        BEST_CURRENT_GAMERS.push(id);
-        BEST_CURRENT_GAMERS_SCORES[id] = {};
-        BEST_CURRENT_GAMERS_SCORES_SUM[id] = 0;
-        bestRerenderPlayersList();
+      if (!BEST_CURRENT_GAMERS.hasOwnProperty(id)) {
+        BEST_CURRENT_GAMERS[id] = {
+          id: id,
+          name: globalProfiles[id].name,
+          avaUrl: globalProfiles[id].logo,
+          scores: {},
+          scoresSum: 0
+        }
+        bestRerenderCurrentPlayersList();   
       }
     }
 
-    if (BEST_GAME_IN_PROGRESS && BEST_CURRENT_GAMERS.indexOf(id) !== -1) {
-      if (BEST_GAME_CURRENT_STICKER == sticker) {
+    if (BEST_GAME_IN_PROGRESS && BEST_CURRENT_GAMERS.hasOwnProperty(id)) {
+      if (BEST_GAME_CURRENT_STICKERS.includes(sticker)) {
         bestGameProcessCorrectSticker(id, sticker, sendAt);
       } else {
         // bestGameProcessIncorrectSticker(id);
       }
     }
     
-    //BEST_GAME_CURRENT_STICKER
 
   } else if (FIRST_ALLOW_ADD_NEW_PLAYERS) { // игра на большее количество первых
     var hasNewGamer = false;
@@ -3354,33 +3805,38 @@ var startBestTime = 0;
 const now = () => performance.now();
 
 
-function startBestTimer(duration) {
-  // BEST_TIMER.style.display = "block";
-  // var duration;
+function startBestTimer(duration, showSec = false) {
+  BEST_TIMER.style.display = "block";
+  var duration;
+  var showSec;
   
-  // const update = () => {
-  //   const delta = now() - startBestTime;
-  //   const difference = duration - delta;
-  //   const percent = Math.max(0, Math.min(100, (difference / duration) * 100));
+  const update = () => {
+    const delta = now() - startBestTime;
+    const difference = duration - delta;
+    const percent = Math.max(0, Math.min(100, (difference / duration) * 100));
+    if (showSec) {
+      const sec = Math.floor(difference / 1000);
+      document.getElementById("best-timer-text").innerHTML = sec;
+    }
     
-  //   BEST_TIMER.style.setProperty('--progress', percent);
+    BEST_TIMER.style.setProperty('--progress', percent);
     
-  //   if (difference > 0) {
-  //     requestAnimationFrame(update);
-  //   }
-  // };
+    if (difference > 0) {
+      requestAnimationFrame(update);
+    }
+  };
 
   startBestTime = now();
-  // requestAnimationFrame(update);
-  // setTimeout(() => {BEST_TIMER.style.display = "none"}, duration);
+    requestAnimationFrame(update);
+    setTimeout(() => {BEST_TIMER.style.display = "none"}, duration);
 };
 
-const fadeIn = (el, timeout) => {
+const fadeIn = (el, timeout, opacity = 1) => {
   el.style.opacity = 0;
   el.style.display = 'block';
   el.style.transition = `opacity ${timeout}ms`;
   setTimeout(() => {
-    el.style.opacity = 1;
+    el.style.opacity = opacity;
   }, 10);
 };
 
@@ -3398,100 +3854,198 @@ function startGameBestTimeSticker() {
   BEST_LOG_LAST_STICKERS_TO_ME = true;
 
   // warmup
-  document.getElementById("best-leader-board").style.display = "block";
-  document.getElementById("best-game-launch-info").style.display = "block";
-  document.getElementById("best-game-rules").style.display = "block";
-  document.getElementById("best-game-rules").style.opacity = "0";
-  document.getElementById("best-game-lose").style.display = "block";
-  document.getElementById("best-game-lose").style.opacity = "0";
-  document.getElementById("best-game-new-winner").style.display = "block";
-  document.getElementById("best-game-new-winner").style.opacity = "0";
-  document.getElementById("best-game-need-wait").style.display = "block";
-  document.getElementById("best-game-need-wait").style.opacity = "0";
-
-  setTimeout(function() {
-    document.getElementById("best-game-rules").style.display = "none";
-    document.getElementById("best-game-lose").style.display = "none";
-    document.getElementById("best-game-new-winner").style.display = "none";
-    document.getElementById("best-game-rules").style.opacity = "1";
-    document.getElementById("best-game-lose").style.opacity = "1";
-    document.getElementById("best-game-new-winner").style.opacity = "1";
-    document.getElementById("best-game-need-wait").style.display = "none";
-  document.getElementById("best-game-need-wait").style.opacity = "1";
-  }, 100);
-  bestSetNewLeader("portbot1", getRandom(10, 30)); // @todo restore to 10-30
-}
-
-function bestSetNewLeader(id, score) {
-  if (BEST_WINNER_ID != id) {
-    BEST_WINNER_ID = id;
-    bestSetWinnerMarkerClassForId(id); 
-  }
-
-  BEST_GAME_BEST_RESULT = score;
-
-  const name = globalProfiles[id].name;
-  const firstLeaderColumn = document.getElementById("best-leader-table-first-column");
-  const secondLeaderColumn = document.getElementById("best-leader-table-second-column");
-  const thirdLeaderColumn = document.getElementById("best-leader-table-third-column");
+  //document.getElementById("best-leader-board").style.display = "block";
+  map.invalidateSize();
+  // map.setCenter(
+  //   [
+  //     globalMarkers["codefestbot"].getCoordinates()[0],
+  //     globalMarkers["codefestbot"].getCoordinates()[1]
+  // ]);
   
-  firstLeaderColumn.innerHTML = bestGetFirstColumnById(id, true);
-  secondLeaderColumn.innerHTML = score; 
-  thirdLeaderColumn.innerHTML = `<div>${name}</div>`              
+  document.getElementById("best-game-launch-info").style.display = "block";
+  bestGameReloadLiaders();
+  bestRerenderCurrentPlayersList();
+  bestLaunchTimerBeforeStartGame();  
 }
 
 function getRandom(min, max, integer = true) {
   return integer ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min) + min;
 }
 
-function bestGetFirstColumnById(id, isLeader = false) {
+function bestGetFirstColumnById(avaUrl, name, position, isLeader = false) {
   var acronym = "";
-  const avaUrl = globalProfiles[id].logo;
-
+  
   const backgroundImage = getBackgroundImageForAva(avaUrl);
 
   if (backgroundImage === null) {
     acronym = getAcronymFromName(name);
+    if (BEST_AWAINING_NAMES.includes(name)) {
+      acronym = "";
+    }
   }
 
+  
+
+  const customStyle = position > 3 ? 'style="background-color: #131313;"' : "";
+  const positionHTML = BEST_AWAINING_NAMES.includes(name) ? "" : `<div class="leader-position" ${customStyle}>${position}</div>`
+
+
   const classAva = isLeader ? "winner-leader-board-ava-container" : "leader-board-ava-container";
-  return `<div class="friend"><div class="${classAva}" style="${backgroundImage}">${acronym}</div></div>`;
+  const winnerCrown = isLeader ? `<div class="winner-leader-board-ava-crown"></div>`: "";
+  return `<div>
+      ${positionHTML}${winnerCrown}
+      <div class="friend">
+          <div class="${classAva}" style="${backgroundImage}">${acronym}</div>
+      </div>
+    </div>`;
 
 }
 
-function bestRerenderPlayersList() {
+function bestRerenderCurrentPlayersList() {
 
-  var HTML = `<table class = "best-leader-top-table" id = "best-current-game-players-table">`;
-  for (i = 0; i < BEST_CURRENT_GAMERS.length; i++) {
-    const name = globalProfiles[BEST_CURRENT_GAMERS[i]].name
-    HTML += `<tr>`;
-    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(BEST_CURRENT_GAMERS[i])}</td>`;
-    HTML += `<td class = "best-leader-table-second-column">${BEST_CURRENT_GAMERS_SCORES_SUM[BEST_CURRENT_GAMERS[i]]}</td>`;
-    HTML += `<td class = "best-leader-table-third-column">${name}</td>`;
-    HTML += `</tr>`;
+  var results = [];
+  if (Object.keys(BEST_CURRENT_GAMERS).length === 0) {
+    results = {codefestbot1:
+                {
+                  avaUrl: null, 
+                  id: "codefestbot1",
+                  name: getRandomAwaitingName(),
+                  scoresSum: ":)"
+                }
+      };
+  } else {
+    results = BEST_CURRENT_GAMERS;
   }
+
+
+  var objectsToSort = {};
+  for (id in results) {
+    objectsToSort[id] = results[id].scoresSum;
+  }
+
+  let sortable = [];
+  for (var id in objectsToSort) {
+      sortable.push({id: id, score: objectsToSort[id]});
+  }
+
+  sortable.sort(function(a, b) {
+      return b.score - a.score;
+  });
+
+  var HTML = `<table class = "best-leader-top-table">`;
+  var i = 0;
+  sortable.forEach((item) => {
+
+    const name = results[item.id].name.replace(/>|</gi, '');
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[item.id].avaUrl, name, i + 1)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${name}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${results[item.id].scoresSum}</td>`;
+    HTML += `</tr>`;
+    i++;
+  });
   HTML += `</table>`;
+
   document.getElementById("best-current-game-players-table-container").innerHTML = HTML;
 
 }
 
+function bestRerenderLeaderCurrentHourList(results) {
+  if (results.length == 0) {
+    results = [ 
+                {
+                  user_ava_path: null, 
+                  user_name: getRandomAwaitingName(),
+                  max_score: ":)"
+                }
+      ]
+  }
+
+  var HTML = `<table class = "best-leader-top-table">`;
+  for (i = 0; i < results.length; i++) {
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name, i + 1)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${results[i].user_name.replace(/>|</gi, '')}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${results[i].max_score}</td>`;
+    HTML += `</tr>`;
+  }
+  HTML += `</table>`;
+  document.getElementById("best-current-game-players-current-hour-leaders-container").innerHTML = HTML;
+
+}
+
+function bestRerenderLeaderPreviousHourList(results) {
+  if (results.length == 0) {
+    results = [ 
+                {
+                  user_ava_path: null, 
+                  user_name: "Ждем тебя",
+                  max_score: ":)"
+                }
+      ]
+  }
+  
+
+  var HTML = `<table class = "best-leader-top-table">`;
+  for (i = 0; i < results.length; i++) {
+
+    if (i == 0) {
+      BEST_WINNER_ID = results[i].user_id;
+      bestSetWinnerMarkerClassForId(results[i].user_id);
+    }
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name, i + 1, i == 0)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${results[i].user_name.replace(/>|</gi, '')}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${results[i].max_score}</td>`;
+    HTML += `</tr>`;
+  }
+  HTML += `</table>`;
+  document.getElementById("best-current-game-players-previous-hour-leaders-container").innerHTML = HTML;
+
+}
+
+function bestGameReloadLiaders() {
+
+    fadeOut(document.getElementById("best-leader-board"), 500);
+
+
+    setTimeout(() => {
+      const tsNow = Math.floor((Date.now() - serverTimestampShift) / 1000)
+      $.getJSON( `https://offline-zond.api.2gis.com/codefest/getLeaders?timestamp=${tsNow}&limit=5`, function( json ) {
+        bestRerenderLeaderCurrentHourList(json);
+      });
+
+      const d = new Date();
+      const time = Math.floor((d.setHours(d.getHours() - 1) - serverTimestampShift) / 1000);
+
+      $.getJSON( `https://offline-zond.api.2gis.com/codefest/getLeaders?timestamp=${time}&limit=3`, function( json ) {
+        bestRerenderLeaderPreviousHourList(json);
+      });
+      fadeIn(document.getElementById("best-leader-board"), 500, 0.9)
+      bestRerenderCurrentPlayersList();
+    }, 500);
+
+    ;
+}
+
 
 function bestLaunchTimerBeforeStartGame() {
-    startBestTimer(BEST_SHOW_RULES_TIMER);
-    fadeIn(document.getElementById("best-game-rules"), 500)
-    fadeIn(document.getElementById("best-current-game-players-list"), 500);
-    fadeOut(document.getElementById("best-game-launch-info"), 500);
-    BEST_CURRENT_GAMERS_SCORES = {};
-    BEST_CURRENT_GAMERS_SCORES_SUM = {};
-    playerQR.seek("100%");
-    playerCongratsBlue.seek("100%");
-    playerCongratsRed.seek("100%");
-    playerCongratsGreen.seek("100%");
+    BEST_GAME_CURRENT_ID = CryptoJS.MD5(Date.now().toString()).toString();
+    BEST_GAME_TIME_STARTED = Math.floor((Date.now() - serverTimestampShift) / 1000);
+    startBestTimer(BEST_SHOW_RULES_TIMER, true);
+    // fadeIn(document.getElementById("best-game-rules"), 500)
+    // fadeIn(document.getElementById("best-current-game-players-list"), 500);
+    // fadeOut(document.getElementById("best-game-launch-info"), 500);
+    
+    // playerQR.seek("100%"); // @todo почему это тут
+    // playerCongratsBlue.seek("100%");
+    // playerCongratsRed.seek("100%");
+    // playerCongratsGreen.seek("100%");
     setTimeout(() => {
-      fadeOut(document.getElementById("best-game-rules"), 500);
+      // fadeOut(document.getElementById("best-game-rules"), 500);
       BEST_GAME_IN_PROGRESS = true;
       bestStartPushingStickersWithTimersAndCountResults();
-    }, BEST_SHOW_RULES_TIMER);
+    }, BEST_SHOW_RULES_TIMER + 100);
 }
 
 
@@ -3501,96 +4055,135 @@ function bestStartPushingStickersWithTimersAndCountResults() {
 
 function bestSpawnRandomSticker() {
 
+  BEST_GAME_CURRENT_STICKERS = [];
+  BEST_GAME_CURRENT_STICKER_MARKERS = {};
   const duration = BEST_GAME_ONE_ROUND_DURATION;
-  const randomSticker = getRandomSticker();
-  BEST_GAME_CURRENT_STICKER = randomSticker;
   BEST_GAME_CURRENT_ROUND++;
 
   const bounds = map.getBounds();
-  const center = map.getCenter();
+  const center = globalMarkers['codefestbot'].getCoordinates(); // @codefest bot center
 
   const container = document.getElementById("container");
   
-  const htmlMarker = createStickerMapMarker(randomSticker, center[0], center[1], "best-emoji-marker-sticker", true)
-
-  var randomPoint = null;
-  switch (getRandom(0,3)) {
-    case 0:
-      randomPoint = map.unproject([0, getRandom(0, container.clientHeight)]);
-      break;
-    case 1: 
-      randomPoint = map.unproject([container.clientWidth, getRandom(0, container.clientHeight)]);
-      break;
-    case 2: 
-      randomPoint = map.unproject([getRandom(0, container.clientWidth), 0]);
-      break;
-    case 3: 
-      randomPoint = map.unproject([getRandom(0, container.clientWidth), container.clientHeight]);
-      break;
+  var stickersCount = 1;
+  if (BEST_GAME_CURRENT_ROUND > 19 ) {
+    stickersCount = 10;
+  } else if (BEST_GAME_CURRENT_ROUND > 18 ) {
+    stickersCount = 10;
+  } else if (BEST_GAME_CURRENT_ROUND > 17) {
+    stickersCount = 3;
+  } else if (BEST_GAME_CURRENT_ROUND > 11) {
+    stickersCount = 2;
   }
 
-  moveMarker(
-    null,
-    htmlMarker,
-    randomPoint[0],
-    randomPoint[1],
-    duration
-  );
+  function getUniqSticker() {
+    while (true) {
+      const randomSticker = getRandomSticker();
+      if (!BEST_GAME_CURRENT_STICKERS.includes(randomSticker)) {
+        return randomSticker;
+      }
+    }
+  }
 
-  BEST_GAME_CURRENT_STICKER_MARKER = htmlMarker;
+  for (var i = 0; i < stickersCount; i++) {
+    const randomSticker = getUniqSticker();
+    
+
+    const htmlMarker = createStickerMapMarker(randomSticker, center[0], center[1], "best-emoji-marker-sticker", true);
+    var randomPoint = null;
+    switch (getRandom(0,3)) {
+      case 0:
+        randomPoint = map.unproject([0, getRandom(0, container.clientHeight)]);
+        break;
+      case 1: 
+        randomPoint = map.unproject([container.clientWidth, getRandom(0, container.clientHeight)]);
+        break;
+      case 2: 
+        randomPoint = map.unproject([getRandom(0, container.clientWidth), 0]);
+        break;
+      case 3: 
+        randomPoint = map.unproject([getRandom(0, container.clientWidth), container.clientHeight]);
+        break;
+    }
+
+    moveMarker(
+      null,
+      htmlMarker,
+      randomPoint[0],
+      randomPoint[1],
+      duration
+    );
+
+    BEST_GAME_CURRENT_STICKERS.push(randomSticker);
+    BEST_GAME_CURRENT_STICKER_MARKERS[randomSticker] = htmlMarker;
+    setTimeout(function () {
+      htmlMarker.destroy();
+    }, duration * 1000); // change time if changed animation css time
+  }
 
   const firstPartText = BEST_GAME_CURRENT_ROUND < 10 && BEST_GAME_TOTAL_ROUNDS > 10 ? '&nbsp&nbsp' : '';
 
-  document.getElementById("best-timer-text").innerHTML = firstPartText + BEST_GAME_CURRENT_ROUND + ' / ' + BEST_GAME_TOTAL_ROUNDS;
+  document.getElementById("best-timer-text").innerHTML = `<div style="overflow: hidden;"><div style="text-align: center; display: inline-block; width: 50px;">${firstPartText}${BEST_GAME_CURRENT_ROUND}</div><div style="text-align: center; display: inline-block; width: 20px;">/</div><div style="text-align: center; display: inline-block; width: 50px;">${BEST_GAME_TOTAL_ROUNDS}</div></div>`;
   startBestTimer(duration * 1000);
 
   if (BEST_GAME_CURRENT_ROUND < BEST_GAME_TOTAL_ROUNDS) {
     setTimeout(function () {
-      htmlMarker.destroy();
       bestSpawnRandomSticker();
     }, duration * 1000); // change time if changed animation css time
   } else {
     setTimeout(function () {
-      htmlMarker.destroy();
+      BEST_GAME_IN_PROGRESS = false;
       bestFinishGame();
     }, duration * 1000); // change time if changed animation css time
   }
 }
 
 function bestFinishGame() {
-  var maxResult = 0;
-  var currentWinner = null;
-  for (const userId in BEST_CURRENT_GAMERS_SCORES_SUM) {
-    if (BEST_CURRENT_GAMERS_SCORES_SUM[userId] > maxResult) {
-      currentWinner = userId;
-      maxResult = BEST_CURRENT_GAMERS_SCORES_SUM[userId];
+  bestSendResultsToBE(BEST_CURRENT_GAMERS);
+}
+
+function bestSendResultsToBE(results) {
+  //results.forEach((element) => element.ava_path = globalProfiles[element.id].logo);
+  // globalProfiles[id].logo
+  json = {
+    game_id: BEST_GAME_CURRENT_ID,
+    game_time: BEST_GAME_TIME_STARTED,
+    results: results
+  }
+
+  $.ajax("https://offline-zond.api.2gis.com/codefest/postResults", {
+    data : JSON.stringify(json),
+    contentType : 'application/json',
+    type : 'POST',
+    success: function () {
+        bestGameSuccessFinished();
+    },
+    error: function (error) {
+      console.log(error);
+      //@todo make error on display
     }
-  }
+  })
+}
 
-  if (maxResult >= BEST_GAME_BEST_RESULT) {
-    bestSetNewLeader(currentWinner, maxResult);
-    fadeIn(document.getElementById("best-game-new-winner"), 500);
-  } else {
-    fadeIn(document.getElementById("best-game-lose"), 500);
-  }
-
-
+function bestGameSuccessFinished() {
+  document.getElementById("best-timer-text").innerHTML = "";
+  //startBestTimer(BEST_SHOW_FINISH_IMAGE, true);
   setTimeout(() => {
-    fadeOut(document.getElementById("best-game-new-winner"), 500);
-    fadeOut(document.getElementById("best-game-lose"), 500);
-    BEST_CURRENT_GAMERS = [];
-    BEST_CURRENT_GAMERS_SCORES = {};
-    BEST_CURRENT_GAMERS_SCORES_SUM = {};
-    BEST_GAME_STARTED = false;
-    BEST_GAME_IN_PROGRESS = false;
-    BEST_GAME_CURRENT_STICKER = null;
-    BEST_GAME_CURRENT_STICKER_MARKER = null;
-    BEST_GAME_CURRENT_ROUND = 0;
-    document.getElementById("best-timer-text").innerHTML = "";
-    fadeIn(document.getElementById("best-game-launch-info"), 500);
-    fadeOut(document.getElementById("best-current-game-players-list"), 500);
-  }, BEST_SHOW_FINISH_IMAGE);
+    // fadeOut(document.getElementById("best-game-new-winner"), 500);
+    // fadeOut(document.getElementById("best-game-lose"), 500);
+    bestGameReloadLiaders();
 
+    BEST_CURRENT_GAMERS = {};
+    BEST_GAME_STARTED = false;
+    BEST_GAME_CURRENT_STICKERS = [];
+    BEST_GAME_CURRENT_STICKER_MARKERS = {};
+    BEST_GAME_CURRENT_ROUND = 0;
+    // fadeIn(document.getElementById("best-game-launch-info"), 500);
+    // fadeOut(document.getElementById("best-current-game-players-list"), 500);
+    setTimeout(() => {
+      bestLaunchTimerBeforeStartGame();
+    }, 200); 
+  }, BEST_SHOW_FINISH_IMAGE + 100);
 }
 
 
@@ -3645,25 +4238,28 @@ function bestGameProcessCorrectSticker(userId, sticker, sendAt) {
   const deltaTime = (now() - startBestTime - 500) / 1000;
 
   const floorDelta = Math.floor(deltaTime);
-  const additionalScore = (3 - floorDelta) > 0 ? 3 - floorDelta : 0;
+  const points = (BEST_GAME_ONE_ROUND_DURATION - floorDelta) > BEST_GAME_ONE_ROUND_DURATION ? BEST_GAME_ONE_ROUND_DURATION : BEST_GAME_ONE_ROUND_DURATION - floorDelta;
+  const additionalScore = points > 0 ? points : 0;
+  const key = BEST_GAME_CURRENT_ROUND.toString() + sticker 
 
-  if (!BEST_CURRENT_GAMERS_SCORES[userId].hasOwnProperty(BEST_GAME_CURRENT_ROUND)) {
-    BEST_CURRENT_GAMERS_SCORES[userId][BEST_GAME_CURRENT_ROUND] = additionalScore;
-    BEST_CURRENT_GAMERS_SCORES_SUM[userId] += additionalScore;
+  if (!BEST_CURRENT_GAMERS[userId].scores.hasOwnProperty(key)) { // @todo сделать для двух и более стикеров
+    BEST_CURRENT_GAMERS[userId].scores[key] = additionalScore;
+    BEST_CURRENT_GAMERS[userId].scoresSum += additionalScore;
   } 
 
-  bestRerenderPlayersList();
+  bestRerenderCurrentPlayersList();
 
   const senderMarker = globalMarkers[userId];
   const senderLon = senderMarker.getCoordinates()[0];
   const senderLat = senderMarker.getCoordinates()[1];
-  const htmlMarker = createStickerMapMarker(sticker, senderLon, senderLat, "best-emoji-marker-sticker-shot")
+  const htmlMarker = createStickerMapMarker(sticker, senderLon, senderLat, "best-emoji-marker-sticker-shot");
+
   const duration = 200;
   moveMarker(
     null,
     htmlMarker,
-    BEST_GAME_CURRENT_STICKER_MARKER.getCoordinates()[0],
-    BEST_GAME_CURRENT_STICKER_MARKER.getCoordinates()[1],
+    BEST_GAME_CURRENT_STICKER_MARKERS[sticker].getCoordinates()[0],
+    BEST_GAME_CURRENT_STICKER_MARKERS[sticker].getCoordinates()[1],
     duration / 1000
   );
 
@@ -3673,10 +4269,7 @@ function bestGameProcessCorrectSticker(userId, sticker, sendAt) {
 }
 
 function bestGameProcessIncorrectSticker(userId) {
-  if (BEST_CURRENT_GAMERS_SCORES_SUM[userId] > 0) {
-    BEST_CURRENT_GAMERS_SCORES_SUM[userId] -= 1;
-    bestRerenderPlayersList();
-  }
+  
 }
 
 
@@ -3848,6 +4441,11 @@ function getRandomSticker() {
   return SUPPORTED_EMOJI[stickerN];
 }
 
+function getRandomAwaitingName() {
+  const namesN = Math.floor(Math.random() * BEST_AWAINING_NAMES.length);
+  return BEST_AWAINING_NAMES[namesN];
+}
+
 function getRandomLeftForSticker() {
   const container = document.getElementById("game-container");
   return Math.floor(Math.random() * container.clientWidth);
@@ -4002,10 +4600,17 @@ const getBase64StringFromDataURL = (dataURL) =>
 
 //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
-// startSceneZEM();
+//  startSceneZEM();
+
+// $.ajax("https://offline-zond.api.2gis.com/codefest/post_results", {
+//     data : '"test":"bla"',
+//     contentType : 'application/json',
+//     type : 'POST'})
 
 
-
+// $.getJSON( "https://offline-zond.api.2gis.com/codefest/index", function( json ) {
+//   console.log( "JSON Data: " + json.message );
+//  });
 
 
 </script>
