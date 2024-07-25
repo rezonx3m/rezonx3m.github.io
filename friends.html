@@ -390,21 +390,9 @@
       display: none;
     }
 
-    #game-first-send-intro {
-      opacity: 1;
-      background-color: white;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 100px;
-      overflow: hidden;
-      top: 26px;
-      color: #262626;
-      overflow: hidden;
-      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
-      border: 3px solid white;
-      white-space: nowrap;
-      cursor: pointer;
-    }
+/* games */
+
+   
 
     #game {
       opacity: 1;
@@ -582,17 +570,7 @@
 
     /* styles port */
 
-    #port-controls {
-      display: none;
-    }
 
-    #qr-promo {
-      display: none;
-    }
-
-    #img-garbage {
-      display: none;
-    }
 
     .center-lottie-player {
       position: absolute;
@@ -812,7 +790,7 @@
       width: 786px;
       height: 203px;
       position: absolute;
-      top: 10px;
+      top: 17px;
       left: 380px;
       
       display: none;
@@ -874,10 +852,10 @@
     .best-timer {
       --progress: 100;
       display: none;
-      position: absolute;
-      top: 220px;
-      left: 985px;
-      
+      position: fixed;
+      top: 34px;
+      right: 34px;
+      /* transform: translate(-50%, -50%); */
       width: 150px;
       height: 150px;
       justify-content: center;
@@ -971,62 +949,8 @@
           </div>
         </div>
       </div>
-      <div id="port-controls">
-        <div>
-          <input type="checkbox" id="port-send-ping" name="port-send-ping" checked />
-          <label for="port-send-ping">оптравлять пинг</label>
-        </div>
-      </div>
     </div>
 
-    <div id="game-container">
-      <div id="game-center-screen">
-        <div class="animate-rotating">
-
-          <div class="animate-scale">
-            <div id=game-sticker-container></div>
-          </div>
-        </div>
-      </div>
-      <div id="game-first-send-intro" onClick="restartGame()"></div>
-
-      <div id="game-first-send">
-      </div>
-      <div class="timer">
-        <div class="timer__items">
-          <div class="timer__item timer__name" id="timer__name"></div>
-          <div class="timer__item timer__seconds" id="timer__seconds"></div>
-        </div>
-      </div>
-
-      <div id="game">
-      </div>
-    </div>
-    <div id="qr-promo">
-      <div class="center-lottie-player">
-        <lottie-player id="lottie-player-qr" mode="normal" style="width: 100%"> </lottie-player>
-      </div>
-      <div class="center-lottie-player">
-        <lottie-player id="lottie-player-congrats-green" mode="normal" style="width: 100%"> </lottie-player>
-      </div>
-      <div class="center-lottie-player">
-        <lottie-player id="lottie-player-congrats-red" mode="normal" style="width: 100%"> </lottie-player>
-      </div>
-      <div class="center-lottie-player">
-        <lottie-player id="lottie-player-congrats-blue" mode="normal" style="width: 100%">
-        </lottie-player>
-      </div>
-    </div>
-    <div id="center-text-promo">
-    </div>
-    <div id='img-garbage'>
-      <div id='img-src'>
-        <img id='img-loader' />
-      </div>
-      <div id='img-crop-result'>
-        <canvas id="canvas" width=300 height=300></canvas>
-      </div>
-    </div>
     <div id='friends-list'>
     </div>
 
@@ -1071,7 +995,6 @@ const getParamUserId = urlParams.get("user_id");
 const getParamScene = urlParams.get("scene");
 const getParamSendBounds = urlParams.get("send_bounds");
 const getParamHideStatus = urlParams.get("hide_status");
-const getParamHidePromoQR = urlParams.get("hide_promo");
 const getParamShowFriendsList = urlParams.get("show_friends_list");
 const getParamMarkStickersAsViewd = urlParams.get("mark_stickers_as_viewed");
 const getParamBestGameIgnorePlayerDistance = urlParams.get("best_game_ignore_player_distance");
@@ -1099,6 +1022,8 @@ const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
 var OVERRIDED_ZOOM = null;
 const DROP_MARKERS_WITH_OLD_STATE = !DEBUG;
 
+
+// wtf?
 const SKIPED_ID = "0155140dfccb40739784b81e9faa445b";
 
 // маркера в кластерах (для быстрой чистки)
@@ -1152,44 +1077,11 @@ const SUPPORTED_EMOJI = [
   "beer"
 ];
 
-// scenes params
-var POPUP_ANIMATION_IS_BUSY = false;
-var POPUP_NEXT_ANIMATION = null;
-var POPUP_CURRENT_ANIMATION = null;
-const POPUP_QR_ANIMATION_TIME = 22000;
-const POPUP_CONGRATS_ANIMATION_TIME = 7000;
 
-var PORT_FORCE_SEND_SHOW_STUB = false;
 
-const playerQR = document.getElementById("lottie-player-qr");
-const playerCongratsBlue = document.getElementById(
-  "lottie-player-congrats-blue"
-);
-const playerCongratsRed = document.getElementById("lottie-player-congrats-red");
-const playerCongratsGreen = document.getElementById(
-  "lottie-player-congrats-green"
-);
+
 
 // game params
-
-// params for game who first send sticker
-
-var FIRST_LOG_LAST_STICKERS_TO_ME = false;
-var FIRST_LAST_STICKERS_BY_USERS = {};
-var FIRST_CURRENT_GAMERS = [];
-var FIRST_CURRENT_GAMERS_SCORE = {};
-var FIRST_SCORE_TO_WIN = 10; // @todo return 10
-var FIRST_MAX_PLAYERS = 40;
-var FIRST_MAX_ROUNDS = 30;
-var FIRST_CURRENT_ROUND_NUM = 0;
-var FIRST_GAME_TIMER_ID = null;
-var FIRST_ALLOW_ADD_NEW_PLAYERS = true;
-var FIRST_GAME_STARTED = false;
-var FIRST_CURRENT_STICKER = null;
-var FIRST_CURRENT_ROUTN_WINNER = null;
-var FIRST_GAME_FINISHED = false;
-//////////////////
-
 // params for game best time send sticker
 
 var BEST_GAME_CURRENT_ID = null;
@@ -1508,10 +1400,7 @@ function addProfile(profile, isInit = false) {
   if (isItChange) {
     refreshAvaInMarker(profile.id);
     clusteriseMarkers(true);
-  } else if (!isInit) {
-    showSceneNewFriendAnimation();
-  }
-
+  } 
   if (getParamShowFriendsList === "true" || DEBUG) {
     refreshFriendsList();
   }
@@ -2129,7 +2018,7 @@ function processStickerToMe(payload) {
       return;
     }
 
-    if (DEBUG && (FIRST_LOG_LAST_STICKERS_TO_ME || BEST_LOG_LAST_STICKERS_TO_ME)) {
+    if (DEBUG && (BEST_LOG_LAST_STICKERS_TO_ME)) {
       console.log(senderId, stickerId);
     }
 
@@ -2663,39 +2552,6 @@ case "codefest": {
   }
 }
 
-function startScene2fest() {
-  currentScene = "2fest";
-  //OVERRIDED_ZOOM = 100;
-
-  map.setCenter([82.898612, 54.980413]);
-  map.setZoom(17.5);
-  map.setPitch(45.51);
-  map.setRotation(-43.33);
-  //document.getElementById("input-id").value = "2fest";
-  //document.getElementById("best-game-launch-info").style.backgroundImage = "url('https://rezonx3m.github.io/friends/static/best-game-launch-2fest.png')";
-  
-
-  document.getElementById("input-id").value = "port";
-
-  
-
-  SOCKET_PATH =
-    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true";
-
-  connectButtonClick();
-  document.getElementById("input-id").style.display = "none";
-  document.getElementById("connect-button").style.display = "none";
-
-  ENABLE_CLUSTERS = false;
-  ENABLE_STICKERS = true;
-  ENABLE_MARK_STICKERS_AS_VIEWED = true;
-  FORCE_RECONNECT_IF_NO_STICKERS = true;
-
-  setTimeout(startGameBestTimeSticker, 1500);
-  //startGameFirstSendSticker();
-  
-}
-
 function startSceneZEM() {
   currentScene = "ZEM";
   //OVERRIDED_ZOOM = 100;
@@ -2704,111 +2560,13 @@ function startSceneZEM() {
   //map.setPitch(50);
   //map.setRotation(-170.85);
   document.getElementById("input-id").value = "ZEM";
-  //startGameFirstSendSticker();
+  
   SOCKET_PATH =
     "ws://zem.rezon.webapi-dnd.os-n3.hw/api/1.1/user/ws";
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
 
-
-}
-
-function startScenePort() {
-  currentScene = "port";
-  OVERRIDED_ZOOM = 100;
-  map.setCenter([30.242201, 59.923987]);
-  map.setZoom(18.71);
-  map.setPitch(20.1);
-  map.setRotation(142.11);
-
-  //const snow = new mapglSnow.Snow(map);
-
-  playerQR.load(lottieQR);
-
-  playerCongratsBlue.load(lottieCongratsBlue);
-  playerCongratsRed.load(lottieCongratsRed);
-  playerCongratsGreen.load(lottieCongratsGreen);
-
-  ENABLE_CLUSTERS = false;
-  ENABLE_STICKERS = true;
-  ENABLE_MARK_STICKERS_AS_VIEWED = true;
-  FORCE_RECONNECT_IF_NO_STICKERS = true;
-  document.getElementById("input-id").value = "port";
-
-  
-
-  SOCKET_PATH =
-    "wss://offline-zond.api.2gis.com/api/1.1/user/:id/ws?get-friends-stickers=true&channes=markers,stickers";
-    connectButtonClick();
-  document.getElementById("input-id").style.display = "none";
-  document.getElementById("connect-button").style.display = "none";
-
-  if (getParamHidePromoQR !== "true") {
-    document.getElementById("qr-promo").style.display = "block";
-  }
-
-  setInterval(portSendPing, 1000);
-  setInterval(portSendShowStub, 1000);
-
-  //showScenePushButtonAnimation();
-  setTimeout(addPortBots, 1000);
-  ON_CONNECT_FUNCTION = addPortBots;
-  setTimeout(startGameBestTimeSticker, 1500);
-  
-
-  document.onkeypress = function (e) {
-    e = e || window.event;
-    switch (e.keyCode) {
-
-      case 48:
-        window.location.reload();;
-        break;
-
-
-      case 49:
-        perfTest();
-        break;
-
-      case 50:
-        showSceneNewFriendAnimation();
-        break;
-
-      case 51:
-        showScenePushButtonAnimation();
-        break;
-
-      case 52:
-        document.getElementById("port-send-ping").checked = true;
-        break;
-
-      case 53:
-        document.getElementById("port-send-ping").checked = false;
-        break;
-
-      case 54:
-        PORT_FORCE_SEND_SHOW_STUB = false;
-        break;
-
-      case 55:
-        PORT_FORCE_SEND_SHOW_STUB = true;
-        break;
-
-      case 56:
-        processStickerToMe(testMessageStickerFromToMe2);
-        break;
-
-      case 57:
-        processStickerToMe(testMessageStickerFromToMe);
-        break;
-
-      
-
-        
-    }
-  };
-
-  //showScenePushButtonAnimation();
 }
 
 
@@ -2827,8 +2585,6 @@ function startSceneCodefest() {
   ENABLE_MARK_STICKERS_AS_VIEWED = true;
   FORCE_RECONNECT_IF_NO_STICKERS = true;
   document.getElementById("input-id").value = "codefest";
-
-  
 
   SOCKET_PATH =
     "wss://zond.api.2gis.ru/api/1.1/user/ws?token=b731c9e5e542f345900cca57ba92b819fe371fd3&get-friends-stickers=true&channes=markers,stickers";
@@ -3055,577 +2811,6 @@ function addCodefestBots() {
   }
 }
 
-//-----------------------------------//
-
-var PORT_BOTS_STARTED = false;
-
-function addPortBots() {
-  const portBotId = "portbot";
-  const portBotId1 = "portbot1";
-  const portBotId2 = "portbot2";
-  const portBotId3 = "portbot3";
-
-  const profilePort = {
-    id: portBotId,
-    name: "Севкабель Порт",
-    logo: "https://i2.photo.2gis.com/images/profile/30258560158804614_b42b.jpg"
-  };
-
-  const profilePort1 = {
-    id: portBotId1,
-    name: "Алиса Кюнтиева",
-    logo: "https://rezonx3m.github.io/friends/static/bot1.JPG"
-  };
-
-  const profilePort2 = {
-    id: portBotId2,
-    name: "Какоето Имя",
-    logo: "https://rezonx3m.github.io/friends/static/bot2.JPG"
-  };
-
-  const profilePort3 = {
-    id: portBotId3,
-    name: "Еще Фамилия",
-    logo: "https://rezonx3m.github.io/friends/static/bot3.JPG"
-  };
-
-  const profileState = {
-    type: "friendState",
-    payload: {
-      id: portBotId,
-      lastSeen: Date.now() * 1000,
-      location: {
-        lat: 59.923999,
-        lon: 30.242194,
-        azimuth: 0,
-        speed: 0,
-        accuracy: 1
-      },
-      battery: {
-        level: 1
-      },
-      movement: {
-        status: "stopped",
-        stoppedAt: 1698728448409
-      }
-    }
-  };
-
-  var profileState1 = {
-    type: "friendState",
-    payload: {
-      id: portBotId1,
-      lastSeen: Date.now() * 1000,
-      location: {
-        lat: 59.924838,
-        lon: 30.240264,
-        azimuth: 206.91267,
-        speed: 1.5,
-        accuracy: 17.823999404907227
-      },
-      battery: {
-        level: 0.81
-      },
-      movement: {
-        status: "moving",
-        stoppedAt: 1698728448409
-      }
-    }
-  };
-
-  const profileState2 = {
-    type: "friendState",
-    payload: {
-      id: portBotId2,
-      lastSeen: Date.now() * 1000,
-      location: {
-        lat: 59.924661,
-        lon: 30.241195,
-        azimuth: 206.91267,
-        speed: 160,
-        accuracy: 17.823999404907227
-      },
-      battery: {
-        level: 0.81
-      },
-      movement: {
-        status: "stopped",
-        stoppedAt: 1698728448409
-      }
-    }
-  };
-
-  const profileState3 = {
-    type: "friendState",
-    payload: {
-      id: portBotId3,
-      lastSeen: Date.now() * 1000,
-      location: {
-        lat: 59.923647,
-        lon: 30.241312,
-        azimuth: 206.91267,
-        speed: 160,
-        accuracy: 17.823999404907227
-      },
-      battery: {
-        level: 0.81
-      },
-      movement: {
-        status: "stopped",
-        stoppedAt: 1698728448409
-      }
-    }
-  };
-  addProfile(profilePort, true);
-  addProfile(profilePort1, true);
-  addProfile(profilePort2, true);
-  addProfile(profilePort3, true);
-  processMessage(profileState);
-  processMessage(profileState1);
-  processMessage(profileState2);
-  processMessage(profileState3);
-
-  bot1movements = [
-    [30.240264, 59.924838],
-    [30.240412, 59.924776],
-    [30.240554, 59.92472],
-    [30.240696, 59.924649],
-    [30.240849, 59.924607],
-    [30.240987, 59.924593],
-    [30.241109, 59.924617],
-    [30.241218, 59.92466],
-    [30.241308, 59.924716],
-    [30.24142, 59.924787],
-    [30.241538, 59.924827],
-    [30.241705, 59.924772],
-    [30.241826, 59.924713],
-    [30.241932, 59.924667],
-    [30.242072, 59.924615],
-    [30.242169, 59.924565],
-    [30.242291, 59.924518],
-    [30.24242, 59.924471],
-    [30.242553, 59.924417],
-    [30.242686, 59.924364],
-    [30.242804, 59.924317],
-    [30.242934, 59.924261],
-    [30.243033, 59.924224],
-    [30.243117, 59.924184],
-    [30.243138, 59.924116],
-    [30.243126, 59.924054],
-    [30.243036, 59.924003],
-    [30.242963, 59.923935],
-    [30.242936, 59.923845],
-    [30.242975, 59.923777],
-    [30.242931, 59.923719],
-    [30.242881, 59.923651],
-    [30.242881, 59.9236],
-    [30.242872, 59.923546],
-    [30.242998, 59.923492],
-    [30.243095, 59.923448],
-    [30.243099, 59.923385],
-    [30.243082, 59.92331],
-    [30.24304, 59.923233],
-    [30.24301, 59.923156],
-    [30.242987, 59.923085],
-    [30.243092, 59.923028],
-    [30.243232, 59.922996],
-    [30.243352, 59.922967],
-    [30.243506, 59.922936],
-    [30.243706, 59.922899],
-    [30.243852, 59.922862],
-    [30.24402, 59.922863]
-  ];
-  if (PORT_BOTS_STARTED === false) {
-    moveBot(bot1movements, true, 0, 5000);
-    PORT_BOTS_STARTED = true;
-  }
-
-  function moveBot(path, isForwardDirection, position, animationTime) {
-    if (position == 0) {
-      isForwardDirection = true;
-    } else if (position == path.length - 1) {
-      isForwardDirection = false;
-    }
-    // console.log("position", position);
-    const nextPosition = path[position];
-
-    profileState1.payload.location.lat = nextPosition[1];
-    profileState1.payload.location.lon = nextPosition[0];
-    profileState1.payload.lastSeen = Date.now() * 1000;
-    processMessage(profileState1);
-
-    currentPosition = isForwardDirection ? position++ : position--;
-    setTimeout(function () {
-      moveBot(path, isForwardDirection, position, animationTime);
-    }, animationTime);
-  }
-}
-
-function showSceneNewFriendAnimation() {
-  if (currentScene === "port") {
-    portSendNewFriend();
-
-    if (!BEST_GAME_STARTED) {
-      const randomNumber = Math.floor(Math.random() * 3);
-      const isBusy = getPopupAnimationBusy();
-      if (!isBusy) {
-        switch (randomNumber) {
-          case 0:
-            playerCongratsBlue.seek(0);
-            playerCongratsBlue.play();
-            break;
-          case 1:
-            playerCongratsRed.seek(0);
-            playerCongratsRed.play();
-            break;
-          case 2:
-            playerCongratsGreen.seek(0);
-            playerCongratsGreen.play();
-            break;
-        }
-        setPopupAnimationBusy(true);
-        setPopupAnimationBusy(false, POPUP_CONGRATS_ANIMATION_TIME);
-        POPUP_CURRENT_ANIMATION = "congrats";
-      } else if (POPUP_CURRENT_ANIMATION !== "congrats") {
-        POPUP_NEXT_ANIMATION = "congrats";
-      }
-    }
-  }
-}
-
-function setPopupAnimationBusy(status, time = null) {
-  if (time) {
-    setTimeout(function () {
-      POPUP_ANIMATION_IS_BUSY = status;
-      if (status == false) {
-        if (POPUP_NEXT_ANIMATION != null) {
-          switch (POPUP_NEXT_ANIMATION) {
-            case "qr":
-              showScenePushButtonAnimation();
-              break;
-            case "congrats":
-              showSceneNewFriendAnimation();
-              break;
-          }
-          POPUP_NEXT_ANIMATION = null;
-        }
-      }
-    }, time);
-  } else {
-    POPUP_ANIMATION_IS_BUSY = status;
-  }
-}
-
-function getPopupAnimationBusy() {
-  return POPUP_ANIMATION_IS_BUSY;
-}
-
-var bestGameNeedWaitAlreadyBusy = false;
-
-function showScenePushButtonAnimation() {
-  if (DEBUG) {
-    console.log("push button");
-  }
-  if (currentScene === "port") {
-    const isBusy = getPopupAnimationBusy();
-
-    if (BEST_GAME_STARTED) {
-      fadeIn(document.getElementById("best-game-need-wait"), 500);
-      if (bestGameNeedWaitAlreadyBusy !== true) {
-        bestGameNeedWaitAlreadyBusy = true;
-        setTimeout(function() {
-          fadeOut(document.getElementById("best-game-need-wait"), 500);
-          bestGameNeedWaitAlreadyBusy = false;
-        }, 5000);
-      }
-    } else if (!isBusy) {
-      if (!BEST_GAME_STARTED) {
-        // lottie version
-        playerQR.seek(0);
-        playerQR.play();
-        setPopupAnimationBusy(true);
-        setPopupAnimationBusy(false, POPUP_QR_ANIMATION_TIME);
-        POPUP_CURRENT_ANIMATION = "qr";
-      } else {
-        
-      }
-
-      // css version
-      // let element = document.getElementById("popup-qr");
-      // element.classList.remove("popup-qr-class");
-      // void element.offsetWidth;
-      // element.classList.add("popup-qr-class");
-      // element.style.display = "block";
-      // setTimeout(function () {
-      //   element.style.display = "none";
-      // }, POPUP_QR_ANIMATION_TIME);
-    } else if (POPUP_CURRENT_ANIMATION !== "qr") {
-      POPUP_NEXT_ANIMATION = "qr";
-    }
-  }
-}
-
-function portSendNewFriend() {
-  if (window.hasOwnProperty("electronAPI")) {
-    window.electronAPI.addNewFriend();
-  }
-  if (DEBUG) {
-    console.log("send new friend action to TD");
-  }
-}
-
-function portSendPing() {
-  let checked = document.getElementById("port-send-ping").checked;
-
-  if (checked) {
-    if (window.hasOwnProperty("electronAPI")) {
-      window.electronAPI.ping();
-    }
-    if (DEBUG) {
-      console.log("send ping to TD");
-    }
-  }
-}
-
-function portReceivePushButton() {
-  showScenePushButtonAnimation();
-  if (DEBUG) {
-    console.log("receive push button from TD");
-  }
-}
-
-function portSendShowStub() {
-  if (!isConnected || PORT_FORCE_SEND_SHOW_STUB) {
-    if (window.hasOwnProperty("electronAPI")) {
-      window.electronAPI.showStub();
-    }
-    if (DEBUG) {
-      console.log("send show stub");
-    }
-  } else if (DEBUG) {
-    console.log("show stub not sended, because all rigth");
-  }
-}
-
-// function portSendHideStub() {
-//   if (window.hasOwnProperty("electronAPI")) {
-//     window.electronAPI.hideStub();
-//   }
-// }
-
-// ------------------------------------ tests ------------------------------- //
-
-function perfTest() {
-  testMessage.payload.location.lat = map.getCenter()[1];
-  testMessage.payload.location.lon = map.getCenter()[0];
-  map.setZoom(11.5);
-
-  const maxI = 1000;
-  const floor = Math.floor(Math.sqrt(maxI));
-  for (i = 1; i <= maxI; i++) {
-    testProfile.id = "test-" + i;
-    testMessage.payload.id = testProfile.id;
-
-    addProfile(testProfile);
-
-    testMessage.payload.location.lon += 0.01;
-
-    processMessage(testMessage);
-    if (i % floor == 0) {
-      testMessage.payload.location.lat += 0.01;
-      testMessage.payload.location.lon -= 0.01 * floor;
-      processMessage(testMessage);
-      testMessageStickerFromTo.senderId = "test-" + i;
-      testMessageStickerFromTo.recipientId = "test-" + (i - 9);
-      processStickerFromTo(testMessageStickerFromTo);
-    }
-  }
-}
-
-// 45755262
-const testId1 = "abc123";
-const testId2 = "xyz789";
-const testId3 = "zzz666";
-const testId4 = "999999";
-
-var testMessageStickerFromTo = {
-  senderId: testId1,
-  recipientId: testId2,
-  stickerRecord: {
-    sticker: {
-      stickerId: "fire",
-      count: 1
-    }
-  }
-};
-
-var testMessageStickerFromToMe = {
-  senderId: 'codefestbot1',
-  stickerRecord: {
-    sticker: {
-      stickerId: "go",
-      count: 1
-    }
-  }
-};
-
-var testMessageStickerFromToMe2 = {
-  senderId: 'codefestbot1',
-  stickerRecord: {
-    sticker: {
-      stickerId: "poop",
-      count: 1
-    }
-  }
-};
-
-var testProfile = {
-  id: testId1,
-  name: "Poop Boop",
-  logo: "https://rezonx3m.github.io/friends/static/poop.png"
-};
-
-var testProfile2 = {
-  id: testId2,
-  name: "Foo Bar",
-  logo: null
-};
-
-var testProfile3 = {
-  id: testId3,
-  name: "Zoo zoo",
-  logo: null
-};
-
-var testProfile4 = {
-  id: testId4,
-  name: "Yo Yo",
-  logo: "https://rezonx3m.github.io/friends/static/fire.png"
-};
-
-var testMessage = {
-  type: "friendState",
-  payload: {
-    id: testId1,
-    lastSeen: 16987361519730,
-    location: {
-      lat: map.getCenter()[1],
-      lon: map.getCenter()[0],
-      azimuth: 206.91267,
-      speed: 160,
-      accuracy: 17.823999404907227
-    },
-    battery: {
-      level: 0.81
-    },
-    movement: {
-      status: "moving",
-      stoppedAt: 1698728448409
-    }
-  }
-};
-
-var testMessage2 = {
-  type: "friendState",
-  payload: {
-    id: testId2,
-    lastSeen: 16987361519730,
-    location: {
-      lat: 55.03,
-      lon: 82.99,
-      azimuth: 206.91267,
-      speed: 160,
-      accuracy: 17.823999404907227
-    },
-    battery: {
-      level: 0.81
-    },
-    movement: {
-      status: "moving",
-      stoppedAt: 1698728448409
-    }
-  }
-};
-
-var testMessage3 = {
-  type: "friendState",
-  payload: {
-    id: testId3,
-    lastSeen: 16987361519730,
-    location: {
-      lat: 55.02,
-      lon: 82.97,
-      azimuth: 206.91267,
-      speed: 160,
-      accuracy: 17.823999404907227
-    },
-    battery: {
-      level: 0.81
-    },
-    movement: {
-      status: "moving",
-      stoppedAt: 1698728448409
-    }
-  }
-};
-
-var testMessage4 = {
-  type: "friendState",
-  payload: {
-    id: testId4,
-    lastSeen: 16987361519730,
-    location: {
-      lat: 55.035,
-      lon: 82.999,
-      azimuth: 206.91267,
-      speed: 160,
-      accuracy: 17.823999404907227
-    },
-    battery: {
-      level: 0.81
-    },
-    movement: {
-      status: "moving",
-      stoppedAt: 1698728448409
-    }
-  }
-};
-
-function testMove() {
-  const multiplier1 = Math.random() > 0.5 ? 1 : -1;
-  const multiplier2 = Math.random() > 0.5 ? 1 : -1;
-  testMessage.payload.location.lon += 0.01 * multiplier1;
-  testMessage.payload.location.lat += 0.01 * multiplier2;
-  processMessage(testMessage);
-}
-
-function testRotate() {
-  rotateMarker(testId1, Math.random() * 360);
-}
-
-function testRandomSticker() {
-  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
-  testMessageStickerFromTo.stickerRecord.sticker.stickerId =
-    SUPPORTED_EMOJI[stickerN];
-  processStickerFromTo(testMessageStickerFromTo);
-}
-
-function testChangeAva() {
-  testProfile["name"] = "Angry Bird";
-  testProfile["logo"] = "https://rezonx3m.github.io/friends/static/angry.png";
-  addProfile(testProfile);
-}
-
-if (DEBUG) {
-  addProfile(testProfile);
-  addProfile(testProfile2);
-  addProfile(testProfile3);
-  addProfile(testProfile4);
-  processMessage(testMessage);
-  processMessage(testMessage2);
-  processMessage(testMessage3);
-  processMessage(testMessage4);
-}
 
 // ------------------------------------ games ------------------------------- //
 
@@ -3695,112 +2880,8 @@ function logStickerByUser(id, sticker, sendAt) {
     }
     
 
-  } else if (FIRST_ALLOW_ADD_NEW_PLAYERS) { // игра на большее количество первых
-    var hasNewGamer = false;
-    if (FIRST_LOG_LAST_STICKERS_TO_ME) {
-      if (!FIRST_LAST_STICKERS_BY_USERS.hasOwnProperty(id)) {
-        FIRST_LAST_STICKERS_BY_USERS[id] = [];
-      } else if (FIRST_LAST_STICKERS_BY_USERS[id].length >= 5) {
-        FIRST_LAST_STICKERS_BY_USERS[id].shift();
-      }
-      FIRST_LAST_STICKERS_BY_USERS[id].push(sticker);
-
-      if (DEBUG) {
-        console.log(FIRST_LAST_STICKERS_BY_USERS);
-      }
-
-      if (
-        FIRST_LAST_STICKERS_BY_USERS[id].length == 5 &&
-        FIRST_LAST_STICKERS_BY_USERS[id][0] == "fire" &&
-        FIRST_LAST_STICKERS_BY_USERS[id][1] == "poop" &&
-        FIRST_LAST_STICKERS_BY_USERS[id][2] == "greenheart" &&
-        FIRST_LAST_STICKERS_BY_USERS[id][3] == "greenheart" &&
-        FIRST_LAST_STICKERS_BY_USERS[id][4] == "snowball"
-      ) {
-        if (!FIRST_CURRENT_GAMERS.includes(id)) {
-          FIRST_CURRENT_GAMERS.push(id);
-          hasNewGamer = true;
-          FIRST_CURRENT_GAMERS_SCORE[id] = 0;
-        }
-      }
-
-      var tableContent = '<table class="gamers-table">';
-      if (FIRST_CURRENT_GAMERS.length > 0) {
-        const timerElement = document.querySelector(".timer");
-        timerElement.style.display = "flex";
-
-        tableContent += "<tr>";
-        for (var i = 0; i < FIRST_CURRENT_GAMERS.length; i++) {
-          var acronym = "";
-          const avaUrl = globalProfiles[FIRST_CURRENT_GAMERS[i]].logo;
-          const name = globalProfiles[FIRST_CURRENT_GAMERS[i]].name;
-          const backgroundImage = getBackgroundImageForAva(avaUrl);
-
-          if (backgroundImage === null) {
-            acronym = getAcronymFromName(name);
-          }
-          if (i % 10 == 0 && i != 0) {
-            tableContent += "</tr>";
-            tableContent += '</table class="gamers-table">';
-            tableContent += '<table class="gamers-table">';
-          }
-          tableContent += "<td>";
-          tableContent += `<div class="gamer">
-                           <div class="gamer-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>
-                           <div class="gamer-score" id="gamer-score-${FIRST_CURRENT_GAMERS[i]}">0</div>
-                         <div>`;
-          tableContent += "</td>";
-        }
-        tableContent += "</tr>";
-      }
-
-      if (hasNewGamer) {
-        waitMoreGamers(FIRST_CURRENT_GAMERS.length);
-      }
-
-      tableContent += "</table>";
-      gameElement.innerHTML = tableContent;
-    }
-  } else if (FIRST_GAME_STARTED) {
-    if (
-      FIRST_CURRENT_GAMERS.includes(id) &&
-      sticker == FIRST_CURRENT_STICKER &&
-      FIRST_CURRENT_ROUTN_WINNER === null
-    ) {
-      FIRST_CURRENT_ROUTN_WINNER = id;
-      if (DEBUG) {
-        console.log("round winner", FIRST_CURRENT_ROUTN_WINNER);
-      }
-      FIRST_CURRENT_GAMERS_SCORE[id] = FIRST_CURRENT_GAMERS_SCORE[id] + 1;
-      const gamerScore = document.getElementById("gamer-score-" + id);
-      gamerScore.innerText = FIRST_CURRENT_GAMERS_SCORE[id];
-      if (FIRST_SCORE_TO_WIN == FIRST_CURRENT_GAMERS_SCORE[id]) {
-        finishGame(id);
-      }
-    }
-
-    // логика игры
-  }
+  } 
 }
-
-function startGameFirstSendSticker() {
-  FIRST_LOG_LAST_STICKERS_TO_ME = true;
-  const friendName = "RND 2FEST";
-  const gameContainer = document.getElementById("game-container");
-  const intro = document.getElementById("game-first-send-intro");
-  intro.innerHTML = `
-  <div>
-  <div>Для подключения к игре отправьте другу ${friendName} &nbsp;
-  <div class="emogi-fire game-first-send-intro-emoji"></div>
-  <div class="emogi-poop game-first-send-intro-emoji"></div>
-  <div class="emogi-greenheart game-first-send-intro-emoji"></div>
-  <div class="emogi-greenheart game-first-send-intro-emoji"></div>
-  <div class="emogi-snowball game-first-send-intro-emoji"></div>
-  </div>
-  </div>`;
-  gameContainer.style.display = "block";
-}
-
 var startBestTime = 0;
 const now = () => performance.now();
 
@@ -4037,10 +3118,6 @@ function bestLaunchTimerBeforeStartGame() {
     // fadeIn(document.getElementById("best-current-game-players-list"), 500);
     // fadeOut(document.getElementById("best-game-launch-info"), 500);
     
-    // playerQR.seek("100%"); // @todo почему это тут
-    // playerCongratsBlue.seek("100%");
-    // playerCongratsRed.seek("100%");
-    // playerCongratsGreen.seek("100%");
     setTimeout(() => {
       // fadeOut(document.getElementById("best-game-rules"), 500);
       BEST_GAME_IN_PROGRESS = true;
@@ -4272,170 +3349,6 @@ function bestGameProcessIncorrectSticker(userId) {
   
 }
 
-
-//--------------------------------------------------------//
-
-const timerName = document.getElementById("timer__name");
-const gameElement = document.getElementById("game");
-const secondsDiv = document.querySelector(".timer__seconds");
-const centerGameDiv = document.getElementById("game-center-screen");
-const centerSrickerDiv = document.getElementById("game-sticker-container");
-timerName.innerHTML = "Ожидаем игроков...";
-
-function finishGame(winnerId) {
-  centerSrickerDiv.innerHTML = `<div></div>`;
-  FIRST_GAME_FINISHED = true;
-
-  hideTimer();
-  //setTimeout(restartGame, 10000); //@todo return after debug
-  setTimeout(restartGame, 10000);
-
-  var winners = [];
-  if (!winnerId) {
-    var maxScore = 0;
-    for (const id in FIRST_CURRENT_GAMERS_SCORE) {
-      if (FIRST_CURRENT_GAMERS_SCORE[id] == maxScore) {
-        winners.push(id);
-      } else if (FIRST_CURRENT_GAMERS_SCORE[id] > maxScore) {
-        winners = [];
-        maxScore = FIRST_CURRENT_GAMERS_SCORE[id];
-        winners.push(id);
-      }
-    }
-  }
-
-  if (winners.length == 1) {
-    winnerId = winners[0];
-  }
-  if (winnerId) {
-    timerName.innerHTML = "У нас есть победитель!!!";
-    var acronym = "";
-    const avaUrl = globalProfiles[winnerId].logo;
-    const name = globalProfiles[winnerId].name;
-    const backgroundImage = getBackgroundImageForAva(avaUrl);
-
-    if (backgroundImage === null) {
-      acronym = getAcronymFromName(name);
-    }
-    gameElement.innerHTML = `<div class="gamer-ava ava ava-only-text winner" style="${backgroundImage}">${acronym}</div>`;
-  } else {
-    timerName.innerHTML = "У несколько победителей!!!";
-    for (var i = 0; i < winners.length; i++) {
-      const gamerScore = document.getElementById("gamer-score-" + winners[i]);
-      gamerScore.style.backgroundColor = "#F99D33";
-    }
-  }
-}
-
-function startTimer(seconds, callback) {
-  if (DEBUG) {
-    console.log("start timer with callback", seconds, callback);
-  }
-  if (FIRST_GAME_TIMER_ID != null) {
-    clearInterval(FIRST_GAME_TIMER_ID);
-  }
-  d1 = new Date();
-  d2 = new Date(d1);
-  d2.setSeconds(d1.getSeconds() + seconds);
-  function countdownTimer() {
-    const diff = d2 - new Date();
-    if (diff <= 0) {
-      clearInterval(FIRST_GAME_TIMER_ID);
-      if (typeof callback === "function") {
-        callback();
-      }
-    } else {
-      const seconds = Math.floor(diff / 1000);
-      secondsDiv.textContent = seconds < 10 ? "0" + seconds : seconds;
-    }
-  }
-
-  showTimer();
-  //countdownTimer();
-  FIRST_GAME_TIMER_ID = setInterval(countdownTimer, 40); // 25fps
-}
-
-function showTimer() {
-  secondsDiv.style.display = "block";
-}
-
-function hideTimer() {
-  secondsDiv.style.display = "none";
-}
-
-function waitMoreGamers(currentCountGamers) {
-  if (FIRST_CURRENT_GAMERS.length < FIRST_MAX_PLAYERS) {
-    const seconds = currentCountGamers == 1 ? 60 : 15; //@todo 60 15
-    startTimer(seconds, function () {
-      return processFinishWaitMoreGamesTimer(currentCountGamers);
-    });
-  } else {
-    processFinishWaitMoreGamesTimer(currentCountGamers);
-  }
-}
-
-function processFinishWaitMoreGamesTimer(currentCountGamers) {
-  FIRST_ALLOW_ADD_NEW_PLAYERS = false;
-  if (currentCountGamers <= (getParamDebugGame === "true" ? 0 : 1)) {
-    timerName.innerHTML = "Недостаточно игроков, собираем игру заново!";
-    hideTimer();
-    setTimeout(restartGame, 2000);
-  } else {
-    startGame();
-  }
-}
-
-function startGame() {
-  FIRST_GAME_STARTED = true;
-  FIRST_GAME_FINISHED = false;
-  timerName.innerHTML = "Готовы??? Кто-же первый отправит нужный стикер!?";
-  startTimer(5, playRound);
-}
-
-function playRound() {
-  if (!FIRST_GAME_FINISHED && FIRST_GAME_STARTED) {
-    if (FIRST_CURRENT_ROUND_NUM < FIRST_MAX_ROUNDS) {
-      FIRST_CURRENT_ROUND_NUM = FIRST_CURRENT_ROUND_NUM + 1;
-      FIRST_CURRENT_ROUTN_WINNER = null;
-      FIRST_CURRENT_STICKER = getRandomSticker();
-      timerName.innerHTML = "Лови его!"; // "рандомные тексты";
-      if (DEBUG) {
-        console.log("round", FIRST_CURRENT_STICKER);
-      }
-      const emogiClass = "emogi-" + FIRST_CURRENT_STICKER;
-      centerSrickerDiv.innerHTML = `<div class="${emogiClass} game-center-screen-sticker"></div>`;
-
-      centerGameDiv.style.marginLeft = getRandomLeftForSticker() + "px";
-      centerGameDiv.style.marginTop = getRandomTopForSticker() + "px";
-
-      startTimer(3, playRound);
-    } else {
-      finishGame();
-    }
-  } else {
-    centerSrickerDiv.innerHTML = `<div></div>`;
-  }
-}
-
-function restartGame() {
-  if (DEBUG) {
-    console.log("restart game");
-  }
-  FIRST_LAST_STICKERS_BY_USERS = {};
-  FIRST_CURRENT_GAMERS = [];
-  FIRST_CURRENT_GAMERS_SCORE = {};
-  timerName.innerHTML = "Ожидаем игроков";
-  FIRST_ALLOW_ADD_NEW_PLAYERS = true;
-  gameElement.innerHTML = "";
-  hideTimer();
-  FIRST_CURRENT_STICKER = null;
-  FIRST_CURRENT_ROUTN_WINNER = null;
-  FIRST_GAME_FINISHED = false;
-  FIRST_GAME_STARTED = false;
-  FIRST_CURRENT_ROUND_NUM = 0;
-  centerSrickerDiv.innerHTML = `<div></div>`;
-}
-
 function getRandomSticker() {
   const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
   return SUPPORTED_EMOJI[stickerN];
@@ -4446,157 +3359,309 @@ function getRandomAwaitingName() {
   return BEST_AWAINING_NAMES[namesN];
 }
 
-function getRandomLeftForSticker() {
-  const container = document.getElementById("game-container");
-  return Math.floor(Math.random() * container.clientWidth);
-}
 
-function getRandomTopForSticker() {
-  const container = document.getElementById("game-container");
-  return Math.floor(Math.random() * (container.clientHeight - 100));
-}
+// ------------------------------------ tests ------------------------------- //
 
-function gameTest() {
-  startScene2fest();
-  var testMessageSticker1 = {
-    senderId: "debf959572c14aba8a5147678bf831aa",
-    stickerRecord: {
-      sticker: {
-        stickerId: "fire",
-        count: 1
-      }
-    }
-  };
-  var testMessageSticker2 = {
-    senderId: "debf959572c14aba8a5147678bf831aa",
-    stickerRecord: {
-      sticker: {
-        stickerId: "poop",
-        count: 1
-      }
-    }
-  };
-  var testMessageSticker3 = {
-    senderId: "debf959572c14aba8a5147678bf831aa",
-    stickerRecord: {
-      sticker: {
-        stickerId: "greenheart",
-        count: 1
-      }
-    }
-  };
-  var testMessageSticker4 = {
-    senderId: "debf959572c14aba8a5147678bf831aa",
-    stickerRecord: {
-      sticker: {
-        stickerId: "snowball",
-        count: 1
-      }
-    }
-  };
+function perfTest() {
+  testMessage.payload.location.lat = map.getCenter()[1];
+  testMessage.payload.location.lon = map.getCenter()[0];
+  map.setZoom(11.5);
 
-  function addBots() {
-    for (const id in globalMarkers) {
-      testMessageSticker1.senderId = id;
-      testMessageSticker2.senderId = id;
-      testMessageSticker3.senderId = id;
-      testMessageSticker4.senderId = id;
-      processStickerToMe(testMessageSticker1);
-      processStickerToMe(testMessageSticker2);
-      processStickerToMe(testMessageSticker3);
-      processStickerToMe(testMessageSticker3);
-      processStickerToMe(testMessageSticker4);
+  const maxI = 300;
+  const floor = Math.floor(Math.sqrt(maxI));
+  for (i = 1; i <= maxI; i++) {
+    testProfile.id = "test-" + i;
+    testMessage.payload.id = testProfile.id;
+
+    addProfile(testProfile);
+
+    testMessage.payload.location.lon += 0.01;
+
+    processMessage(testMessage);
+    if (i % floor == 0) {
+      testMessage.payload.location.lat += 0.01;
+      testMessage.payload.location.lon -= 0.01 * floor;
+      processMessage(testMessage);
+      testMessageStickerFromTo.senderId = "test-" + i;
+      testMessageStickerFromTo.recipientId = "test-" + (i - 9);
+      processStickerFromTo(testMessageStickerFromTo);
     }
   }
-
-  setTimeout(addBots, 8000);
 }
 
-// ------------------ cropper ------------------------------//
+// 45755262
+const testId1 = "abc123";
+const testId2 = "xyz789";
+const testId3 = "zzz666";
+const testId4 = "999999";
 
-function getRoundedCanvas(sourceCanvas) {
-  var canvas = document.createElement("canvas");
-  var context = canvas.getContext("2d");
-  var width = sourceCanvas.width;
-  var height = sourceCanvas.height;
-
-  canvas.width = width;
-  canvas.height = height;
-  context.imageSmoothingEnabled = true;
-  context.drawImage(sourceCanvas, 0, 0, width, height);
-  context.globalCompositeOperation = "destination-in";
-  context.beginPath();
-  context.arc(
-    width / 2,
-    height / 2,
-    Math.min(width, height) / 2,
-    0,
-    2 * Math.PI,
-    true
-  );
-  context.fill();
-  return canvas;
-}
-
-function cropImage(base64) {
-  var canvas = document.getElementById("canvas");
-  var ctx = canvas.getContext("2d");
-  var cw = canvas.width;
-  var ch = canvas.height;
-
-  var img = new Image();
-  img.onload = start;
-  img.src = url;
-  function start() {
-    var cw, ch;
-    cw = canvas.width = img.width;
-    ch = canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
-    ctx.globalCompositeOperation = "destination-in";
-    ctx.beginPath();
-    ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.fill();
-    const dataURL = canvas.toDataURL();
-    console.log(dataURL);
+var testMessageStickerFromTo = {
+  senderId: testId1,
+  recipientId: testId2,
+  stickerRecord: {
+    sticker: {
+      stickerId: "fire",
+      count: 1
+    }
   }
+};
+
+var testMessageStickerFromToMe = {
+  senderId: 'codefestbot1',
+  stickerRecord: {
+    sticker: {
+      stickerId: "go",
+      count: 1
+    }
+  }
+};
+
+var testMessageStickerFromToMe2 = {
+  senderId: 'codefestbot1',
+  stickerRecord: {
+    sticker: {
+      stickerId: "poop",
+      count: 1
+    }
+  }
+};
+
+var testProfile = {
+  id: testId1,
+  name: "Poop Boop",
+  logo: "https://rezonx3m.github.io/friends/static/poop.png"
+};
+
+var testProfile2 = {
+  id: testId2,
+  name: "Foo Bar",
+  logo: null
+};
+
+var testProfile3 = {
+  id: testId3,
+  name: "Zoo zoo",
+  logo: null
+};
+
+var testProfile4 = {
+  id: testId4,
+  name: "Yo Yo",
+  logo: "https://rezonx3m.github.io/friends/static/fire.png"
+};
+
+var testMessage = {
+  type: "friendState",
+  payload: {
+    id: testId1,
+    lastSeen: 16987361519730,
+    location: {
+      lat: map.getCenter()[1],
+      lon: map.getCenter()[0],
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+var testMessage2 = {
+  type: "friendState",
+  payload: {
+    id: testId2,
+    lastSeen: 16987361519730,
+    location: {
+      lat: 55.03,
+      lon: 82.99,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+var testMessage3 = {
+  type: "friendState",
+  payload: {
+    id: testId3,
+    lastSeen: 16987361519730,
+    location: {
+      lat: 55.02,
+      lon: 82.97,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+var testMessage4 = {
+  type: "friendState",
+  payload: {
+    id: testId4,
+    lastSeen: 16987361519730,
+    location: {
+      lat: 55.035,
+      lon: 82.999,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+function testMove() {
+  const multiplier1 = Math.random() > 0.5 ? 1 : -1;
+  const multiplier2 = Math.random() > 0.5 ? 1 : -1;
+  testMessage.payload.location.lon += 0.01 * multiplier1;
+  testMessage.payload.location.lat += 0.01 * multiplier2;
+  processMessage(testMessage);
 }
 
-function showBase64Image(base64) {
-  console.log(base64);
+function testRotate() {
+  rotateMarker(testId1, Math.random() * 360);
 }
 
-function loadImage(url) {
-  let _img = document.getElementById("img-loader");
-  let newImg = new Image();
-  newImg.onload = function () {
-    _img.src = this.src;
-    const image = _img;
-
-    // Get the remote image as a Blob with the fetch API
-    fetch(_img.src)
-      .then((res) => res.blob())
-      .then((blob) => {
-        // Read the Blob as DataURL using the FileReader API
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          console.log(reader.result);
-          // Logs data:image/jpeg;base64,wL2dvYWwgbW9yZ...
-
-          // Convert to Base64 string
-          const base64 = getBase64StringFromDataURL(reader.result);
-          console.log(base64);
-          // Logs wL2dvYWwgbW9yZ...
-        };
-        reader.readAsDataURL(blob);
-      });
-    //cropImage(url);
-  };
-  newImg.src = url;
+function testRandomSticker() {
+  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
+  testMessageStickerFromTo.stickerRecord.sticker.stickerId =
+    SUPPORTED_EMOJI[stickerN];
+  processStickerFromTo(testMessageStickerFromTo);
 }
 
-const getBase64StringFromDataURL = (dataURL) =>
-  dataURL.replace("data:", "").replace(/^.+,/, "");
+function testChangeAva() {
+  testProfile["name"] = "Angry Bird";
+  testProfile["logo"] = "https://rezonx3m.github.io/friends/static/angry.png";
+  addProfile(testProfile);
+}
+
+if (DEBUG) {
+  addProfile(testProfile);
+  addProfile(testProfile2);
+  addProfile(testProfile3);
+  addProfile(testProfile4);
+  processMessage(testMessage);
+  processMessage(testMessage2);
+  processMessage(testMessage3);
+  processMessage(testMessage4);
+}
+
+
+//--------------------------------------------------------//
+
+
+
+// function getRoundedCanvas(sourceCanvas) {
+//   var canvas = document.createElement("canvas");
+//   var context = canvas.getContext("2d");
+//   var width = sourceCanvas.width;
+//   var height = sourceCanvas.height;
+
+//   canvas.width = width;
+//   canvas.height = height;
+//   context.imageSmoothingEnabled = true;
+//   context.drawImage(sourceCanvas, 0, 0, width, height);
+//   context.globalCompositeOperation = "destination-in";
+//   context.beginPath();
+//   context.arc(
+//     width / 2,
+//     height / 2,
+//     Math.min(width, height) / 2,
+//     0,
+//     2 * Math.PI,
+//     true
+//   );
+//   context.fill();
+//   return canvas;
+// }
+
+// function cropImage(base64) {
+//   var canvas = document.getElementById("canvas");
+//   var ctx = canvas.getContext("2d");
+//   var cw = canvas.width;
+//   var ch = canvas.height;
+
+//   var img = new Image();
+//   img.onload = start;
+//   img.src = url;
+//   function start() {
+//     var cw, ch;
+//     cw = canvas.width = img.width;
+//     ch = canvas.height = img.height;
+//     ctx.drawImage(img, 0, 0);
+//     ctx.globalCompositeOperation = "destination-in";
+//     ctx.beginPath();
+//     ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2);
+//     ctx.closePath();
+//     ctx.fill();
+//     const dataURL = canvas.toDataURL();
+//     console.log(dataURL);
+//   }
+// }
+
+// function showBase64Image(base64) {
+//   console.log(base64);
+// }
+
+// function loadImage(url) {
+//   let _img = document.getElementById("img-loader");
+//   let newImg = new Image();
+//   newImg.onload = function () {
+//     _img.src = this.src;
+//     const image = _img;
+
+//     // Get the remote image as a Blob with the fetch API
+//     fetch(_img.src)
+//       .then((res) => res.blob())
+//       .then((blob) => {
+//         // Read the Blob as DataURL using the FileReader API
+//         const reader = new FileReader();
+//         reader.onloadend = () => {
+//           console.log(reader.result);
+//           // Logs data:image/jpeg;base64,wL2dvYWwgbW9yZ...
+
+//           // Convert to Base64 string
+//           const base64 = getBase64StringFromDataURL(reader.result);
+//           console.log(base64);
+//           // Logs wL2dvYWwgbW9yZ...
+//         };
+//         reader.readAsDataURL(blob);
+//       });
+//     //cropImage(url);
+//   };
+//   newImg.src = url;
+// }
+
+// const getBase64StringFromDataURL = (dataURL) =>
+//   dataURL.replace("data:", "").replace(/^.+,/, "");
 
 //loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
 
