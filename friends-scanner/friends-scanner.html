@@ -310,7 +310,7 @@
                 event_id: getParamEventId
             }
 
-            $.ajax("https://offline-zond.api.2gis.com/proxy?action=scanner_post", {
+            $.ajax("https://offline-zond.api.2gis.com/proxy/scannerPostData", {
                 data : JSON.stringify(json),
                 contentType : 'application/json',
                 type : 'POST',
