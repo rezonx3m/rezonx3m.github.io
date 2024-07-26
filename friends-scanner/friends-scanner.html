@@ -270,7 +270,7 @@
             POPUP_SHOWED = true;
             popup.style.display = "block";
             overlay.classList.add("show");
-            document.getElementById("popup-header").textContent = "Добавить пользователя с id " + result + "?";
+            document.getElementById("popup-header").textContent = "Зарегистрировать пользователя с id " + result + " на событии " + getParamEventId + "?";
         }
 
         function showPupupOneButton(headerText, buttonText, isError = false) {
@@ -310,7 +310,7 @@
                 event_id: getParamEventId
             }
 
-            $.ajax("https://friends-scanner.rezon.webapi-dnd.os-n3.hfasfw/friendsScanner/postData", {
+            $.ajax("https://offline-zond.api.2gis.com/proxy?action=scanner_post", {
                 data : JSON.stringify(json),
                 contentType : 'application/json',
                 type : 'POST',
