@@ -20,7 +20,7 @@
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-  <script src="https://d-assets.2gis.ru/vendor.48c43c73384d52df9da5.js"></script>
+  <!--  <script src="https://d-assets.2gis.ru/vendor.48c43c73384d52df9da5.js"></script> -->
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
 
@@ -998,6 +998,26 @@ const getParamHideStatus = urlParams.get("hide_status");
 const getParamShowFriendsList = urlParams.get("show_friends_list");
 const getParamMarkStickersAsViewd = urlParams.get("mark_stickers_as_viewed");
 const getParamBestGameIgnorePlayerDistance = urlParams.get("best_game_ignore_player_distance");
+const getParamEnableClusters = urlParams.get("enable_clusters");
+const getParamMaxMarkersCount = urlParams.get("max_markers_count");
+
+const getParamMapLon = urlParams.get("map_lon");
+const getParamMapLat = urlParams.get("map_lat");
+const getParamMapZoom = urlParams.get("map_zoom");
+const getParamMapPitch = urlParams.get("map_pitch");
+const getParamMapRotation = urlParams.get("map_rotation");
+const getParamMapScenario = urlParams.get("map_scenario");
+
+const maxMarkersCount = getParamMaxMarkersCount ? Number(getParamMaxMarkersCount) : null;
+var markersLimitArray = [];
+
+const mapLon = getParamMapLon ? Number(getParamMapLon) : 82.963483;
+const mapLat = getParamMapLat ? Number(getParamMapLat) : 55.039882;
+const mapZoom = getParamMapZoom ? Number(getParamMapZoom) : 12;
+const mapPitch = getParamMapPitch ? Number(getParamMapPitch) : 0;
+const mapRotation = getParamMapRotation ? Number(getParamMapRotation) : 0;
+
+
 // включаем дебак для кодпена или по параметру
 const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
 const ENABLE_DEBUG_MARKERS =
@@ -1011,16 +1031,20 @@ var FORCE_RECONNECT_IF_NO_STICKERS = false;
 var ON_CONNECT_FUNCTION = () => {};
 
 const SUPER_USER_ID = "cd3f16bcdd5b4fc7a9bb02ba68e75536";
-var LAST_SUPER_USER_STICKERS = [];
-const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
 const ENABLE_AUTO_RECONNECT = true;
-var ENABLE_CLUSTERS = false;
+
+var LAST_SUPER_USER_STICKERS = [];
+
+const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
+var ENABLE_CLUSTERS = false || getParamEnableClusters == "true";
 var ENABLE_STICKERS = true;
 var ENABLE_STICKERS_TO_ME = true;
 var ENABLE_MARK_STICKERS_AS_VIEWED = false || getParamMarkStickersAsViewd == "true";
 const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
 var OVERRIDED_ZOOM = null;
 const DROP_MARKERS_WITH_OLD_STATE = !DEBUG;
+
+
 
 
 // wtf?
@@ -1114,11 +1138,85 @@ const BEST_AWAINING_NAMES = [
 ];
 
 
-
+function sleep(time) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, time);
+    });
+}
+  
+function waitIdle() {
+    return new Promise((resolve) => {
+        map.once('idle', resolve);
+    });
+}
+  
+async function runScenario(scenario) {
+    for (const part of scenario) {
+        // console.log(part);
+        const duration = part.duration || 0;
+        if (part.zoom !== undefined) {
+            const params = {
+                duration,
+                animateHeight: true,
+            };
+            if (part.zoomEasing) {
+                params.easing = part.zoomEasing;
+            }
+            map.setZoom(part.zoom, params);
+        }
+        if (part.pitch !== undefined) {
+            const params = {
+                duration,
+            };
+            if (part.pitchEasing) {
+                params.easing = part.pitchEasing;
+            }
+            map.setPitch(part.pitch, params);
+        }
+        if (part.snowIntensity !== undefined) {
+            const intensity = part.snowIntensity;
+            snow.setOptions({
+                enabled: intensity > 0,
+                particleNumber: intensity * 1000,
+                velocityZ: 500 + intensity * 7,
+                velocityX: intensity * 4,
+                dispersion: intensity,
+            })
+        }
+        if (part.center) {
+            const params = {
+                duration,
+            };
+            if (part.centerEasing) {
+                params.easing = part.centerEasing;
+            }
+            map.setCenter(part.center, params);
+        }
+        if (part.rotation !== undefined) {
+            const params = {
+                duration,
+            };
+            if (part.rotationEasing) {
+                params.easing = part.rotationEasing;
+            }
+            map.setRotation(part.rotation, { ...params, normalize: false });
+        }
+  
+        if (typeof part.f === 'function') {
+            part.f();
+        }
+  
+        if (part.waitIdle) {
+            await waitIdle();
+        } else {
+            await sleep(duration);
+        }
+    }
+}
 
 const map = new mapgl.Map("container", {
-  center: [82.963483, 55.039882],
-  zoom: 12,
+  center: [mapLon, mapLat],
+  zoom: mapZoom,
   key: "2a5f353b-5172-411f-b1a2-8ea58b3f290c",
   //style: "b16cfd38-28d4-401c-a8a0-4942de84ce3a",
   floorsEnabled: true,
@@ -1127,7 +1225,9 @@ const map = new mapgl.Map("container", {
   minPitch: 0,
   maxPitch: 70,
   lowZoomMaxPitch: 45,
-  zoomControl: false
+  zoomControl: false,
+  pitch: mapPitch,
+  rotation: mapRotation
 });
 
 map.on('floorplanshow', (e) => {
@@ -1138,6 +1238,14 @@ map.on('floorplanshow', (e) => {
 
 // фиксим рамер карты при ресайзе
 window.addEventListener("resize", () => map.invalidateSize());
+
+
+const getParamAccessToken = urlParams.get("access_token");
+
+if (getParamAccessToken) {
+  startSceneCustom();
+}
+
 
 // глобальный стейт @todo обобщить
 var globalProfiles = {};
@@ -1401,6 +1509,15 @@ function addProfile(profile, isInit = false) {
     refreshAvaInMarker(profile.id);
     clusteriseMarkers(true);
   } 
+
+  if (maxMarkersCount !== null) {
+    markersLimitArray.push(profile.id);
+    if (markersLimitArray.length > maxMarkersCount) {
+      const first = markersLimitArray.shift();
+      removeProfile(first);
+    }
+  }
+
   if (getParamShowFriendsList === "true" || DEBUG) {
     refreshFriendsList();
   }
@@ -1454,6 +1571,12 @@ function processState(state) {
     return;
   }
 
+  // если включен лимиттер и маркер не в списке
+  if (maxMarkersCount !== null && !markersLimitArray.includes(id)) {
+    //removeMarker(id);
+    return;
+  }
+
   if (DEBUG) {
     console.log("processState", id, state);
   }
@@ -1471,6 +1594,8 @@ function processState(state) {
     hideMarker(id); // обратно раскрываются в moveMarker и в декластеризации
     return;
   }
+
+
 
   const marker = isInit ? null : globalMarkers[id];
   const lastLon = isInit ? null : globalStates[id]["lon"];
@@ -1514,9 +1639,9 @@ function processState(state) {
   const isMoving =
     state.movement.status == STATE_MOVING && !isOldMovingData ? true : false;
 
-if (globalProfiles[id] === undefined) {
-  console.log('id not found', id)
-}
+  if (globalProfiles[id] === undefined) {
+    console.log('id not found', id)
+  }
 
   const avaUrl = globalProfiles[id].logo;
   const name = globalProfiles[id].name;
@@ -2536,18 +2661,12 @@ prewarm();
 // ------------------------------------ scenes ------------------------------- //
 
 switch (getParamScene) {
-  case "2fest": {
-    startScene2fest();
-    break;
-  }
-
-  case "port": {
-    startScenePort();
-    break;
-  }
-
-case "codefest": {
+  case "codefest": {
     startSceneCodefest();
+    break;
+  }
+case "custom": {
+    startSceneCustom();
     break;
   }
 }
@@ -2654,6 +2773,72 @@ function startSceneCodefest() {
 
   //showScenePushButtonAnimation();
 }
+
+function startSceneCustom() {
+  currentScene = "custom";
+  //OVERRIDED_ZOOM = 100;
+  document.getElementById("input-id").value = "custom";
+
+  SOCKET_PATH =
+    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=" + getParamAccessToken + "&channes=markers,stickers";
+  
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+  //setTimeout(addCodefestBots, 1000);
+  //ON_CONNECT_FUNCTION = addCodefestBots;
+
+  map.setPitch(0);
+  map.setRotation(0);
+
+
+
+  function scenarioForCustom() {
+
+    runScenario([
+      {
+        duration: 20000,
+        zoomEasing: 'easeOutCubic',
+        centerEasing: 'easeOutCubic',
+        zoom: 19,
+        pitch: 0,
+        rotation: 0,
+      },
+      {
+        duration: 15000,
+        zoomEasing: 'easeOutCubic',
+        centerEasing: 'easeOutCubic',
+        zoom: 17,
+        pitch: 45,
+        rotation: 181,
+      },
+      {
+        duration: 15000,
+        zoomEasing: 'easeOutCubic',
+        centerEasing: 'easeOutCubic',
+        zoom: 19,
+        pitch: 0,
+        rotation: 0,
+        
+      },
+      {
+        duration: 10000,
+        zoomEasing: 'easeOutCubic',
+        centerEasing: 'easeOutCubic',
+        zoom: 10,
+        rotation: 0,
+      }]);
+
+  }
+
+  if (getParamMapScenario == "true") {
+    scenarioForCustom();
+    setInterval(scenarioForCustom, 60000);
+  }
+}
+
+
 
 
 var CODEFEST_BOTS_STARTED = false;
@@ -3372,7 +3557,6 @@ function perfTest() {
   for (i = 1; i <= maxI; i++) {
     testProfile.id = "test-" + i;
     testMessage.payload.id = testProfile.id;
-
     addProfile(testProfile);
 
     testMessage.payload.location.lon += 0.01;
