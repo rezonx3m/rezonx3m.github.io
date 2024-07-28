@@ -92,7 +92,9 @@
         }
 
         .popup__button {
-          padding: 30px 120px;
+          /*padding: 30px 120px;*/
+          width: 210px;
+          height: 80px;
           border-radius: 5px;
           border: none;
           background-color: #1c87c9;
@@ -129,17 +131,30 @@
           display: block;
         }
 
-
+        #title {
+          position: fixed;
+          top:30px;
+          transform: translate(-50%, -50%);
+          left:50%;
+          padding: 20px;
+          border-radius: 10px;
+          background-color: #fff;
+          width:300px;
+          z-index: 8000;
+          text-align: center;
+        }
         
     </style>
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 </head>
 
 <body>
+   
     <div id="overlay"></div>
     <div id="video-container">
             <video id="qr-video"></video>
     </div>
+    <div id="title"></div>
 
 
 
@@ -240,6 +255,8 @@
         const urlParams = new URLSearchParams(window.location.search);
 
         const getParamEventId = urlParams.get("event_id") ? urlParams.get("event_id") : "default";
+
+        document.getElementById("title").textContent = "Регистрация пользователя на событии " + getParamEventId;
 
         var currentUserId = null;
 
