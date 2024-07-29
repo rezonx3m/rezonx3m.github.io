@@ -255,6 +255,7 @@
         const urlParams = new URLSearchParams(window.location.search);
 
         const getParamEventId = urlParams.get("event_id") ? urlParams.get("event_id") : "default";
+        const getParamManagerName = urlParams.get("manager_name") ? urlParams.get("manager_name") : null;
 
         document.getElementById("title").textContent = "Регистрация пользователя на событии " + getParamEventId;
 
@@ -324,7 +325,8 @@
 
             json = {
                 user_id: currentUserId,
-                event_id: getParamEventId
+                event_id: getParamEventId,
+                manager_name: getParamManagerName
             }
 
             $.ajax("https://offline-zond.api.2gis.com/proxy/scannerPostData", {
