@@ -216,83 +216,83 @@
       display: none;
     }
 
-    .emogi-fire {
+    .emoji-fire {
       background-image: url("https://cachizer1.2gis.com/common/8f10cf05-f9fd-467b-888b-ea9c38d48171.png?w=200&h=200");
     }
 
-    .emogi-greenheart {
+    .emoji-greenheart {
       background-image: url("https://cachizer2.2gis.com/common/6085e54d-15f0-41c8-90c8-3257b2c1c03a.png?w=200&h=200");
     }
 
-    .emogi-snowball {
+    .emoji-snowball {
       background-image: url("https://cachizer1.2gis.com/common/07336686-7ecd-4f3d-afa8-925de33b6c62.png?w=200&h=200");
     }
 
-    .emogi-poop {
+    .emoji-poop {
       background-image: url("https://cachizer2.2gis.com/common/ab98af20-0d27-4e4d-8555-82c0fa0fe8b8.png?w=200&h=200");
     }
 
-    .emogi-wavinghand {
+    .emoji-wavinghand {
       background-image: url("https://cachizer1.2gis.com/common/f3b8ac5d-1f67-44ff-b8c3-f6aceec3beb9.png?w=200&h=200");
     }
 
-    .emogi-angry {
+    .emoji-angry {
       background-image: url("https://cachizer2.2gis.com/common/339d8ffa-735f-47c9-b557-5cf3a4f6abb1.png?w=200&h=200");
     }
 
-    .emogi-eyes {
+    .emoji-eyes {
       background-image: url("https://cachizer1.2gis.com/common/905959df-f128-4691-8686-dd9b11b9ce63.png?w=200&h=200");
     }
 
-    .emogi-party {
+    .emoji-party {
       background-image: url("https://cachizer3.2gis.com/common/7e392598-710c-4340-80cb-c0b3b47b6741.png?w=200&h=200");
     }
 
-    .emogi-go {
+    .emoji-go {
       background-image: url("https://cachizer3.2gis.com/common/466a8841-50d8-4b92-bea7-c280a693a25c.png?w=200&h=200");
     }
 
-    .emogi-nav {
+    .emoji-nav {
       background-image: url("https://cachizer2.2gis.com/common/e213fd69-105d-441c-8fe9-426c42b39d7c.png?w=200&h=200");
     }
 
-    .emogi-cupid {
+    .emoji-cupid {
       background-image: url("https://cachizer1.2gis.com/common/f600e309-6d08-4ab9-a022-fc0857d6d5c1.png?w=200&h=200");
     }
 
-    .emogi-lips {
+    .emoji-lips {
       background-image: url("https://cachizer3.2gis.com/common/64cb03c3-f4c9-44e8-a3b5-308785febde2.png?w=200&h=200");
     }
 
-    .emogi-tulip {
+    .emoji-tulip {
       background-image: url("https://cachizer1.2gis.com/common/2ffaef56-9f7d-4998-9505-2fa6a0db5a43.png?w=200&h=200");
     }
 
-    .emogi-dyson {
+    .emoji-dyson {
       background-image: url("https://cachizer3.2gis.com/common/a5fd7c24-0e53-4720-98a1-1120768dd4f8.png?w=200&h=200");
     }
 
-    .emogi-koffee {
+    .emoji-koffee {
       background-image: url("https://cachizer1.2gis.com/common/26cd2ec3-c16a-46fa-8c03-fc1a6162507f.png?w=200&h=200");
     }
 
-    .emogi-hotdog {
+    .emoji-hotdog {
       background-image: url("https://cachizer3.2gis.com/achieves/8dc24faf-5f22-440b-b29e-4e3a5fc6a3d0.png?w=200&h=200");
     }
 
-    .emogi-cake {
+    .emoji-cake {
       background-image: url("https://cachizer3.2gis.com/common/717d61dd-513c-46b4-aa42-7911cb01b7a1.png?w=200&h=200");
     }
 
-    .emogi-kebab {
+    .emoji-kebab {
       background-image: url("https://cachizer2.2gis.com/common/0d82a11e-9df7-44ee-abdf-713333564154.png?w=200&h=200");
     }
 
-    .emogi-beer {
+    .emoji-beer {
       background-image: url("https://cachizer1.2gis.com/common/b006e22f-d8a7-43ff-a09c-8b89a2ce82b5.png?w=200&h=200");
     }
 
-    .emogi-battery {
+    .emoji-battery {
       background-image: url("https://cachizer3.2gis.com/common/6ff114a3-ee18-4feb-9dfd-30dbec3db9b6.png?w=200&h=200");
     }
 
@@ -582,13 +582,41 @@
       transform: translateY(-50%);
     }
 
+    #stickers-list {
+        position: absolute;
+        top: 10px;
+        overflow-y: auto;
+        width: 45px;
+        
+    }
+
+    .emoji-button {
+      width: 40px;
+      height: 40px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      margin: 2px 2px 2px 2px;
+      border-radius: 5px;
+      transition-duration: 0.4s;
+    }
+
+
+    .emoji-button:hover {
+      background-color: #04AA6D; /* Green */
+      color: white;
+    }
+
+
     #friends-list {
       position: absolute;
       right: 10px;
       top: 10px;
 
-      overflow-y: auto;
-      max-height: 500px;
+      overflow-y: scroll;
+      max-height: 95%;
+
+      
       max-width: 350px;
       width: 350px;
       background: #eeeeee;
@@ -908,10 +936,26 @@
       min-width: 40px;
       min-height: 40px;
     }
+
+   #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      display: none;
+    }
+
+    #overlay.show {
+      display: block;
+    }
   </style>
 </head>
 
 <body>
+  <div id="overlay"></div>
   <div class="global">
     <div id="main">
       <div id="container"> </div>
@@ -954,6 +998,10 @@
     <div id='friends-list'>
     </div>
 
+    <div id='stickers-list'>
+      
+    </div>
+
     <!-- best time game html -->
     <div id="best-leader-board">
       <div id="best-current-game-players-previous-hour-leaders">
@@ -992,6 +1040,7 @@ const getParamDebugMarkers = urlParams.get("debug_markers");
 const getParamDebug = urlParams.get("debug");
 const getParamDebugGame = urlParams.get("debug_game");
 const getParamUserId = urlParams.get("user_id");
+const getParamAccessToken = urlParams.get("access_token");
 const getParamScene = urlParams.get("scene");
 const getParamSendBounds = urlParams.get("send_bounds");
 const getParamHideStatus = urlParams.get("hide_status");
@@ -1000,6 +1049,8 @@ const getParamMarkStickersAsViewd = urlParams.get("mark_stickers_as_viewed");
 const getParamBestGameIgnorePlayerDistance = urlParams.get("best_game_ignore_player_distance");
 const getParamEnableClusters = urlParams.get("enable_clusters");
 const getParamMaxMarkersCount = urlParams.get("max_markers_count");
+
+const getParamSendStickers = urlParams.get("send_stickers");
 
 const getParamMapLon = urlParams.get("map_lon");
 const getParamMapLat = urlParams.get("map_lat");
@@ -1016,6 +1067,8 @@ const mapLat = getParamMapLat ? Number(getParamMapLat) : 55.039882;
 const mapZoom = getParamMapZoom ? Number(getParamMapZoom) : 12;
 const mapPitch = getParamMapPitch ? Number(getParamMapPitch) : 0;
 const mapRotation = getParamMapRotation ? Number(getParamMapRotation) : 0;
+
+const sendStickersFromUI = (getParamSendStickers === 'true') && getParamAccessToken !== null;
 
 
 // включаем дебак для кодпена или по параметру
@@ -1240,11 +1293,6 @@ map.on('floorplanshow', (e) => {
 window.addEventListener("resize", () => map.invalidateSize());
 
 
-const getParamAccessToken = urlParams.get("access_token");
-
-if (getParamAccessToken) {
-  startSceneCustom();
-}
 
 
 // глобальный стейт @todo обобщить
@@ -1275,6 +1323,11 @@ if (DEBUG) {
 if (getParamUserId !== null) {
   document.getElementById("input-id").value = getParamUserId;
   connectButtonClick();
+}
+
+
+if (getParamAccessToken) {
+  startSceneCustom();
 }
 
 // скрытие кнопок дле тестов
@@ -1336,6 +1389,56 @@ function connectButtonClick() {
         globalWS.close();
       }
       setConnectionState("disconnected");
+    }
+  }
+}
+
+function showEmojiList() {
+  var html = ""
+  SUPPORTED_EMOJI.forEach((emoji) => {
+    html += renderEmojiButton(emoji);
+  });
+
+  document.getElementById("stickers-list").innerHTML = html;
+  return html;
+}
+
+if (sendStickersFromUI) {
+  showEmojiList();
+}
+
+function renderEmojiButton(emoji) {
+  return '<button onClick="sendStickerToAll(\'' + emoji +'\')" class="emoji-button emoji-' + emoji + '"></button>';
+}
+
+function sendStickerToAll(emoji) {
+
+  const overlay = document.getElementById("overlay");
+  overlay.classList.add("show");
+  alert("Стикеры " + emoji + " будут отправлены  " + Object.keys(globalProfiles).length + " друзьям");
+  for (const id in globalProfiles) {
+      sendStickerToUser(globalWS, id, emoji);   
+  }
+  overlay.classList.remove("show");
+}
+
+function sendStickerToUser(ws, friendId, emoji) {
+  if (ws && ws.readyState == 1) {
+    const message = {
+      type: "sendSticker",
+      payload: {
+        recipientId: friendId,
+        sticker: {
+          stickerId: emoji,
+          count: 1
+        }
+      }
+    };
+
+    const jsonMessage = JSON.stringify(message);
+    ws.send(jsonMessage);
+    if (DEBUG) {
+      console.log("send sendSticker", jsonMessage);
     }
   }
 }
@@ -2176,10 +2279,10 @@ function spawnEmoji(senderId, stickerId, stickersCount) {
   return createStickerMapMarker(stickerId, senderLon, senderLat);
 }
 
-function createStickerMapMarker(stickerId, startLon, startLat, emogiClass = "emoji-marker", addRotation = false) {
-  const markerClass = "emogi-" + stickerId;
+function createStickerMapMarker(stickerId, startLon, startLat, emojiClass = "emoji-marker", addRotation = false) {
+  const markerClass = "emoji-" + stickerId;
 
-  const html = addRotation ? `<div class="animate-rotating"><div class="${emogiClass} ${markerClass}"></div></div>` : `<div class="${emogiClass} ${markerClass}"></div>`;
+  const html = addRotation ? `<div class="animate-rotating"><div class="${emojiClass} ${markerClass}"></div></div>` : `<div class="${emojiClass} ${markerClass}"></div>`;
 
   const htmlMarker = new mapgl.HtmlMarker(map, {
     coordinates: [startLon, startLat],
@@ -2637,10 +2740,10 @@ function goMapCenterToId(id) {
 
 function prewarm() {
   const controlsDiv = document.getElementById("controls");
-  SUPPORTED_EMOJI.forEach((emogi) => {
+  SUPPORTED_EMOJI.forEach((emoji) => {
     const elemDiv = document.createElement("div");
     elemDiv.style.cssText = "width:0px;height:0px;";
-    elemDiv.classList.add("emogi-" + emogi);
+    elemDiv.classList.add("emoji-" + emoji);
     controlsDiv.appendChild(elemDiv);
   });
 
@@ -2781,6 +2884,7 @@ function startSceneCustom() {
 
   SOCKET_PATH =
     "wss://zond.api.2gis.ru/api/1.1/user/ws?token=" + getParamAccessToken + "&channes=markers,stickers";
+
   
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
@@ -2788,6 +2892,7 @@ function startSceneCustom() {
 
   //setTimeout(addCodefestBots, 1000);
   //ON_CONNECT_FUNCTION = addCodefestBots;
+
 
   map.setPitch(0);
   map.setRotation(0);
@@ -2828,6 +2933,7 @@ function startSceneCustom() {
         centerEasing: 'easeOutCubic',
         zoom: 10,
         rotation: 0,
+        pitch: 10,
       }]);
 
   }
