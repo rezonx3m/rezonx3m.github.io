@@ -1233,7 +1233,7 @@ const map = new mapgl.Map("container", {
 map.on('floorplanshow', (e) => {
     const length = e.floorLevels.length;
     const { floorLevelIndex } = e.floorLevels[length - 1];
-    map.setFloorPlanLevel(e.floorPlanId, floorLevelIndex);
+   // map.setFloorPlanLevel(e.floorPlanId, floorLevelIndex);
 });
 
 // фиксим рамер карты при ресайзе
