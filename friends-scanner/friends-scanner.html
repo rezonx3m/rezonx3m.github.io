@@ -296,7 +296,7 @@
             popup.style.display = "none";
             overlay.classList.add("show");
 
-            document.getElementById("popup-one-button-header").textContent = headerText;
+            document.getElementById("popup-one-button-header").innerHTML = headerText;
             document.getElementById("popup-one-button-btn").textContent = buttonText;
 
             if (isError) {
@@ -337,7 +337,7 @@
                     if (data.message == "ok") {
                         showPupupOneButton("Пользователь успешно зарегистрирован", "Продолжить сканирование");
                     } else if (data.message.includes("duplicate")) {
-                        showPupupOneButton("Ошибка! Повторная регистрация пользователя!", "Продолжить сканирование", true);
+                        showPupupOneButton("<p style='color: #ef8080;'>Ошибка!</p>Повторная регистрация пользователя!", "Продолжить сканирование", true);
                     } else {
                         showPupupOneButton("Техническая ошибка при добавлении: " + data.toString(), "Продолжить сканирование", true);
                         console.log(data)
