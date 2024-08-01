@@ -288,7 +288,7 @@
             POPUP_SHOWED = true;
             popup.style.display = "block";
             overlay.classList.add("show");
-            document.getElementById("popup-header").textContent = "Зарегистрировать пользователя с id " + result + " на событии " + getParamEventId + "?";
+            document.getElementById("popup-header").innerHTML = "Зарегистрировать пользователя с id</br>" + result + "</br>на событии " + getParamEventId + "?";
         }
 
         function showPupupOneButton(headerText, buttonText, isError = false) {
