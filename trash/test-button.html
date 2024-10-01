@@ -19,61 +19,84 @@
 			}
 		</style>
 		<script type="text/javascript">
+			function setCookie(name,value,days) {
+				var expires = "";
+				if (days) {
+					var date = new Date();
+					date.setTime(date.getTime() + (days*24*60*60*1000));
+					expires = "; expires=" + date.toUTCString();
+				}
+				document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+				}
 			function getCookie(name) {
-			  const value = `; ${document.cookie}`;
-			  const parts = value.split(`; ${name}=`);
-			  if (parts.length === 2) return parts.pop().split(';').shift();
+				var nameEQ = name + "=";
+				var ca = document.cookie.split(';');
+				for(var i=0;i < ca.length;i++) {
+					var c = ca[i];
+					while (c.charAt(0)==' ') c = c.substring(1,c.length);
+					if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+				}
+				return null;
 			}
+			function eraseCookie(name) {   
+				document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		}
+
 		</script>
 	</head>
 	<body>
-		<button class="btn-new" id="btn-onboarding">Перейти на dgis://2gis.ru/mapfriends/invite</button>
+		<button class="btn-new" id="btn-onboarding-one">Перейти на dgis://2gis.ru/mapfriends/contest?skip_onboarding=true</button>
 	    </br>
 	    </br>
-		<button class="btn-new" id="btn-close-deep">Перейти на dgis://2gis.ru/closeThisWindow</button>
-
+		<button class="btn-new" id="btn-onboarding-two">Перейти на dgis://2gis.ru/mapfriends/contest</button>
 	    </br>
 	    </br>
-		<button class="btn-new" id="btn-close-arg">Добавить в location "?action=close"</button>
-
+		<button class="btn-new" id="btn-go-to-search-eat">Перейти на dgis://2gis.ru/search/%D0%9F%D0%BE%D0%B5%D1%81%D1%82%D1%8C (поесть)</button>
 		</br>
 	    </br>
-		<button class="btn-new" id="btn-cookie-test">Вывести все cookie</button>
+		<button class="btn-new" id="btn-cookie-test-read">Вывести все cookie</button>
+		</br>
+		</br>
+		<button class="btn-new" id="btn-cookie-test-write">Записать в куки Foo значение Bar</button>
 
 		<script>
-			var clickButtonOnboarding = function(e) {
-			  window.open('dgis://2gis.ru/mapfriends/invite', "_self");
-
+			var clickButtonOnboardingOne = function(e) {
+			  window.open('dgis://2gis.ru/mapfriends/contest?skip_onboarding=true', "_self");
 			};
 
-			var clickButtonCloseDeep = function(e) {
-			  window.open('dgis://2gis.ru/closeThisWindow', "_self");
-
+			var clickButtonOnboardingTwo = function(e) {
+			  window.open('dgis://2gis.ru/mapfriends/contest', "_self");
 			};
 
-			var clickButtonCloseArg = function(e) {
-			  const urlParams = new URLSearchParams(window.location.search);
-     		  urlParams.set('action', 'close');
-			  window.location.search = urlParams;
+			var clickButtonEatSearch = function(e) {
+			  window.open('dgis://2gis.ru/search/%D0%9F%D0%BE%D0%B5%D1%81%D1%82%D1%8C', "_self");
 			};
+
 
 			var clickButtonReadCookie = function(e) {
 			  alert('Результат:' + document.cookie);
 			};
 
-			var buttonOnboarding = document.getElementById("btn-onboarding");
-			buttonOnboarding.addEventListener('click', clickButtonOnboarding, false);
+			var clickButtonWriteCookie = function(e) {
+				setCookie("Foo", "Bar");
+			  	alert('Куки записаны');
+			};
 
-			var buttonClose = document.getElementById("btn-close-deep");
-			buttonClose.addEventListener('click', clickButtonCloseDeep, false);
+			var buttonOnboardingOne = document.getElementById("btn-onboarding-one");
+			buttonOnboardingOne.addEventListener('click', clickButtonOnboardingOne, false);
 
-			var buttonCloseArg = document.getElementById("btn-close-arg");
-			buttonCloseArg.addEventListener('click', clickButtonCloseArg, false);
+			var buttonOnboardingTwo = document.getElementById("btn-onboarding-two");
+			buttonOnboardingTwo.addEventListener('click', clickButtonOnboardingTwo, false);
 
-			var buttonCookieTest = document.getElementById("btn-cookie-test");
-			buttonCookieTest.addEventListener('click', clickButtonReadCookie, false);
+			var buttonEat = document.getElementById("btn-go-to-search-eat");
+			buttonEat.addEventListener('click', clickButtonEatSearch, false);
 
-			
+
+			var buttonCookieTestReat = document.getElementById("btn-cookie-test-read");
+			buttonCookieTestReat.addEventListener('click', clickButtonReadCookie, false);
+
+			var buttonCookieTestWrite = document.getElementById("btn-cookie-test-write");
+			buttonCookieTestWrite.addEventListener('click', clickButtonWriteCookie, false);
 		</script>
 	</body>
 </html>
