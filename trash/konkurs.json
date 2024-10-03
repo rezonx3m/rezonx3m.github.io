@@ -1,0 +1,33 @@
+  {
+    "contest": {
+      "id": "0981e368-b49d-474b-ae3c-e38fe5c9d4f8",
+      "image_template": "https://cachizer2.2gis.com/common/1b27172b-9166-4e15-98f5-edd1c1d1f6ed.png",
+      "link": "https://rezonx3m.github.io/trash/test-button.html",
+      "countries": [
+        "ru",
+        "kz"
+      ],
+      "banner": {
+        "title": {
+          "ru": "Приглашай друзей и получай призы",
+          "en": "Invite friends and get rewards",
+          "az": "Dostları dəvət edin və hədiyyələr qazanın",
+          "kz": "Достарыңызды шақырыңыз және сыйлықтар алыңыз",
+          "ua": "Запрошуй друзів та отримуй призи",
+          "hy": "Հրավիրեք ընկերներին և ստացեք մրցանակներ",
+          "uz": "Do'stlaringizni taklif qiling va sovg'alarni oling"
+        },
+        "button": {
+          "ru": "Подробности конкурса",
+          "en": "Contest details",
+          "az": "Müsabiqə təfərrüatları",
+          "kz": "Жарыс туралы мәліметтер",
+          "ua": "Подробиці конкурсу",
+          "hy": "Մրցույթի մանրամասները",
+          "uz": "Musobaqa tafsilotlari"
+        },
+        "image_template": "https://cachizer1.2gis.com/common/8649c174-1563-41cf-a70e-0c88c47fb979.png",
+        "link": "https://rezonx3m.github.io/trash/test-button.html"
+      }
+    }
+  }
