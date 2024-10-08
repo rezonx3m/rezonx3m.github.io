@@ -1545,41 +1545,44 @@ function sendStickerToAll(emoji) {
 
   const overlay = document.getElementById("overlay");
   overlay.classList.add("show");
-  alert("Стикеры " + emoji + " будут отправлены  " + Object.keys(globalProfiles).length + " друзьям");
 
-  if (getParamUserId !== null) {
-      const message = {
-        stickers: [
-            {
-              stickerId: emoji,
-              count: 10
-            }
-          ]
-      };
-      $.ajax("https://offline-zond.api.2gis.com/codefest/postResults", {
-        data : JSON.stringify(message),
-        contentType : 'application/json',
-        type : 'POST',
-        success: function () {
-            bestGameSuccessFinished();
-        },
-        error: function (error) {
-          console.log(error);
-          //@todo make error on display
-        }
+
+  function sendStickersAfterPause() {
+    alert("Стикеры " + emoji + " будут отправлены  " + Object.keys(globalProfiles).length + " друзьям");
+
+    if (getParamAccessToken !== null) {
+      for (const id in globalProfiles) {
+            sendStickerToUser(globalWS, id, emoji);   
+      }  
+    } else if (document.getElementById("input-id").value != "") {
+       const message = {
+          stickers: [
+              {
+                stickerId: emoji,
+                count: 10
+              }
+            ]
+        };
+        const urlForStickers = "https://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/" + document.getElementById("input-id").value + "/friends/sticker";
+        $.ajax(urlForStickers, {
+          data : JSON.stringify(message),
+          contentType : 'application/json',
+          type : 'POST',
+          success: function () {
+              ;
+          },
+          error: function (error) {
+            console.log(error);
+            //@todo make error on display
+          }
       })
-  } else {
-    for (const id in globalProfiles) {
-          sendStickerToUser(globalWS, id, emoji);   
     }
+    overlay.classList.remove("show");
   }
+
+  setTimeout(sendStickersAfterPause, 300);
   
-
-
-
-
-
-  overlay.classList.remove("show");
+  
 }
 
 
