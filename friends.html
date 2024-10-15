@@ -4,15 +4,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
-<!-- 
-  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD_march.js"></script>
-  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_QR_HD.js"></script> 
-
-  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_green_HD.js"></script>
-  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_red_HD.js"></script>
-  <script src="https://rezonx3m.github.io/friends/static/Installation_UI_screen_congrats_blue_HD.js"></script>
--->
-
   <link rel="stylesheet" href="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.css">
   <script defer src="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.js"></script>
 
@@ -23,6 +14,7 @@
   <!--  <script src="https://d-assets.2gis.ru/vendor.48c43c73384d52df9da5.js"></script> -->
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
+  <script src="https://rezonx3m.github.io/landing/friends-scripts.js"></script>
 
   
 
@@ -400,44 +392,6 @@
 
 
 
-
-
-
-
-    
-
-    /* fade in out */
-    /* todo удалить нахрен, так как теперь лотти /*
-.popup-qr-class {
-  display: none;
-  position: absolute;
-  top: 0px;
-  height: 100%;
-  left: 10%;
-  right: 10%;
-
-  background-image: url("https://rezonx3m.github.io/friends/static/QR.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  animation: popup-scale 32s ease-in-out infinite;
-}
-
-@keyframes popup-scale {
-  0% {
-    transform: scale(0);
-  }
-  2% {
-    transform: scale(1);
-  }
-  98% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0);
-  }
-}
-
 /* sliders */
 
     .itcss_item_text {
@@ -773,7 +727,7 @@
       min-width: 320px;
       min-height: 110px;
       position: absolute;
-      top: 34px;
+      top: 18px;
       left: 34px;
       display: none;
       /*border-radius: 20px;*/
@@ -785,7 +739,7 @@
       opacity: 0.9;
     }
 
-    #best-current-game-players-previous-hour-leaders, #best-current-game-players-current-hour-leaders, #best-current-game-players-list  {
+    #best-current-game-players-previous-hour-leaders, #best-current-game-players-current-hour-leaders, #best-current-game-players-list, #best-game-launch-info-text  {
       background-color: white;
       padding: 6px 0px 6px 0px;
       border-radius: 20px;
@@ -793,12 +747,38 @@
       box-shadow: 0px 2px 4px 0px #00000014;
     }
 
-    .best-leader-top-header {
+    .best-leader-top-header, .best-game-launch-info-text-header {
       font-family: "SB Sans Display Semibold";
       padding-left: 21px;
       padding-top: 10px;
       font-size: 18px;
     }
+
+    .best-game-launch-info-text-сontent {
+      font-family: "SB Sans Display Regular";
+      padding-left: 21px;
+      padding-top: 10px;
+      font-size: 18px;
+    }
+
+    .best-game-launch-info-text-сontent-image {
+      width: 34px;
+      height: 34px;
+      background-size: cover;
+      display: inline-flex;
+      margin-bottom: -10px;
+    }
+
+    #best-game-launch-info-qr {
+      width: 140px;
+      height: 140px;
+      margin-left: 20px;
+      margin-top: 20px;
+      margin-right: 10px;
+    
+    }
+
+    
 
 
     .best-leader-top-second-line {
@@ -919,62 +899,15 @@
       animation: scale 2s ease-in-out infinite;
     }
 
-    #best-game-launch-info {
-      width: 786px;
-      height: 203px;
+
+    #best-game-launch-info-text {   
       position: absolute;
-      top: 17px;
-      left: 380px;
-      
-      display: none;
-      background-image: url("https://rezonx3m.github.io/friends/static/best-game-launch-codefest2.png");
-      background-size: contain;
-      background-repeat: no-repeat;
+      top: 18px;
+      left: 380px; 
+      display: flex;
+      justify-content: space-between;
       opacity: 0.9;
-    }
-
-    #best-game-rules {
-      width: 1024px;
-      height: 648px;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: none;
-      background-image: url("https://rezonx3m.github.io/friends/static/best-game-rules.png");
-    }
-
-    #best-game-new-winner {
-      width: 1405px;
-      height: 757px;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: none;
-      background-image: url("https://rezonx3m.github.io/friends/static/best-game-new-winner.png");
-    }
-
-    #best-game-lose {
-      width: 1000px;
-      height: 485px;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: none;
-      background-image: url("https://rezonx3m.github.io/friends/static/best-game-lose.png");
-    }
-
-    #best-game-need-wait {
-      width: 574px;
-      height: 184px;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translate(-50%, 0px);
-      display: none;
-      background-image: url("https://rezonx3m.github.io/friends/static/best-game-need-wait.png");
+      margin-right: 34px; 
     }
 
     #best-current-game-players-list {
@@ -985,9 +918,9 @@
     .best-timer {
       --progress: 100;
       display: none;
-      position: fixed;
-      top: 224px;
-      left: 396px;
+      position: absolute;
+      bottom: 18px;
+      right: 34px;
       /* transform: translate(-50%, -50%); */
       width: 150px;
       height: 150px;
@@ -1126,11 +1059,21 @@
         </div>
       </div>
     </div>
-    <div id="best-game-launch-info"></div>
-    <div id="best-game-rules"></div>
-    <div id="best-game-new-winner"></div>
-    <div id="best-game-lose"></div>
-    <div id="best-game-need-wait"></div>
+    <div id="best-game-launch-info-text">
+      <div>
+        <div class="best-game-launch-info-text-header">Подарки за эмоджи!</div>
+        <div class="best-game-launch-info-text-сontent">
+          Добавить 
+          <span class="best-game-launch-info-text-сontent-image" id="game-bot-launch-info-avatar"></span>
+          в друзья и отправь
+          <span class="best-game-launch-info-text-сontent-image emoji-go"></span>
+          , чтобы вступить в игру.<br/>
+          Смотри эмоджи на экране и отправляй в ответ такие же<br/>
+          быстрее всех.
+        </div>
+      </div>
+      <div id=best-game-launch-info-qr></div>
+    </div>
 
     <div class="best-timer">
       <div class="best-timer-progress"></div>
@@ -1353,12 +1296,15 @@ var BEST_GAME_CURRENT_STICKERS = [];
 var BEST_GAME_CURRENT_STICKER_MARKERS = {}; 
 var BEST_GAME_CURRENT_ROUND = 0;
 var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
-const BEST_GAME_MIN_DISTANCE_TO_START = 0.5;
+const BEST_GAME_MIN_DISTANCE_TO_START = 1;
 const BEST_GAME_TOTAL_ROUNDS = 20; //20
 const BEST_SHOW_RULES_TIMER = 30000; // 30000
 const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
 const BEST_GAME_ONE_ROUND_DURATION = 5; // change with best-emoji-marker-sticke
 const BEST_TIMER = document.querySelector('.best-timer');
+
+
+const BEST_GAME_BOT_AVA = urlParams.get("game_bot_ava_path") || "https://rezonx3m.github.io/friends/static/gameBotAva.jpg";
 
 const BEST_AWAINING_NAMES = [
   "Ждем тебя",
@@ -1448,6 +1394,7 @@ async function runScenario(scenario) {
     }
 }
 
+
 const map = new mapgl.Map("container", {
   center: [mapLon, mapLat],
   zoom: mapZoom,
@@ -1463,6 +1410,7 @@ const map = new mapgl.Map("container", {
   pitch: mapPitch,
   rotation: mapRotation
 });
+
 
 map.on('floorplanshow', (e) => {
     const length = e.floorLevels.length;
@@ -2984,8 +2932,8 @@ switch (getParamScene) {
     startSceneCodefest();
     break;
   }
-  case "hb": {
-    startSceneHB();
+  case "game": {
+    startSceneGame();
     break;
   }
   case "custom": {
@@ -3098,48 +3046,62 @@ function startSceneCodefest() {
 }
 
 
-function startSceneHB() {
-  currentScene = "hb";
+function startSceneGame() {
+  currentScene = "game";
   //OVERRIDED_ZOOM = 100;
   
-  map.setCenter([30.41089, 59.940955]);
-  map.setZoom(19.35);
-  map.setPitch(47.75);
-  map.setRotation(-65.7);
+  
+
   //const snow = new mapglSnow.Snow(map);
-  ENABLE_CLUSTERS = true;
+  ENABLE_CLUSTERS = false;
   ENABLE_STICKERS = true;
   ENABLE_STICKERS_TO_ME = false;
   ENABLE_MARK_STICKERS_AS_VIEWED = true;
   FORCE_RECONNECT_IF_NO_STICKERS = true;
-  document.getElementById("input-id").value = "hb";
+  document.getElementById("input-id").value = "game";
 
   SOCKET_PATH =
-    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=77367bc0967b93f273050b4d05930ba72a1728da&get-friends-stickers=true&channes=markers,stickers";
+    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=" + getParamAccessToken + "&get-friends-stickers=true&channes=markers,stickers";
   
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
 
-  document.getElementById("global").style.maxWidth = urlParams.get("screen-width") || "768px";
-  document.getElementById("global").style.maxHeight = urlParams.get("screen-height") || "768px";
-
-  //setTimeout(addCodefestBots, 1000);
-  //ON_CONNECT_FUNCTION = addCodefestBots;
-
+  document.getElementById("global").style.maxWidth = urlParams.get("screen_width") || "100%";
+  document.getElementById("global").style.maxHeight = urlParams.get("screen_height") || "100%";
 
   var gameStarted = false;
   var positionSelected = false;
 
-  setTimeout(addHBBots, 1000);
-  ON_CONNECT_FUNCTION = addHBBots;
+  setTimeout(addGameBot, 1000);
+  ON_CONNECT_FUNCTION = addGameBot;
 
-  gameStarted = true;
+  const avatarElement = document.getElementById("game-bot-launch-info-avatar");
+  avatarElement.style.backgroundImage = "url('" + BEST_GAME_BOT_AVA + "')"
+  avatarElement.style.width = "28px";
+  avatarElement.style.height = "28px";
+  avatarElement.style.marginBottom = "-6px";
+
+
+  var frenderQR = function (){
+    const QRemelemt = document.getElementById("best-game-launch-info-qr");
+    var qrcode = new QRCode(QRemelemt, {
+      width : QRemelemt.clientWidth,
+      height : QRemelemt.clientWidth, // не ошибка, рисуем квадратик
+    });
+    const gamePublicUserId = urlParams.get("game_public_user_id") || ""; 
+    qrcode.makeCode("https://2gis.ru/user/" + gamePublicUserId);
+  }
+
+  setTimeout(frenderQR, 1000);
+  
+
+
   setTimeout(startGameBestTimeSticker, 1500);
 
-  //setInterval(getActionToStart, 3000);
-  
-  
+
+  map.setPitch(mapPitch);
+  map.setRotation(mapRotation);
 
   document.onkeypress = function (e) {
     e = e || window.event;
@@ -3155,14 +3117,14 @@ function startSceneHB() {
         break;
       case 56: // 8
         var sticker = testMessageStickerFromToMe2;
-        sticker.senderId = 'hbbot';
+        sticker.senderId = 'gamebot';
         sticker.stickerRecord.sticker.stickerId =  BEST_GAME_CURRENT_STICKERS[getRandom(0, BEST_GAME_CURRENT_STICKERS.length - 1, true)];
         processStickerToMe(sticker);
         break; 
 
       case 57: // 9
         var sticker = testMessageStickerFromToMe2;
-        sticker.senderId = 'hbbot';
+        sticker.senderId = 'gamebot';
         sticker.stickerRecord.sticker.stickerId =  "go";
         processStickerToMe(sticker);
         break;
@@ -3241,25 +3203,24 @@ function startSceneCustom() {
 }
 
 
-function addHBBots() {
-  const hbBotId = "hbbot";
+function addGameBot() {
+  const gameBotId = "gamebot";
  
 
-  const profileHB = {
-    id: hbBotId,
-    name: "2GISDev Heisenbug",
-    logo: "https://i6.photo.2gis.com/images/profile/30258560202192565_80d9.jpg"
+  const profileBot = {
+    id: gameBotId,
+    name: "GameBot",
+    logo: BEST_GAME_BOT_AVA
   };
-
  
-  const profileStateHB = {
+  const profileStateGameBot = {
     type: "friendState",
     payload: {
-      id: hbBotId,
+      id: gameBotId,
       lastSeen: Date.now() * 1000,
       location: {
-        lon: 30.411119,
-        lat: 59.940555,
+        lon: parseFloat(urlParams.get("game_bot_lon")) || 30.411119,
+        lat: parseFloat(urlParams.get("game_bot_lat")) || 59.940555,
         azimuth: 0,
         speed: 0,
         accuracy: 1
@@ -3275,8 +3236,8 @@ function addHBBots() {
   };
 
  
-  addProfile(profileHB, true);
-  processMessage(profileStateHB);
+  addProfile(profileBot, true);
+  processMessage(profileStateGameBot);
 
   
 }
@@ -3568,7 +3529,7 @@ function startGameBestTimeSticker() {
   //     globalMarkers["codefestbot"].getCoordinates()[1]
   // ]);
   
-  document.getElementById("best-game-launch-info").style.display = "block";
+  document.getElementById("best-game-launch-info-text").style.display = "flex";
   bestGameReloadLiaders();
   bestRerenderCurrentPlayersList();
   bestLaunchTimerBeforeStartGame();  
@@ -3739,12 +3700,10 @@ function bestLaunchTimerBeforeStartGame() {
     BEST_GAME_CURRENT_ID = CryptoJS.MD5(Date.now().toString()).toString();
     BEST_GAME_TIME_STARTED = Math.floor((Date.now() - serverTimestampShift) / 1000);
     startBestTimer(BEST_SHOW_RULES_TIMER, true);
-    // fadeIn(document.getElementById("best-game-rules"), 500)
     // fadeIn(document.getElementById("best-current-game-players-list"), 500);
     // fadeOut(document.getElementById("best-game-launch-info"), 500);
     
     setTimeout(() => {
-      // fadeOut(document.getElementById("best-game-rules"), 500);
       BEST_GAME_IN_PROGRESS = true;
       bestStartPushingStickersWithTimersAndCountResults();
     }, BEST_SHOW_RULES_TIMER + 100);
@@ -3763,7 +3722,7 @@ function bestSpawnRandomSticker() {
   BEST_GAME_CURRENT_ROUND++;
 
   const bounds = map.getBounds();
-  const center = globalMarkers['hbbot'].getCoordinates(); // @codefest bot center
+  const center = globalMarkers['gamebot'].getCoordinates(); // @codefest bot center
 
   const container = document.getElementById("container");
   
@@ -3871,8 +3830,6 @@ function bestGameSuccessFinished() {
   document.getElementById("best-timer-text").innerHTML = "";
   //startBestTimer(BEST_SHOW_FINISH_IMAGE, true);
   setTimeout(() => {
-    // fadeOut(document.getElementById("best-game-new-winner"), 500);
-    // fadeOut(document.getElementById("best-game-lose"), 500);
     bestGameReloadLiaders();
 
     BEST_CURRENT_GAMERS = {};
