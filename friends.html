@@ -3090,8 +3090,8 @@ function startSceneGame() {
       width : QRemelemt.clientWidth,
       height : QRemelemt.clientWidth, // не ошибка, рисуем квадратик
     });
-    const gamePublicUserId = urlParams.get("game_public_user_id") || ""; 
-    qrcode.makeCode("https://2gis.ru/user/" + gamePublicUserId);
+    const gameQRLink = urlParams.get("game_qr") || "https://2gis.ru"; 
+    qrcode.makeCode(gameQRLink);
   }
 
   setTimeout(renderQR, 2000);
