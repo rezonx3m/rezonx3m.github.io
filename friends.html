@@ -508,7 +508,7 @@
 
     #game-fisrt-send {}
 
-    .global {
+    #global {
       width: 100%;
       height: 100%;
       position: absolute;
@@ -986,8 +986,8 @@
       --progress: 100;
       display: none;
       position: fixed;
-      top: 34px;
-      right: 34px;
+      top: 224px;
+      left: 396px;
       /* transform: translate(-50%, -50%); */
       width: 150px;
       height: 150px;
@@ -1061,7 +1061,7 @@
 
 <body>
   <div id="overlay"></div>
-  <div class="global">
+  <div id="global">
     <div id="main">
       <div id="container"> </div>
     </div>
@@ -1281,8 +1281,59 @@ const SUPPORTED_EMOJI = [
   "champagne",
   "matchatea",
   "zucchini",
-  "umbrella"
+  "umbrella",
+  "snowball"
 ];
+
+// список поддерживаемых эмодзи, при расширенни добавить css
+const SUPPORTED_EMOJI_FOR_GAME = [
+  "fire",
+  "greenheart",
+  "poop",
+  "wavinghand",
+  "angry",
+  "eyes",
+  "party",
+  "go",
+  "nav",
+  "cupid",
+  "lips",
+  "tulip",
+  //"dyson",
+  "koffee",
+  "hotdog",
+  "cake",
+  //"kebab",
+  "battery",
+  "beer",
+  "tea",
+  "pumpkin",
+  "leaf",
+  //"ball",
+  //"watermelon",
+  //"balloons",
+  //"popcorn",
+  //"laughter",
+  //"prayer",
+  //"cry",
+  //"clown",
+  //"tomato",
+  //"snail",
+  //"cocktail",
+  //"cherry",
+  //"koreanheart",
+  //"teddy",
+  //"kiss",
+  //"space",
+  //"bell",
+  //"dish",
+  //"champagne",
+  //"matchatea",
+  //"zucchini",
+  //"umbrella"
+  "snowball"
+];
+
 
 
 
@@ -2933,7 +2984,11 @@ switch (getParamScene) {
     startSceneCodefest();
     break;
   }
-case "custom": {
+  case "hb": {
+    startSceneHB();
+    break;
+  }
+  case "custom": {
     startSceneCustom();
     break;
   }
@@ -2974,7 +3029,7 @@ function startSceneCodefest() {
   document.getElementById("input-id").value = "codefest";
 
   SOCKET_PATH =
-    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=b731c9e5e542f345900cca57ba92b819fe371fd3&get-friends-stickers=true&channes=markers,stickers";
+    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=d30ae1b6407301be189cb86fd14e629023e6d0aa&get-friends-stickers=true&channes=markers,stickers";
   
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
@@ -3008,6 +3063,81 @@ function startSceneCodefest() {
   }
 
   setInterval(getActionToStart, 3000);
+  
+  
+
+  document.onkeypress = function (e) {
+    e = e || window.event;
+    switch (e.keyCode) {
+
+      case 49:
+        perfTest();
+        break;
+
+
+      case 48:
+        window.location.reload();;
+        break;
+      case 55:
+        var sticker = testMessageStickerFromToMe2;
+        sticker.stickerRecord.sticker.stickerId =  BEST_GAME_CURRENT_STICKERS[getRandom(0, BEST_GAME_CURRENT_STICKERS.length - 1, true)];
+        processStickerToMe(sticker);
+        break; 
+      case 56:
+        processStickerToMe(testMessageStickerFromToMe2);
+        break;
+
+      case 57:
+        processStickerToMe(testMessageStickerFromToMe);
+        break;
+        
+    }
+  };
+
+  //showScenePushButtonAnimation();
+}
+
+
+function startSceneHB() {
+  currentScene = "hb";
+  //OVERRIDED_ZOOM = 100;
+  
+  map.setCenter([30.41089, 59.940955]);
+  map.setZoom(19.35);
+  map.setPitch(47.75);
+  map.setRotation(-65.7);
+  //const snow = new mapglSnow.Snow(map);
+  ENABLE_CLUSTERS = true;
+  ENABLE_STICKERS = true;
+  ENABLE_STICKERS_TO_ME = false;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+  document.getElementById("input-id").value = "hb";
+
+  SOCKET_PATH =
+    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=77367bc0967b93f273050b4d05930ba72a1728da&get-friends-stickers=true&channes=markers,stickers";
+  
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+  document.getElementById("global").style.maxWidth = urlParams.get("screen-width") || "768px";
+  document.getElementById("global").style.maxHeight = urlParams.get("screen-height") || "768px";
+
+  //setTimeout(addCodefestBots, 1000);
+  //ON_CONNECT_FUNCTION = addCodefestBots;
+
+
+  var gameStarted = false;
+  var positionSelected = false;
+
+  setTimeout(addHBBots, 1000);
+  ON_CONNECT_FUNCTION = addHBBots;
+
+  gameStarted = true;
+  setTimeout(startGameBestTimeSticker, 1500);
+
+  //setInterval(getActionToStart, 3000);
   
   
 
@@ -3110,7 +3240,45 @@ function startSceneCustom() {
 }
 
 
+function addHBBots() {
+  const hbBotId = "hbbot";
+ 
 
+  const profileHB = {
+    id: hbBotId,
+    name: "2GISDev Heisenbug",
+    logo: "https://i6.photo.2gis.com/images/profile/30258560202192565_80d9.jpg"
+  };
+
+ 
+  const profileStateHB = {
+    type: "friendState",
+    payload: {
+      id: hbBotId,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lon: 30.411119,
+        lat: 59.940555,
+        azimuth: 0,
+        speed: 0,
+        accuracy: 1
+      },
+      battery: {
+        level: 1
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+ 
+  addProfile(profileHB, true);
+  processMessage(profileStateHB);
+
+  
+}
 
 var CODEFEST_BOTS_STARTED = false;
 
@@ -3548,14 +3716,14 @@ function bestGameReloadLiaders() {
 
     setTimeout(() => {
       const tsNow = Math.floor((Date.now() - serverTimestampShift) / 1000)
-      $.getJSON( `https://offline-zond.api.2gis.com/codefest/getLeaders?timestamp=${tsNow}&limit=5`, function( json ) {
+      $.getJSON( `https://offline-zond.api.2gis.com/proxy/getGameLeaders?timestamp=${tsNow}&limit=5`, function( json ) {
         bestRerenderLeaderCurrentHourList(json);
       });
 
       const d = new Date();
       const time = Math.floor((d.setHours(d.getHours() - 1) - serverTimestampShift) / 1000);
 
-      $.getJSON( `https://offline-zond.api.2gis.com/codefest/getLeaders?timestamp=${time}&limit=3`, function( json ) {
+      $.getJSON( `https://offline-zond.api.2gis.com/proxy/getGameLeaders?timestamp=${time}&limit=3`, function( json ) {
         bestRerenderLeaderPreviousHourList(json);
       });
       fadeIn(document.getElementById("best-leader-board"), 500, 0.9)
@@ -3594,7 +3762,7 @@ function bestSpawnRandomSticker() {
   BEST_GAME_CURRENT_ROUND++;
 
   const bounds = map.getBounds();
-  const center = globalMarkers['codefestbot'].getCoordinates(); // @codefest bot center
+  const center = globalMarkers['hbbot'].getCoordinates(); // @codefest bot center
 
   const container = document.getElementById("container");
   
@@ -3611,7 +3779,7 @@ function bestSpawnRandomSticker() {
 
   function getUniqSticker() {
     while (true) {
-      const randomSticker = getRandomSticker();
+      const randomSticker = getRandomStickerForGame();
       if (!BEST_GAME_CURRENT_STICKERS.includes(randomSticker)) {
         return randomSticker;
       }
@@ -3684,7 +3852,7 @@ function bestSendResultsToBE(results) {
     results: results
   }
 
-  $.ajax("https://offline-zond.api.2gis.com/codefest/postResults", {
+  $.ajax("https://offline-zond.api.2gis.com/proxy/postGameResults", {
     data : JSON.stringify(json),
     contentType : 'application/json',
     type : 'POST',
@@ -3805,9 +3973,9 @@ function bestGameProcessIncorrectSticker(userId) {
   
 }
 
-function getRandomSticker() {
-  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
-  return SUPPORTED_EMOJI[stickerN];
+function getRandomStickerForGame() {
+  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI_FOR_GAME.length);
+  return SUPPORTED_EMOJI_FOR_GAME[stickerN];
 }
 
 function getRandomAwaitingName() {
