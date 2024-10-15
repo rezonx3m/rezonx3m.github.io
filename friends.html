@@ -3145,25 +3145,26 @@ function startSceneHB() {
     e = e || window.event;
     switch (e.keyCode) {
 
-      case 49:
+      case 49: // 1
         perfTest();
         break;
 
 
-      case 48:
+      case 48: // 0
         window.location.reload();;
         break;
-      case 55:
+      case 56: // 8
         var sticker = testMessageStickerFromToMe2;
+        sticker.senderId = 'hbbot';
         sticker.stickerRecord.sticker.stickerId =  BEST_GAME_CURRENT_STICKERS[getRandom(0, BEST_GAME_CURRENT_STICKERS.length - 1, true)];
         processStickerToMe(sticker);
         break; 
-      case 56:
-        processStickerToMe(testMessageStickerFromToMe2);
-        break;
 
-      case 57:
-        processStickerToMe(testMessageStickerFromToMe);
+      case 57: // 9
+        var sticker = testMessageStickerFromToMe2;
+        sticker.senderId = 'hbbot';
+        sticker.stickerRecord.sticker.stickerId =  "go";
+        processStickerToMe(sticker);
         break;
         
     }
