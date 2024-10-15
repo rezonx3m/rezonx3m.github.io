@@ -1286,6 +1286,7 @@ const SUPPORTED_EMOJI_FOR_GAME = [
 // params for game best time send sticker
 
 var BEST_GAME_CURRENT_ID = null;
+var BEST_GAME_STAND = urlParams.get("game_stand") || "default";
 var BEST_GAME_TIME_STARTED = null;
 var BEST_LOG_LAST_STICKERS_TO_ME = false;
 var BEST_WINNER_ID = null;
@@ -3083,7 +3084,7 @@ function startSceneGame() {
   avatarElement.style.marginBottom = "-6px";
 
 
-  var frenderQR = function (){
+  var renderQR = function (){
     const QRemelemt = document.getElementById("best-game-launch-info-qr");
     var qrcode = new QRCode(QRemelemt, {
       width : QRemelemt.clientWidth,
@@ -3093,7 +3094,7 @@ function startSceneGame() {
     qrcode.makeCode("https://2gis.ru/user/" + gamePublicUserId);
   }
 
-  setTimeout(frenderQR, 1000);
+  setTimeout(renderQR, 2000);
   
 
 
@@ -3678,14 +3679,14 @@ function bestGameReloadLiaders() {
 
     setTimeout(() => {
       const tsNow = Math.floor((Date.now() - serverTimestampShift) / 1000)
-      $.getJSON( `https://offline-zond.api.2gis.com/proxy/getGameLeaders?timestamp=${tsNow}&limit=5`, function( json ) {
+      $.getJSON( `https://offline-zond.api.2gis.com/proxy/getGameLeaders?timestamp=${tsNow}&limit=5&stand=${BEST_GAME_STAND}`, function( json ) {
         bestRerenderLeaderCurrentHourList(json);
       });
 
       const d = new Date();
       const time = Math.floor((d.setHours(d.getHours() - 1) - serverTimestampShift) / 1000);
 
-      $.getJSON( `https://offline-zond.api.2gis.com/proxy/getGameLeaders?timestamp=${time}&limit=3`, function( json ) {
+      $.getJSON( `https://offline-zond.api.2gis.com/proxy/getGameLeaders?timestamp=${time}&limit=3&stand=${BEST_GAME_STAND}`, function( json ) {
         bestRerenderLeaderPreviousHourList(json);
       });
       fadeIn(document.getElementById("best-leader-board"), 500, 0.9)
@@ -3807,6 +3808,7 @@ function bestSendResultsToBE(results) {
   //results.forEach((element) => element.ava_path = globalProfiles[element.id].logo);
   // globalProfiles[id].logo
   json = {
+    stand: BEST_GAME_STAND,
     game_id: BEST_GAME_CURRENT_ID,
     game_time: BEST_GAME_TIME_STARTED,
     results: results
