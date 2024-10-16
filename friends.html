@@ -1286,7 +1286,9 @@ const SUPPORTED_EMOJI_FOR_GAME = [
 // params for game best time send sticker
 
 var BEST_GAME_CURRENT_ID = null;
-var BEST_GAME_STAND = urlParams.get("game_stand") || "default";
+var BEST_GAME_PUBLIC_USER_ID = urlParams.get("game_public_user_id");
+var BEST_GAME_INFO_RENDERED = false;
+var BEST_GAME_STAND = BEST_GAME_PUBLIC_USER_ID;
 var BEST_GAME_TIME_STARTED = null;
 var BEST_LOG_LAST_STICKERS_TO_ME = false;
 var BEST_WINNER_ID = null;
@@ -1304,8 +1306,6 @@ const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
 const BEST_GAME_ONE_ROUND_DURATION = 5; // change with best-emoji-marker-sticke
 const BEST_TIMER = document.querySelector('.best-timer');
 
-
-const BEST_GAME_BOT_AVA = urlParams.get("game_bot_ava_path") || "https://rezonx3m.github.io/friends/static/gameBotAva.jpg";
 
 const BEST_AWAINING_NAMES = [
   "Ждем тебя",
@@ -3074,36 +3074,55 @@ function startSceneGame() {
   var gameStarted = false;
   var positionSelected = false;
 
-  setTimeout(addGameBot, 1000);
-  ON_CONNECT_FUNCTION = addGameBot;
-
-  const avatarElement = document.getElementById("game-bot-launch-info-avatar");
-  avatarElement.style.backgroundImage = "url('" + BEST_GAME_BOT_AVA + "')"
-  avatarElement.style.width = "28px";
-  avatarElement.style.height = "28px";
-  avatarElement.style.marginBottom = "-6px";
-
-
-  var renderQR = function (){
-    const QRemelemt = document.getElementById("best-game-launch-info-qr");
-    var qrcode = new QRCode(QRemelemt, {
-      width : QRemelemt.clientWidth,
-      height : QRemelemt.clientWidth, // не ошибка, рисуем квадратик
-    });
-    const gameQRLink = urlParams.get("game_qr") || "https://2gis.ru"; 
-    qrcode.makeCode(gameQRLink);
-  }
-
-  setTimeout(renderQR, 2000);
-  
-
-
-  setTimeout(startGameBestTimeSticker, 1500);
-
-
   map.setPitch(mapPitch);
   map.setRotation(mapRotation);
 
+  function connectGame() {
+    function setup() {
+      if (isConnected) {
+        if (!globalProfiles.hasOwnProperty(BEST_GAME_PUBLIC_USER_ID)) {
+          alert("Не найден пользователь " + BEST_GAME_PUBLIC_USER_ID + ". Возможно передан некорректный access_token или game_public_user_id");
+        } else if (BEST_GAME_INFO_RENDERED == false) {
+          BEST_GAME_INFO_RENDERED = true;
+          console.log('setup. connected');
+          console.log(globalProfiles[BEST_GAME_PUBLIC_USER_ID]);
+          const BEST_GAME_BOT_AVA = globalProfiles[BEST_GAME_PUBLIC_USER_ID].logoTpl.replace('{width}', '96').replace('{height}', '96');
+          const avatarElement = document.getElementById("game-bot-launch-info-avatar");
+          avatarElement.style.backgroundImage = "url('" + BEST_GAME_BOT_AVA + "')"
+          avatarElement.style.width = "28px";
+          avatarElement.style.height = "28px";
+          avatarElement.style.marginBottom = "-6px";
+
+          var renderQR = function (){
+            const QRemelemt = document.getElementById("best-game-launch-info-qr");
+            var qrcode = new QRCode(QRemelemt, {
+              width : QRemelemt.clientWidth,
+              height : QRemelemt.clientWidth, // не ошибка, рисуем квадратик
+            });
+            const gameQRLink = "https://2gis.ru/user/" + BEST_GAME_PUBLIC_USER_ID; 
+            qrcode.makeCode(gameQRLink);
+          }
+
+          setTimeout(renderQR, 2000);
+
+          setTimeout(startGameBestTimeSticker, 1000);
+          
+
+          
+        }
+      } else {
+        console.log('setup. not connected');
+      }
+    }
+
+    if (BEST_GAME_INFO_RENDERED == false) {
+      setTimeout(setup, 3000)
+    }
+  }
+
+  ON_CONNECT_FUNCTION = connectGame;
+  
+  
   document.onkeypress = function (e) {
     e = e || window.event;
     switch (e.keyCode) {
@@ -3118,14 +3137,14 @@ function startSceneGame() {
         break;
       case 56: // 8
         var sticker = testMessageStickerFromToMe2;
-        sticker.senderId = 'gamebot';
+        sticker.senderId = BEST_GAME_PUBLIC_USER_ID;
         sticker.stickerRecord.sticker.stickerId =  BEST_GAME_CURRENT_STICKERS[getRandom(0, BEST_GAME_CURRENT_STICKERS.length - 1, true)];
         processStickerToMe(sticker);
         break; 
 
       case 57: // 9
         var sticker = testMessageStickerFromToMe2;
-        sticker.senderId = 'gamebot';
+        sticker.senderId = BEST_GAME_PUBLIC_USER_ID;
         sticker.stickerRecord.sticker.stickerId =  "go";
         processStickerToMe(sticker);
         break;
@@ -3204,44 +3223,44 @@ function startSceneCustom() {
 }
 
 
-function addGameBot() {
-  const gameBotId = "gamebot";
+// function addGameBot() {
+//   const gameBotId = "gamebot";
  
 
-  const profileBot = {
-    id: gameBotId,
-    name: "GameBot",
-    logo: BEST_GAME_BOT_AVA
-  };
+//   const profileBot = {
+//     id: gameBotId,
+//     name: "GameBot",
+//     logo: BEST_GAME_BOT_AVA
+//   };
  
-  const profileStateGameBot = {
-    type: "friendState",
-    payload: {
-      id: gameBotId,
-      lastSeen: Date.now() * 1000,
-      location: {
-        lon: parseFloat(urlParams.get("game_bot_lon")) || 30.411119,
-        lat: parseFloat(urlParams.get("game_bot_lat")) || 59.940555,
-        azimuth: 0,
-        speed: 0,
-        accuracy: 1
-      },
-      battery: {
-        level: 1
-      },
-      movement: {
-        status: "stopped",
-        stoppedAt: 1698728448409
-      }
-    }
-  };
+//   const profileStateGameBot = {
+//     type: "friendState",
+//     payload: {
+//       id: gameBotId,
+//       lastSeen: Date.now() * 1000,
+//       location: {
+//         lon: parseFloat(urlParams.get("game_bot_lon")) || 30.411119,
+//         lat: parseFloat(urlParams.get("game_bot_lat")) || 59.940555,
+//         azimuth: 0,
+//         speed: 0,
+//         accuracy: 1
+//       },
+//       battery: {
+//         level: 1
+//       },
+//       movement: {
+//         status: "stopped",
+//         stoppedAt: 1698728448409
+//       }
+//     }
+//   };
 
  
-  addProfile(profileBot, true);
-  processMessage(profileStateGameBot);
+//   addProfile(profileBot, true);
+//   processMessage(profileStateGameBot);
 
   
-}
+// }
 
 var CODEFEST_BOTS_STARTED = false;
 
@@ -3723,7 +3742,7 @@ function bestSpawnRandomSticker() {
   BEST_GAME_CURRENT_ROUND++;
 
   const bounds = map.getBounds();
-  const center = globalMarkers['gamebot'].getCoordinates(); // @codefest bot center
+  const center = globalMarkers[BEST_GAME_PUBLIC_USER_ID].getCoordinates(); // @codefest bot center
 
   const container = document.getElementById("container");
   
