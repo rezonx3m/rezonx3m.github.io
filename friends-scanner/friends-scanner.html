@@ -199,7 +199,8 @@
         function setResult(result) {
             if (!POPUP_SHOWED == true) {
                 console.log(result.data); 
-                const regexp = /\/user\/([a-z0-9]+)/g;
+                //const regexp = /\/user\/([a-z0-9]+)/g; // было 
+                const regexp = /\/user\/(.+)/g; // 
                 var res = "";
                 for (const match of result.data.matchAll(regexp)) {
                     res = match[1];
