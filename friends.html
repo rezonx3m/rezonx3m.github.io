@@ -3086,8 +3086,9 @@ function startSceneGame() {
           alert("Не найден пользователь " + BEST_GAME_PUBLIC_USER_ID + ". Возможно передан некорректный access_token или game_public_user_id");
         } else if (BEST_GAME_INFO_RENDERED == false) {
           BEST_GAME_INFO_RENDERED = true;
-          console.log('setup. connected');
-          console.log(globalProfiles[BEST_GAME_PUBLIC_USER_ID]);
+          if (DEBUG) {
+            console.log('setup. connected');
+          }
           const BEST_GAME_BOT_AVA = globalProfiles[BEST_GAME_PUBLIC_USER_ID].logoTpl.replace('{width}', '96').replace('{height}', '96');
           const avatarElement = document.getElementById("game-bot-launch-info-avatar");
           avatarElement.style.backgroundImage = "url('" + BEST_GAME_BOT_AVA + "')"
@@ -3113,7 +3114,9 @@ function startSceneGame() {
           
         }
       } else {
-        console.log('setup. not connected');
+        if (DEBUG) {
+          console.log('setup. not connected');
+        }
       }
     }
 
