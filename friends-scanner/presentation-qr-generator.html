@@ -3,19 +3,21 @@
 	<head>
 		<meta charset="UTF-8" />
 		<script src="https://rezonx3m.github.io/landing/friends-scripts.js"></script>
+		<script src="https://github.com/niklasvh/html2canvas/releases/download/0.4.1/html2canvas.js"></script>
+		<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
 		<script>
 			function renderLink() {
 				const name = document.getElementById('name').value;
-				const href = "https://2gis.ru/user/" + name;
+				const href = "/user/" + name;
 
 				
 				
           		const QRemelemt = document.getElementById("qr");
           		QRemelemt.innerHTML = "";
             	var qrcode = new QRCode(QRemelemt, {
-              		width : QRemelemt.clientWidth,
-              		height : QRemelemt.clientWidth, // не ошибка, рисуем квадратик
+              		width : 300,
+              		height : 300, // не ошибка, рисуем квадратик
             	});
             	
             	qrcode.makeCode(href);
@@ -23,16 +25,26 @@
 				
 			}
 
+		
+
 
 
 		</script>
 
 		<style>
+				#qr-container {
+				  width: 360px;
+			      height: 360px;    
+			      min-width: 360px;
+			      min-height: 360px;
+			      background-color: #FEFEFE;
+				}
 			    #qr {
+			      padding: 30px 30px 30px 30px;
 			      width: 300px;
 			      height: 300px;    
-			      min-width: 300px;
-			      min-height: 300px;
+			      max-width: 300px;
+			      max-height: 300px;
 			    }
 
 			    .parent {
@@ -52,16 +64,41 @@
 
 	</head>
 	<body>
-		<div class="parent">
+		<div class="parent" id="parent">
 			<div class="child">
 				<label>Гость</label>
 				<input onkeyup="renderLink();" onchange="renderLink();" id="name" type="text"/>
 			
 				<br/>
 				<br/>
-				<div id="qr">
+				<div id="qr-container">
+					<div id="qr"></div>
 				</div>
+				<br/>
+				<br/>
+				<button id="toImage">
+					Сохранить
+				</button>
 			</div>
+			
 		</div>
+		
+		
+
+		
+		<script type="text/javascript">
+				$(function() { 
+			    $("#toImage").click(function() { 
+			        html2canvas($("#qr-container"), {
+			            onrendered: function(canvas) {
+			                var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); 
+							window.location.href=image;
+			            }
+			        });
+			    });
+			}); 
+
+
+		</script>
 	</body>
 </html>
