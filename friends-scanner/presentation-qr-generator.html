@@ -4,15 +4,21 @@
 		<meta charset="UTF-8" />
 		<script src="https://rezonx3m.github.io/landing/friends-scripts.js"></script>
 		<script src="https://github.com/niklasvh/html2canvas/releases/download/0.4.1/html2canvas.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
+
 		<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
 		<script>
+
+			const urlParams = new URLSearchParams(window.location.search);
+			const salt = urlParams.get("salt") || "salt";
+
 			function renderLink() {
 				const name = document.getElementById('name').value;
-				const href = "/user/" + name;
+				const hash = CryptoJS.MD5(name + salt);	
+				const href = "/" + hash.toString().slice(0,2) + "/" + name;
 
-				
-				
           		const QRemelemt = document.getElementById("qr");
           		QRemelemt.innerHTML = "";
             	var qrcode = new QRCode(QRemelemt, {
