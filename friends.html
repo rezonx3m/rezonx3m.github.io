@@ -1289,6 +1289,7 @@ const SUPPORTED_EMOJI_FOR_GAME = [
 
 var BEST_GAME_CURRENT_ID = null;
 var BEST_GAME_PUBLIC_USER_ID = urlParams.get("game_public_user_id");
+var BEST_GAME_PUBLIC_USER_CACHE_COORDINATES = null;
 var BEST_GAME_INFO_RENDERED = false;
 var BEST_GAME_STAND = BEST_GAME_PUBLIC_USER_ID;
 var BEST_GAME_TIME_STARTED = null;
@@ -1634,6 +1635,7 @@ function initSocket(id) {
   clearInterval(reconnectTimerId);
 
   ws.onopen = function () {
+    console.log("ws opened");
     // чистимся от греха подальше, так как в коннекте прилетит инит
     clearAll();
     // отправка баундов, чтобы слежение было во вьюпорте
@@ -3085,6 +3087,15 @@ function startSceneGame() {
         if (!globalProfiles.hasOwnProperty(BEST_GAME_PUBLIC_USER_ID)) {
           alert("Не найден пользователь " + BEST_GAME_PUBLIC_USER_ID + ". Возможно передан некорректный access_token или game_public_user_id");
         } else if (BEST_GAME_INFO_RENDERED == false) {
+
+          if (BEST_GAME_PUBLIC_USER_CACHE_COORDINATES === null) {
+            if (globalMarkers.hasOwnProperty(BEST_GAME_PUBLIC_USER_ID)) {
+              BEST_GAME_PUBLIC_USER_CACHE_COORDINATES = globalMarkers[BEST_GAME_PUBLIC_USER_ID].getCoordinates();
+            } else {
+              window.location.reload();
+            }
+          }
+          
           BEST_GAME_INFO_RENDERED = true;
           if (DEBUG) {
             console.log('setup. connected');
@@ -3747,7 +3758,8 @@ function bestSpawnRandomSticker() {
   BEST_GAME_CURRENT_ROUND++;
 
   const bounds = map.getBounds();
-  const center = globalMarkers[BEST_GAME_PUBLIC_USER_ID].getCoordinates(); // @codefest bot center
+
+  const center = BEST_GAME_PUBLIC_USER_CACHE_COORDINATES;
 
   const container = document.getElementById("container");
   
@@ -3843,7 +3855,7 @@ function bestSendResultsToBE(results) {
     contentType : 'application/json',
     type : 'POST',
     success: function () {
-        bestGameSuccessFinished();
+  bestGameSuccessFinished();
     },
     error: function (error) {
       console.log(error);
