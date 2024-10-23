@@ -51,6 +51,9 @@
 		<button class="btn-new" id="btn-onboarding-two">Перейти на dgis://2gis.ru/mapfriends/contest</button>
 	    </br>
 	    </br>
+		<button class="btn-new" id="btn-onboarding-three">Перейти на dgis://2gis.ru/mapfriends/contest?skip_onboarding=true&utm_source=other&utm_campaign=friends_promo_smm_contest_1024</button>
+	    </br>
+	    </br>
 		<button class="btn-new" id="btn-go-to-search-eat">Перейти на dgis://2gis.ru/search/%D0%9F%D0%BE%D0%B5%D1%81%D1%82%D1%8C (поесть)</button>
 		</br>
 	    </br>
@@ -66,6 +69,11 @@
 
 			var clickButtonOnboardingTwo = function(e) {
 			  window.open('dgis://2gis.ru/mapfriends/contest', "_self");
+			};
+
+
+			var clickButtonOnboardingThree = function(e) {
+			  window.open('dgis://2gis.ru/mapfriends/contest?skip_onboarding=true&utm_source=other&utm_campaign=friends_promo_smm_contest_1024', "_self");
 			};
 
 			var clickButtonEatSearch = function(e) {
@@ -87,6 +95,9 @@
 
 			var buttonOnboardingTwo = document.getElementById("btn-onboarding-two");
 			buttonOnboardingTwo.addEventListener('click', clickButtonOnboardingTwo, false);
+
+			var buttonOnboardingThree = document.getElementById("btn-onboarding-three");
+			buttonOnboardingThree.addEventListener('click', clickButtonOnboardingTwo, false);
 
 			var buttonEat = document.getElementById("btn-go-to-search-eat");
 			buttonEat.addEventListener('click', clickButtonEatSearch, false);
