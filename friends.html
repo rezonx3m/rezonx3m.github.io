@@ -1013,12 +1013,14 @@
         <button id="connect-button" onClick="connectButtonClick();">connect</button>
         <button disabled id="connect-status">disconnected</button>
       </div>
+      <!-- wft?
       <div class="test-buttons-line">
         <div id="div-id-follow"> </div>
         <input id="input-follow-id" size="10" placeholder="public-user-id" />
 
         <button id="input-follow-id-button" onClick="mapToUser();">mapToUser</button>
       </div>
+      -->
       <div id="test-buttons">
         <div class="test-buttons-line">
           <button onClick="testMove();">random move</button>
@@ -1030,7 +1032,7 @@
           </div>
           <div class="test-buttons-line">
             <!-- <button onClick="startScene2fest();">2fest scene</button> -->
-            <button onClick="startScenePort();">port</button>
+            <!--  <button onClick="startScenePort();">port</button> -->
           </div>
         </div>
       </div>
@@ -2941,12 +2943,14 @@ function waitForElement(querySelector, timeout) {
   });
 }
 
-function mapToUser(id) {
-  goMapCenterToId(document.getElementById("input-follow-id").value);
-}
+// function mapToUser(id) {
+//   goMapCenterToId(document.getElementById("input-follow-id").value);
+// }
 
 function goMapCenterToId(id) {
-  map.setCenter(globalMarkers[id].getCoordinates());
+  if (globalMarkers.hasOwnProperty(id)) {
+    map.setCenter(globalMarkers[id].getCoordinates());
+  }
 }
 
 // ------------------------------------ prewarm ------------------------------- //
