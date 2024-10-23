@@ -676,8 +676,8 @@
       max-height: 95%;
 
       
-      max-width: 350px;
-      width: 350px;
+      max-width: 365px;
+      width: 365px;
       background: #eeeeee;
     }
 
@@ -711,6 +711,7 @@
       margin: auto;
       text-align: center;
       border-collapse: collapse;
+      width: 100%;
 
     }
 
@@ -1090,6 +1091,7 @@ const getParamDebugMarkers = urlParams.get("debug_markers");
 const getParamDebug = urlParams.get("debug");
 const getParamDebugGame = urlParams.get("debug_game");
 const getParamUserId = urlParams.get("user_id");
+var CURRENT_USER_ID = null;
 const getParamAccessToken = urlParams.get("access_token");
 const getParamScene = urlParams.get("scene");
 const getParamSendBounds = urlParams.get("send_bounds");
@@ -1432,6 +1434,7 @@ window.addEventListener("resize", () => map.invalidateSize());
 var globalProfiles = {};
 var globalMarkers = {};
 var globalStates = {};
+var globalProfilesByDebugApi = {};
 
 var globalWS = null;
 // поправочный коэффциент на вращение карты, чтобы огонь и аватарки были правильно повернуты
@@ -1511,6 +1514,7 @@ function setConnectionState(state) {
 // нажатие в кнопку коннекта
 function connectButtonClick() {
   const userId = document.getElementById("input-id").value;
+  CURRENT_USER_ID = userId;
   if (userId.length > 0) {
     if (!isConnected) {
       hideVisibilityTestButtons(true);
@@ -1614,6 +1618,7 @@ function sendStickerToUser(ws, friendId, emoji) {
 // уничтожение всех данных
 function clearAll() {
   globalProfiles = {};
+  globalProfilesByDebugApi = {};
   for (const id in globalMarkers) {
     removeMarker(id);
   }
@@ -1694,6 +1699,9 @@ function processMessage(msg) {
           globalWS.close();
         }
       }, 1000);
+      if (getParamShowFriendsList === "true") {
+        refreshFriendsList();
+      }
       break;
 
     case "friendState":
@@ -1790,12 +1798,48 @@ function addProfile(profile, isInit = false) {
     }
   }
 
-  if (getParamShowFriendsList === "true" || DEBUG) {
+  if (!isInit && (getParamShowFriendsList === "true")) {
     refreshFriendsList();
   }
 }
 
+function clickInFriendsList(id) {
+  goMapCenterToId(id);
+  if (globalProfilesByDebugApi.hasOwnProperty(id)) {
+    const authUserId = globalProfilesByDebugApi[id].authUserId;
+    $.getJSON( `https://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/${authUserId}/state`, function( json ) {
+      var flag = false;
+      for(var k in json.visibilities) {
+        if (k == CURRENT_USER_ID) {
+          flag = true;
+          break;
+        }
+      }
+      if (flag == false ) {
+        alert(`Пользователь ${id} не ограничил видимость для пользователя ${CURRENT_USER_ID}`);
+      } else {
+        const vilibility = JSON.stringify(json.visibilities[k]);
+        alert(`Пользователь ${id} ограничил видимость для пользователя ${CURRENT_USER_ID}. ${vilibility}`);
+      }
+    });
+  }
+}
+
+function setGlobalProfilesByDebugApi(json) {
+  globalProfilesByDebugApi = {};
+  for(var k in json) {
+    globalProfilesByDebugApi[json[k].id] = json[k];
+  }
+  
+}
+
 function refreshFriendsList() {
+  if (CURRENT_USER_ID !== null) {
+    $.getJSON( `https://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/${CURRENT_USER_ID}/ugc-friends`, function( json ) {
+      setGlobalProfilesByDebugApi(json);
+    });
+  }
+
   const friendsListDiv = document.getElementById("friends-list");
   var tableContent = '<table class="friends-table">';
   for (const id in globalProfiles) {
@@ -1807,7 +1851,7 @@ function refreshFriendsList() {
     if (backgroundImage === null) {
       acronym = getAcronymFromName(name);
     }
-    tableContent += "<tr>";
+    tableContent += `<tr id='friend-list-${id}' onclick="clickInFriendsList('${id}')">`;
     tableContent += "<td>";
     tableContent += `<div class="friend">
                            <div class="friend-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>`;
@@ -3095,7 +3139,7 @@ function startSceneGame() {
               window.location.reload();
             }
           }
-          
+
           BEST_GAME_INFO_RENDERED = true;
           if (DEBUG) {
             console.log('setup. connected');
@@ -3841,7 +3885,7 @@ function bestFinishGame() {
 }
 
 function bestSendResultsToBE(results) {
-  //results.forEach((element) => element.ava_path = globalProfiles[element.id].logo);
+  // results.forEach((element) => element.ava_path = globalProfiles[element.id].logo);
   // globalProfiles[id].logo
   json = {
     stand: BEST_GAME_STAND,
@@ -3855,7 +3899,7 @@ function bestSendResultsToBE(results) {
     contentType : 'application/json',
     type : 'POST',
     success: function () {
-  bestGameSuccessFinished();
+        bestGameSuccessFinished();
     },
     error: function (error) {
       console.log(error);
