@@ -17,7 +17,7 @@
 			function renderLink() {
 				const name = document.getElementById('name').value;
 				const hash = CryptoJS.MD5(name + salt);	
-				const href = "/" + hash.toString().slice(0,2) + "/" + name;
+				const href = "https://go.2gis.com/mpq4n#/" + hash.toString().slice(0,2) + "/" + name;
 
           		const QRemelemt = document.getElementById("qr");
           		QRemelemt.innerHTML = "";
