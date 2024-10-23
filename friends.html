@@ -1818,10 +1818,10 @@ function clickInFriendsList(id) {
         }
       }
       if (flag == false ) {
-        alert(`Пользователь ${id} не ограничил видимость для пользователя ${CURRENT_USER_ID}`);
+        alert(`Пользователь ${authUserId} не ограничил видимость для пользователя ${CURRENT_USER_ID}`);
       } else {
         const vilibility = JSON.stringify(json.visibilities[k]);
-        alert(`Пользователь ${id} ограничил видимость для пользователя ${CURRENT_USER_ID}. ${vilibility}`);
+        alert(`Пользователь ${authUserId} ограничил видимость для пользователя ${CURRENT_USER_ID}. ${vilibility}`);
       }
     });
   }
