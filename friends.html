@@ -722,6 +722,47 @@
     }
 
 
+    #friend-qr-block {
+      width: 350px;
+      height: 310px;
+      position: absolute; 
+      right: 0;
+      bottom: 0px;
+      left: 0;
+      margin: auto;
+      opacity: 0.9;
+      text-align: center;   
+      line-height: 80%;
+      font-family: "SB Sans Display Semibold";
+      font-size: 36px;
+      display: none;
+    }
+
+    #friend-qr-block p {
+      
+    }
+
+    #friend-qr {
+      position: absolute; 
+      background-color: white;
+      
+      border-radius: 20px;
+    
+      box-shadow: 0px 2px 4px 0px #00000014;
+      opacity: 0.9;
+      width: 200px;
+      heigth: 200px;
+      min-width: 182px;
+      min-height: 182px;
+      right: 0;
+      left: 0;
+      margin: auto;
+      padding-top: 20px;
+    }
+
+
+
+
     /* styles for best time game */
 
     #best-leader-board {
@@ -1080,6 +1121,12 @@
       <div id=best-game-launch-info-qr></div>
     </div>
 
+    <div id="friend-qr-block">
+      Добавь себя</br>на карту</br></br>
+      <div id="friend-qr">
+      </div>
+    </div>
+
     <div class="best-timer">
       <div class="best-timer-progress"></div>
       <p class="best-timer-text" id="best-timer-text"></p>
@@ -1112,6 +1159,9 @@ const getParamMapZoom = urlParams.get("map_zoom");
 const getParamMapPitch = urlParams.get("map_pitch");
 const getParamMapRotation = urlParams.get("map_rotation");
 const getParamMapScenario = urlParams.get("map_scenario");
+
+
+const getParamShowFriendQr = urlParams.get("show_friend_qr");
 
 const maxMarkersCount = getParamMaxMarkersCount ? Number(getParamMaxMarkersCount) : null;
 var markersLimitArray = [];
@@ -1292,7 +1342,7 @@ const SUPPORTED_EMOJI_FOR_GAME = [
 // params for game best time send sticker
 
 var BEST_GAME_CURRENT_ID = null;
-var BEST_GAME_PUBLIC_USER_ID = urlParams.get("game_public_user_id");
+var BEST_GAME_PUBLIC_USER_ID = urlParams.get("game_public_user_id"); // отрефакторить и сделать просто параметр getParamUserId везде (в том числе в конфвлюенсе)
 var BEST_GAME_PUBLIC_USER_CACHE_COORDINATES = null;
 var BEST_GAME_INFO_RENDERED = false;
 var BEST_GAME_STAND = BEST_GAME_PUBLIC_USER_ID;
@@ -1458,15 +1508,10 @@ if (DEBUG) {
   hideVisibilityTestButtons(false);
 }
 
-if (getParamUserId !== null) {
-  document.getElementById("input-id").value = getParamUserId;
-  connectButtonClick();
-}
-
-
-if (getParamAccessToken && getParamScene != 'game') { // @todo разобраться, когда вообще custom scene надо стартовать
-  startSceneCustom();
-}
+// if (getParamUserId !== null) {
+//   document.getElementById("input-id").value = getParamUserId;
+//   connectButtonClick();
+// }
 
 // скрытие кнопок дле тестов
 function hideVisibilityTestButtons(hide) {
@@ -1584,7 +1629,7 @@ function sendStickerToAll(emoji) {
             console.log(error);
             //@todo make error on display
           }
-      })
+        })
     }
     overlay.classList.remove("show");
   }
@@ -3220,13 +3265,26 @@ function startSceneGame() {
 }
 
 function startSceneCustom() {
+
+
   currentScene = "custom";
   //OVERRIDED_ZOOM = 100;
-  document.getElementById("input-id").value = "custom";
+  document.getElementById("input-id").value = getParamUserId;
+
+  if (getParamShowFriendQr) {
+    document.getElementById('friend-qr-block').style.display = "block";
+    const QRemelemt = document.getElementById("friend-qr");
+    var qrcode = new QRCode(QRemelemt, {
+      width : QRemelemt.clientWidth - 20,
+      height : QRemelemt.clientWidth - 20, // не ошибка, рисуем квадратик
+    });
+    const gameQRLink = "https://2gis.ru/user/" + getParamUserId; 
+    qrcode.makeCode(gameQRLink);
+  }
+
 
   SOCKET_PATH =
     "wss://zond.api.2gis.ru/api/1.1/user/ws?token=" + getParamAccessToken + "&channes=markers,stickers";
-
   
   connectButtonClick();
   document.getElementById("input-id").style.display = "none";
@@ -3239,6 +3297,8 @@ function startSceneCustom() {
   map.setPitch(0);
   map.setRotation(0);
 
+  
+
 
 
   function scenarioForCustom() {
@@ -3248,7 +3308,7 @@ function startSceneCustom() {
         duration: 20000,
         zoomEasing: 'easeOutCubic',
         centerEasing: 'easeOutCubic',
-        zoom: 18.5,
+        zoom: 19.5,
         pitch: 30,
         rotation: 0,
       },
@@ -3256,7 +3316,7 @@ function startSceneCustom() {
         duration: 15000,
         zoomEasing: 'easeOutCubic',
         centerEasing: 'easeOutCubic',
-        zoom: 16,
+        zoom: 17,
         pitch: 45,
         rotation: 181,
       },
@@ -3264,7 +3324,7 @@ function startSceneCustom() {
         duration: 15000,
         zoomEasing: 'easeOutCubic',
         centerEasing: 'easeOutCubic',
-        zoom: 18.5,
+        zoom: 19,
         pitch: 30,
         rotation: 0,
         
@@ -3273,7 +3333,7 @@ function startSceneCustom() {
         duration: 10000,
         zoomEasing: 'easeOutCubic',
         centerEasing: 'easeOutCubic',
-        zoom: 10,
+        zoom: 11,
         rotation: 0,
         pitch: 10,
       }]);
