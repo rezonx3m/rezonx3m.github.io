@@ -11,6 +11,7 @@
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://rezonx3m.github.io/friends/static/lottie-friends.js"></script>
   <!--  <script src="https://d-assets.2gis.ru/vendor.48c43c73384d52df9da5.js"></script> -->
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
@@ -654,7 +655,7 @@
 
 
 
-    .center-lottie-player {
+    #center-lottie-player {
       position: absolute;
       top: 50%;
       padding: 10px;
@@ -662,6 +663,9 @@
       left: 10%;
       right: 10%;
       transform: translateY(-50%);
+      width: 800px;
+      height: 800px;
+      display: none;
     }
 
     #stickers-list {
@@ -745,43 +749,43 @@
 
 
     #friend-qr-block {
-      width: 350px;
-      height: 300px;
+      width: 286px;
+      height: 356px;
       position: absolute; 
-      right: 0;
+      top:0;
       bottom: 0px;
       left: 0;
       margin: auto;
       opacity: 0.9;
-      text-align: center;   
-      line-height: 90%;
+
+
+      line-height: 32px;
       font-family: "SB Sans Display Semibold";
-      font-size: 36px;
+      font-size: 38px;
       display: none;
+      background-color: white; 
+      border-top-right-radius: 24px;
+      border-bottom-right-radius: 24px;
+      box-shadow: 0px 2px 4px 0px #00000014;
+      padding-left: 32px;
+      padding-top: 10px;
+
     }
 
     #friend-qr-block p {
       font-family: "SB Sans Display Semibold";
+      margin-top: 16px;
+      margin-bottom: 20px;
     }
 
     #friend-qr {
       position: absolute; 
-      background-color: white; 
-      border-radius: 20px;
-      box-shadow: 0px 2px 4px 0px #00000014;
-      opacity: 0.9;
-      width: 200px;
-      heigth: 200px;
-      min-width: 182px;
-      min-height: 182px;
-      right: 0;
-      left: 0;
-      margin: auto;
-      padding-top: 20px;
+      width: 164px;
+      heigth: 164px;
+      min-width: 164px;
+      min-height: 164px;
+      margin: auto;  
     }
-
-
-
 
     /* styles for best time game */
 
@@ -1142,7 +1146,7 @@
     </div>
 
     <div id="friend-qr-block">
-      <p style="margin: 0px 0px 20px 0px;">Добавь себя</br>на карту</p>
+      <p>Добавьте</br>себя на карту</br>и получите</br>подарок</p>
       <div id="friend-qr">
       </div>
     </div>
@@ -1151,10 +1155,28 @@
       <div class="best-timer-progress"></div>
       <p class="best-timer-text" id="best-timer-text"></p>
     </div>
+
+    
   </div>
+  <div id="center-lottie-player">
+        <lottie-player id="lottie-player-new-friend" mode="normal" style="width: 100%">
+        </lottie-player>
+    </div>
+  <canvas id="canvas-cropper" style="display: none; width: 300px; height: 300px; position: absolute;"></canvas>
 </body>
 
 <script type="text/javascript">
+
+const lottiePlayerContainer = document.getElementById("center-lottie-player");
+const playerNewFriend = document.getElementById("lottie-player-new-friend");
+var centerLottiePlayerInUse = false;
+
+SHOW_ANIMATION_NEW_FRIEND = false;
+
+
+
+
+
 const urlParams = new URLSearchParams(window.location.search);
 const getParamDebugMarkers = urlParams.get("debug_markers");
 const getParamDebug = urlParams.get("debug");
@@ -1875,6 +1897,10 @@ function addProfile(profile, isInit = false) {
 
   if (!isInit && (getParamShowFriendsList === "true")) {
     refreshFriendsList();
+  }
+
+  if (SHOW_ANIMATION_NEW_FRIEND === true) {
+    runNewPlayerAnimation(globalProfiles[key].logo)
   }
 }
 
@@ -4361,79 +4387,76 @@ if (DEBUG) {
 //   return canvas;
 // }
 
-// function cropImage(base64) {
-//   var canvas = document.getElementById("canvas");
-//   var ctx = canvas.getContext("2d");
-//   var cw = canvas.width;
-//   var ch = canvas.height;
+function cropImageAndRunAnimation(url = null) {
+  centerLottiePlayerInUse = true;
+  var canvas = document.getElementById("canvas-cropper");
+  var ctx = canvas.getContext("2d");
 
-//   var img = new Image();
-//   img.onload = start;
-//   img.src = url;
-//   function start() {
-//     var cw, ch;
-//     cw = canvas.width = img.width;
-//     ch = canvas.height = img.height;
-//     ctx.drawImage(img, 0, 0);
-//     ctx.globalCompositeOperation = "destination-in";
-//     ctx.beginPath();
-//     ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2);
-//     ctx.closePath();
-//     ctx.fill();
-//     const dataURL = canvas.toDataURL();
-//     console.log(dataURL);
-//   }
-// }
+  function hidePlayer() {
+    lottiePlayerContainer.style.display = "none";
+    centerLottiePlayerInUse = false;
+  }
 
-// function showBase64Image(base64) {
-//   console.log(base64);
-// }
+  function startWithoutUrl() {
+    //console.log(dataURL);
+    
+    playerNewFriend.load(lottieNewFriends);
+    playerNewFriend.seek(0);
+    playerNewFriend.play();
+    function hidePlayer() {
+      lottiePlayerContainer.style.display = "none";
+      centerLottiePlayerInUse = false;
+    }
+    setTimeout(hidePlayer, 4200);
+  }
 
-// function loadImage(url) {
-//   let _img = document.getElementById("img-loader");
-//   let newImg = new Image();
-//   newImg.onload = function () {
-//     _img.src = this.src;
-//     const image = _img;
+  function startWithUrl() {
+    var cw, ch;
+    cw = canvas.width = img.width;
+    ch = canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    ctx.globalCompositeOperation = "destination-in";
+    ctx.beginPath();
+    ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+    //console.log(canvas);
+    const dataURL = canvas.toDataURL("image/png");
+    //console.log(dataURL);
+    var clone = JSON.parse(JSON.stringify(lottieNewFriends));
+    clone.assets[1].p = dataURL;
+    playerNewFriend.load(clone);
+    playerNewFriend.seek(0);
+    playerNewFriend.play();
+    function hidePlayer() {
+      lottiePlayerContainer.style.display = "none";
+      centerLottiePlayerInUse = false;
+    }
+    setTimeout(hidePlayer, 4200);
+  }
 
-//     // Get the remote image as a Blob with the fetch API
-//     fetch(_img.src)
-//       .then((res) => res.blob())
-//       .then((blob) => {
-//         // Read the Blob as DataURL using the FileReader API
-//         const reader = new FileReader();
-//         reader.onloadend = () => {
-//           console.log(reader.result);
-//           // Logs data:image/jpeg;base64,wL2dvYWwgbW9yZ...
+  if (url !== null) {
+    var img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = startWithUrl;
+    img.src = url;
+  } else {
+    startWithoutUrl();
+  }
+  
+}
 
-//           // Convert to Base64 string
-//           const base64 = getBase64StringFromDataURL(reader.result);
-//           console.log(base64);
-//           // Logs wL2dvYWwgbW9yZ...
-//         };
-//         reader.readAsDataURL(blob);
-//       });
-//     //cropImage(url);
-//   };
-//   newImg.src = url;
-// }
+function runNewPlayerAnimation(avaUrl) {
+  if (centerLottiePlayerInUse == false) {
+    lottiePlayerContainer.style.display = "block";
+    cropImageAndRunAnimation(avaUrl);
+  }
+}
 
-// const getBase64StringFromDataURL = (dataURL) =>
-//   dataURL.replace("data:", "").replace(/^.+,/, "");
-
-//loadImage("https://i6.photo.2gis.com/images/profile/844424941320896_ebbb.jpg");
+//runNewPlayerAnimation(null);
+//runNewPlayerAnimation("https://i5.photo.2gis.com/images/profile/30258560205114664_a8b6_300x300.jpg");
 
 //  startSceneZEM();
-
-// $.ajax("https://offline-zond.api.2gis.com/codefest/post_results", {
-//     data : '"test":"bla"',
-//     contentType : 'application/json',
-//     type : 'POST'})
-
-
-// $.getJSON( "https://offline-zond.api.2gis.com/codefest/index", function( json ) {
-//   console.log( "JSON Data: " + json.message );
-//  });
 
 
 </script>
