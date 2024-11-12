@@ -1504,6 +1504,8 @@ map.on('floorplanshow', (e) => {
     map.setFloorPlanLevel(e.floorPlanId, floorLevelIndex);
 });
 
+map.patchStyleState({ immersiveRoadsOn: true });
+
 // фиксим рамер карты при ресайзе
 window.addEventListener("resize", () => map.invalidateSize());
 
