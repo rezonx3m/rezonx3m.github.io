@@ -1201,6 +1201,7 @@ const getParamMapZoom = urlParams.get("map_zoom");
 const getParamMapPitch = urlParams.get("map_pitch");
 const getParamMapRotation = urlParams.get("map_rotation");
 const getParamMapScenario = urlParams.get("map_scenario");
+const getParamMapStyle = urlParams.get("map_style") || "8f12233d-c016-443e-8301-0e0fcf61922d";
 
 
 const getParamShowFriendQr = urlParams.get("show_friend_qr");
@@ -1505,7 +1506,7 @@ const map = new mapgl.Map("container", {
   center: [mapLon, mapLat],
   zoom: mapZoom,
   key: "2a5f353b-5172-411f-b1a2-8ea58b3f290c",
-  style: "8f12233d-c016-443e-8301-0e0fcf61922d",
+  style: getParamMapStyle,
   floorsEnabled: true,
   minZoom: 2,
   maxZoom: 20,
