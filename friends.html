@@ -1204,6 +1204,10 @@ const getParamMapScenario = urlParams.get("map_scenario");
 const getParamMapStyle = urlParams.get("map_style") || "8f12233d-c016-443e-8301-0e0fcf61922d";
 
 
+// @todo костыль для презентации
+const getParamAddRandomToPoints = urlParams.get("add_random_to_points");
+const POINT_RANDOM_SHIFT = false || getParamAddRandomToPoints;
+
 const getParamShowFriendQr = urlParams.get("show_friend_qr");
 
 const maxMarkersCount = getParamMaxMarkersCount ? Number(getParamMaxMarkersCount) : null;
@@ -1985,6 +1989,12 @@ function removeMarker(id) {
   }
 }
 
+function hashCode(str) {
+  return str.split('').reduce((prevHash, currVal) =>
+    (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
+}
+
+
 function processState(state) {
   const id = state.id;
 
@@ -2003,8 +2013,16 @@ function processState(state) {
   }
 
   const lastSeen = state.lastSeen;
-  const lon = state.location.lon;
-  const lat = state.location.lat;
+
+  // @todo костыль для презентации
+  var randomShiftLon = randomShiftLat = 0;
+  if (POINT_RANDOM_SHIFT && id !== getParamUserId) {
+    randomShiftLon = Math.abs(hashCode(globalProfiles[id].name) / 10000000000000 * 5);
+    randomShiftLat = hashCode(globalProfiles[id].name) / 10000000000000 * 2;
+  }
+  
+  const lon = state.location.lon + randomShiftLon ;
+  const lat = state.location.lat + randomShiftLat;
   // первое вхождение на карту
   const isInit = !globalStates.hasOwnProperty(id);
 
