@@ -9,8 +9,8 @@
 
   <!-- <script src="https://unpkg.com/mapgl-snow"></script> -->
   <script src="https://mapgl.2gis.com/api/js/v1"></script>
-  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://rezonx3m.github.io/friends/static/players/dotlottie-player.mjs" type="module"></script>
+  <script src="https://rezonx3m.github.io/friends/static/players/lottie-player.js"></script>
   <script src="https://rezonx3m.github.io/friends/static/lottie-friends.js"></script>
   <!--  <script src="https://d-assets.2gis.ru/vendor.48c43c73384d52df9da5.js"></script> -->
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
@@ -1411,6 +1411,9 @@ const BEST_SHOW_RULES_TIMER = 30000; // 30000
 const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
 const BEST_GAME_ONE_ROUND_DURATION = 5; // change with best-emoji-marker-sticke
 const BEST_TIMER = document.querySelector('.best-timer');
+
+document.getElementById("global").style.maxWidth = urlParams.get("screen_width") || "100%";
+document.getElementById("global").style.maxHeight = urlParams.get("screen_height") || "100%";
 
 
 const BEST_AWAINING_NAMES = [
@@ -3220,8 +3223,6 @@ function startSceneGame() {
   document.getElementById("input-id").style.display = "none";
   document.getElementById("connect-button").style.display = "none";
 
-  document.getElementById("global").style.maxWidth = urlParams.get("screen_width") || "100%";
-  document.getElementById("global").style.maxHeight = urlParams.get("screen_height") || "100%";
 
   var gameStarted = false;
   var positionSelected = false;
@@ -3333,9 +3334,6 @@ function startSceneCustom() {
   ENABLE_STICKERS = true;
   ENABLE_MARK_STICKERS_AS_VIEWED = true;
   FORCE_RECONNECT_IF_NO_STICKERS = true;
-
-  document.getElementById("global").style.maxWidth = urlParams.get("screen_width") || "100%";
-  document.getElementById("global").style.maxHeight = urlParams.get("screen_height") || "100%";
 
   currentScene = "custom";
   //OVERRIDED_ZOOM = 100;
@@ -4466,8 +4464,8 @@ function runNewPlayerAnimation(avaUrl) {
   }
 }
 
-//runNewPlayerAnimation(null);
-//runNewPlayerAnimation("https://i5.photo.2gis.com/images/profile/30258560205114664_a8b6_300x300.jpg");
+// runNewPlayerAnimation(null);
+// runNewPlayerAnimation("https://i5.photo.2gis.com/images/profile/30258560205114664_a8b6_300x300.jpg");
 
 //  startSceneZEM();
 
