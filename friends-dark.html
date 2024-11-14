@@ -1,0 +1,4481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no' />
+  <link rel="stylesheet" href="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.css">
+  <script defer src="https://rezonx3m.github.io/friends/static/simple-adaptive-slider.js"></script>
+
+  <!-- <script src="https://unpkg.com/mapgl-snow"></script> -->
+  <script src="https://mapgl.2gis.com/api/js/v1"></script>
+  <script src="https://rezonx3m.github.io/friends/static/players/dotlottie-player.mjs" type="module"></script>
+  <script src="https://rezonx3m.github.io/friends/static/players/lottie-player.js"></script>
+  <script src="https://rezonx3m.github.io/friends/static/lottie-friends.js"></script>
+  <!--  <script src="https://d-assets.2gis.ru/vendor.48c43c73384d52df9da5.js"></script> -->
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
+  <script src="https://rezonx3m.github.io/landing/friends-scripts.js"></script>
+
+  
+
+
+<style>
+
+    @font-face {
+      font-family: SB Sans Display Regular;
+      src: url("https://rezonx3m.github.io/friends/static/SBSansDisplay-Regular.otf") format("opentype");
+    }
+
+    @font-face {
+      font-family: SB Sans Display Semibold;
+      src: url("https://rezonx3m.github.io/friends/static/SBSansDisplay-SemiBold.otf") format("opentype");
+    }
+
+    
+
+    html,
+    body,
+    #container {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    * {
+      font-family: SB Sans Display Regular;
+    }
+
+    #main {
+      padding: 0px;
+      height: 100%;
+    }
+
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+
+    #connect-button {
+      width: 100px;
+    }
+
+    #connect-status {
+      background-color: #ff8f8f;
+      width: 100px;
+    }
+
+    #connect-indi {
+      background-color: #ff8f8f;
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 10px;
+    }
+
+    #test-buttons {
+      display: none;
+    }
+
+    .test-buttons-line {
+      padding-top: 3px;
+    }
+
+    .ava {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      /* border-radius: 0px; */
+      background-size: cover;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .ava-only-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fired-ava-container {
+      height: 32px;
+      width: 32px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      overflow: hidden;
+      position: absolute;
+      top: 24px;
+      left: 42px;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    .ava-container {
+      height: 32px;
+      width: 32px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      box-shadow: 0px 0px 2px 2px rgba(38, 38, 38, 0.5);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    .cluster-ava-container {
+      height: 32px;
+      width: 32px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      box-shadow: 0px 0px 4px 4px rgba(235, 87, 22, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+    .fire-marker-container {
+      transform-origin: 70% 50%;
+      transition-duration: 0.2s;
+      transition-property: transform;
+    }
+
+    @keyframes scale {
+      0% {
+        transform: scale(1);
+      }
+
+      5% {
+        transform: scale(1);
+      }
+
+      45% {
+        transform: scale(1.05);
+      }
+
+      55% {
+        transform: scale(1.05);
+      }
+
+      95% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .emoji-marker {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      min-height: 20px;
+      animation: emoji-scale 1s ease-in-out;
+      -webkit-animation: emoji-scale 1s ease-in-out;
+    }
+
+    @keyframes emoji-scale {
+      0% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+
+      70% {
+        transform: scale(5);
+        -webkit-transform: scale(5);
+      }
+
+      100% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+
+    .hidden-test-button {
+      display: none;
+    }
+
+    .emoji-fire {
+      background-image: url("https://cachizer1.2gis.com/common/8f10cf05-f9fd-467b-888b-ea9c38d48171.png?w=200&h=200");
+    }
+
+    .emoji-greenheart {
+      background-image: url("https://cachizer2.2gis.com/common/6085e54d-15f0-41c8-90c8-3257b2c1c03a.png?w=200&h=200");
+    }
+
+    .emoji-snowball {
+      background-image: url("https://cachizer1.2gis.com/common/07336686-7ecd-4f3d-afa8-925de33b6c62.png?w=200&h=200");
+    }
+
+    .emoji-poop {
+      background-image: url("https://cachizer2.2gis.com/common/ab98af20-0d27-4e4d-8555-82c0fa0fe8b8.png?w=200&h=200");
+    }
+
+    .emoji-wavinghand {
+      background-image: url("https://cachizer1.2gis.com/common/f3b8ac5d-1f67-44ff-b8c3-f6aceec3beb9.png?w=200&h=200");
+    }
+
+    .emoji-angry {
+      background-image: url("https://cachizer2.2gis.com/common/339d8ffa-735f-47c9-b557-5cf3a4f6abb1.png?w=200&h=200");
+    }
+
+    .emoji-eyes {
+      background-image: url("https://cachizer1.2gis.com/common/905959df-f128-4691-8686-dd9b11b9ce63.png?w=200&h=200");
+    }
+
+    .emoji-party {
+      background-image: url("https://cachizer3.2gis.com/common/7e392598-710c-4340-80cb-c0b3b47b6741.png?w=200&h=200");
+    }
+
+    .emoji-go {
+      background-image: url("https://cachizer3.2gis.com/common/466a8841-50d8-4b92-bea7-c280a693a25c.png?w=200&h=200");
+    }
+
+    .emoji-nav {
+      background-image: url("https://cachizer2.2gis.com/common/e213fd69-105d-441c-8fe9-426c42b39d7c.png?w=200&h=200");
+    }
+
+    .emoji-cupid {
+      background-image: url("https://cachizer1.2gis.com/common/f600e309-6d08-4ab9-a022-fc0857d6d5c1.png?w=200&h=200");
+    }
+
+    .emoji-lips {
+      background-image: url("https://cachizer3.2gis.com/common/64cb03c3-f4c9-44e8-a3b5-308785febde2.png?w=200&h=200");
+    }
+
+    .emoji-tulip {
+      background-image: url("https://cachizer1.2gis.com/common/2ffaef56-9f7d-4998-9505-2fa6a0db5a43.png?w=200&h=200");
+    }
+
+    .emoji-dyson {
+      background-image: url("https://cachizer3.2gis.com/common/a5fd7c24-0e53-4720-98a1-1120768dd4f8.png?w=200&h=200");
+    }
+
+    .emoji-koffee {
+      background-image: url("https://cachizer1.2gis.com/common/26cd2ec3-c16a-46fa-8c03-fc1a6162507f.png?w=200&h=200");
+    }
+
+    .emoji-hotdog {
+      background-image: url("https://cachizer3.2gis.com/achieves/8dc24faf-5f22-440b-b29e-4e3a5fc6a3d0.png?w=200&h=200");
+    }
+
+    .emoji-cake {
+      background-image: url("https://cachizer3.2gis.com/common/717d61dd-513c-46b4-aa42-7911cb01b7a1.png?w=200&h=200");
+    }
+
+    .emoji-kebab {
+      background-image: url("https://cachizer2.2gis.com/common/0d82a11e-9df7-44ee-abdf-713333564154.png?w=200&h=200");
+    }
+
+    .emoji-beer {
+      background-image: url("https://cachizer1.2gis.com/common/b006e22f-d8a7-43ff-a09c-8b89a2ce82b5.png?w=200&h=200");
+    }
+
+    .emoji-battery {
+      background-image: url("https://cachizer3.2gis.com/common/6ff114a3-ee18-4feb-9dfd-30dbec3db9b6.png?w=200&h=200");
+    }
+
+
+    .emoji-tea {
+      background-image: url("https://cachizer1.2gis.com/common/0da54b4a-6d38-4ea1-967c-4761abdcd45c.png?w=200&h=200");
+    }
+
+    .emoji-pumpkin {
+      background-image: url("https://cachizer1.2gis.com/common/61f91ef6-b685-440d-8ea9-c5d0daa7ede9.png?w=200&h=200");
+    }
+
+    .emoji-leaf {
+      background-image: url("https://cachizer2.2gis.com/common/a2495d65-21f4-4771-aa8e-3bdd550fd969.png?w=200&h=200");
+    }
+
+    .emoji-ball {
+      background-image: url("https://cachizer1.2gis.com/common/ce5d3287-5368-44a0-b958-d8154d8faf10.png?w=200&h=200");
+    }
+
+    .emoji-watermelon {
+      background-image: url("https://cachizer3.2gis.com/common/f2bb4ce0-6dbe-4cef-9d66-8d2e324e1f7c.png?w=200&h=200");
+    }
+
+    .emoji-balloons {
+      background-image: url("https://cachizer2.2gis.com/common/ed31a72f-5108-4c17-be77-89e6e22793db.png?w=200&h=200");
+    }
+
+
+    .emoji-popcorn {
+      background-image: url("https://cachizer2.2gis.com/common/e2719057-af03-4663-91a8-288dd03f9fbf.png?w=200&h=200");
+    }
+
+    .emoji-laughter {
+      background-image: url("https://cachizer3.2gis.com/common/cc78d2bc-b120-4aa6-a94a-6d3885907a5a.png?w=200&h=200");
+    }
+
+    .emoji-prayer {
+      background-image: url("https://cachizer3.2gis.com/common/562632d2-cae2-49ff-82c3-75818a8530d7.png?w=200&h=200");
+    }
+
+    .emoji-cry {
+      background-image: url("https://cachizer3.2gis.com/common/b972d98d-afdf-40e7-ad44-ca77de995a93.png?w=200&h=200");
+    }
+    .emoji-clown {
+      background-image: url("https://cachizer2.2gis.com/common/9ecdafce-c9ee-4e5a-95e9-f727f74e71f7.png?w=200&h=200");
+    }
+    .emoji-tomato {
+      background-image: url("https://cachizer2.2gis.com/common/af8e1b0c-e450-4b54-b493-b713f4822a4a.png?w=200&h=200");
+    }
+
+    .emoji-snail {
+      background-image: url("https://cachizer3.2gis.com/common/75d0400e-9fd6-4ef7-a441-2661fdd2b5d6.png?w=200&h=200");
+    }
+
+    .emoji-cocktail {
+      background-image: url("https://cachizer2.2gis.com/common/d5790e23-5c88-4024-9c2e-3ff2b98f70ff.png?w=200&h=200");
+    }
+
+    .emoji-cherry {
+      background-image: url("https://cachizer2.2gis.com/common/98d2f481-76f8-42ad-ab66-99f68f6c3f6a.png?w=200&h=200");
+    }
+
+    .emoji-koreanheart {
+      background-image: url("https://cachizer3.2gis.com/common/cf1a4925-e37d-4bcb-a3fe-e195e856f1d5.png?w=200&h=200");
+    }
+
+    .emoji-teddy {
+      background-image: url("https://cachizer1.2gis.com/common/e5b4c279-1ec6-4ae5-ae5f-b4a9ff4cf8df.png?w=200&h=200");
+    }
+    .emoji-lemon {
+      background-image: url("https://cachizer3.2gis.com/common/8edbb9e9-ec6e-4c6a-944a-a1dc67ed73de.png?w=200&h=200");
+    }
+    .emoji-kiss {
+      background-image: url("https://cachizer1.2gis.com/common/df490c09-5825-4635-ac85-7bd17368fe9f.png?w=200&h=200");
+    }
+
+
+    .emoji-space {
+      background-image: url("https://cachizer2.2gis.com/common/b59f87ad-874e-4069-b320-b635a7d73fac.png?w=200&h=200");
+    }
+    .emoji-bell {
+      background-image: url("https://cachizer3.2gis.com/common/b0cb21d1-d4b8-4c40-80f8-024709c80a25.png?w=200&h=200");
+    }
+    .emoji-dish {
+      background-image: url("https://cachizer2.2gis.com/common/2aa14e2c-fcb9-4481-80fd-7b04c0524a70.png?w=200&h=200");
+    }
+
+    .emoji-champagne {
+      background-image: url("https://cachizer1.2gis.com/common/33d89506-59bc-4af8-91af-3cbf43f6796d.png?w=200&h=200");
+    }
+
+    .emoji-matchatea {
+      background-image: url("https://cachizer3.2gis.com/common/fb4e6674-c436-461c-bad9-d2c879561367.png?w=200&h=200");
+    }
+
+    .emoji-zucchini {
+      background-image: url("https://cachizer3.2gis.com/common/22a6302e-1e30-4cdb-b7c4-a96bb0834cc2.png?w=200&h=200");
+    }
+    .emoji-umbrella {
+      background-image: url("https://cachizer1.2gis.com/common/ae56349b-eeba-4861-9abe-5b5047d71860.png?w=200&h=200");
+    }
+
+
+
+    .emoji-mittens {
+      background-image: url("https://cachizer3.2gis.com/common/ba240dad-8cf6-43a9-952f-e9d4da28ac03.png?w=200&h=200");
+    }
+
+    .emoji-puck {
+      background-image: url("https://cachizer2.2gis.com/common/b886cf78-c2a9-4235-9435-7879849440c7.png?w=200&h=200");
+    }
+
+    .emoji-pine {
+      background-image: url("https://cachizer3.2gis.com/common/cb827001-5d76-4530-8f69-e710ef88e352.png?w=200&h=200");
+    }
+
+    .emoji-kuper_ok {
+      background-image: url("https://cachizer2.2gis.com/common/4a8662d8-45bd-492b-9b6a-8223fe7991c4.png?w=200&h=200");
+    }
+
+    .emoji-ghost {
+      background-image: url("https://cachizer2.2gis.com/common/30d719aa-a934-4675-9373-42319f36243f.png?w=200&h=200");
+    }
+
+
+
+
+
+/* sliders */
+
+    .itcss_item_text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      width: 32px;
+      background-color: gray;
+    }
+
+    .itcss_item_ava {
+      height: 32px;
+      width: 32px;
+      background-size: cover;
+      background-color: gray;
+    }
+
+    .cluster-counter {
+      position: absolute;
+      left: 32px;
+      font-size: 10px;
+
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: cover;
+      background-color: gray;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 100px;
+      color: white;
+      overflow: hidden;
+      top: 26px;
+    }
+
+    .cluster-counter-small {
+      min-width: 12px;
+      min-height: 12px;
+    }
+
+    .cluster-counter-big {
+      min-width: 16px;
+      min-height: 16px;
+    }
+
+    #game-container {
+      width: 50%;
+      /* height: 90%; */
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      margin: 0 0 0 -25%;
+      text-align: center;
+      display: none;
+    }
+
+/* games */
+
+   
+
+    #game {
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    #game-fisrt-send {}
+
+    #global {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: auto;
+    }
+
+    .game-first-send-intro-emoji {
+      background-size: cover;
+      width: 20px;
+      height: 20px;
+      margin-bottom: -3px;
+      display: inline-block;
+    }
+
+    .gamer {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 30px;
+    }
+
+    .gamers-table {
+      margin: auto;
+      text-align: center;
+      border-collapse: collapse;
+    }
+
+    .gamer-score {
+      background-color: white;
+      font-weight: bold;
+      border: 1px solid;
+      border-radius: 50px;
+    }
+
+    .timer__items {
+      font-size: 20px;
+      width: 100%;
+      height: 100%;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .timer__item {
+      margin-left: 10px;
+      text-align: center;
+    }
+
+    .timer__item::before {
+      content: attr(data-title);
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      font-size: 14px;
+    }
+
+    .timer {
+      display: flex;
+      height: 48px;
+    }
+
+    .timer__seconds {
+      display: none;
+      background-color: white;
+      border-radius: 100px;
+      overflow: hidden;
+      color: #262626;
+      overflow: hidden;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      border: 3px solid white;
+      white-space: nowrap;
+      min-width: 22px;
+    }
+
+    .timer__name {
+      margin-left: 10px;
+      text-align: center;
+      background-color: white;
+      border-radius: 100px;
+      overflow: hidden;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+      border: 3px solid white;
+      white-space: nowrap;
+      min-width: 22px;
+      font-weight: bold;
+      font-size: 16px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .winner {
+      margin-top: 20px;
+      text-align: center;
+      width: 300px;
+      height: 300px;
+      box-shadow: 0px 0px 16px 16px rgba(235, 87, 22, 0.8);
+      border-radius: 300px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 120px;
+      border: 10px solid;
+    }
+
+    #game-center-screen {
+      position: fixed;
+      /* or absolute */
+      width: 200px;
+      height: 200px;
+    }
+
+    .animate-rotating {
+      -webkit-animation: rotating 1s linear infinite;
+    }
+
+    .animate-scale {
+      -webkit-animation: sticker-game-scale 2s ease-in-out infinite;
+    }
+
+    @keyframes rotating {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .game-center-screen-sticker {
+      width: 200px;
+      height: 200px;
+    }
+
+    #input-follow-id {
+      display: none;
+    }
+
+    #input-follow-id-button {
+      display: none;
+    }
+
+    .gamer-ava {
+      border-radius: 200px;
+      border: 8px solid;
+      margin-left: -4px;
+    }
+
+    @keyframes sticker-game-scale {
+      0% {
+        transform: scale(0.5);
+      }
+
+      50% {
+        transform: scale(1.5);
+      }
+
+      100% {
+        transform: scale(0.5);
+      }
+    }
+
+    /* styles port */
+
+
+
+    #center-lottie-player {
+      position: absolute;
+      top: 50%;
+      padding: 10px;
+      margin: auto;
+      left: 10%;
+      right: 10%;
+      transform: translateY(-50%);
+      width: 800px;
+      height: 800px;
+      display: none;
+    }
+
+    #stickers-list {
+      position: absolute;
+      top: 40px;
+      overflow-y: auto;
+      width: 90px;  
+    }
+
+    .emoji-button {
+      width: 40px;
+      height: 40px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      margin: 2px 2px 2px 2px;
+      border-radius: 5px;
+      transition-duration: 0.4s;
+    }
+
+
+    .emoji-button:hover {
+      background-color: #04AA6D; /* Green */
+      color: white;
+    }
+
+
+    #friends-list {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+
+      overflow-y: scroll;
+      max-height: 95%;
+
+      
+      max-width: 365px;
+      width: 365px;
+      background: #eeeeee;
+    }
+
+    .friend {
+      width: 30px;
+      height: 30px;
+      margin-bottom: 12px;
+      margin-top: 7px;
+      margin-right: 10px;
+      z-index: 50;
+    }
+
+    .leader-position {
+      width: 22px;
+      height: 16px;
+      padding: 1px 0px 0px 0px;
+      border-radius: 10px 10px 10px 10px;
+      background-color: #19AA1E;
+      text-align: center;
+      font-size: 12px;
+      color: #FFFFFF;
+      z-index: 100;
+      position: absolute;
+      margin-top: -2px;
+      margin-left: -14px;
+    }
+
+    .friends-table table,
+    tr,
+    td {
+      margin: auto;
+      text-align: center;
+      border-collapse: collapse;
+      width: 100%;
+
+    }
+
+    .friend-ava {
+      border-radius: 200px;
+      border: 3px solid;
+      box-shadow: 0px 0px 3px rgba(38, 38, 38, 0.8);
+    }
+
+
+    #friend-qr-block {
+      width: 200px;
+      height: 250px;
+      position: absolute; 
+      top:0;
+      bottom: 0px;
+      left: 0;
+      margin: auto;
+      opacity: 0.9;
+      color: white;
+
+      line-height: 24px;
+      font-family: "SB Sans Display Semibold";
+      font-size: 26px;
+      display: none;
+      background-color: black; 
+      border-top-right-radius: 24px;
+      border-bottom-right-radius: 24px;
+      box-shadow: 0px 2px 4px 0px #00000014;
+      padding-left: 22px;
+      padding-top: 0px;
+
+    }
+
+    #friend-qr-block p {
+      color: white;
+      font-family: "SB Sans Display Semibold";
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    #friend-qr {
+      position: absolute; 
+      width: 128px;
+      heigth: 130px;
+      min-width: 130px;
+      min-height: 128px;
+      margin: auto;  
+      text-align: center;
+      background-color: white;
+      padding-top: 5px;
+    }
+
+    /* styles for best time game */
+
+    #best-leader-board {
+      min-width: 320px;
+      min-height: 110px;
+      position: absolute;
+      top: 18px;
+      left: 34px;
+      display: none;
+      /*border-radius: 20px;*/
+      /*background-color: white;*/
+      max-height: 95%;
+      overflow: auto;
+      overflow-y: hidden; 
+      overflow-x: hidden; 
+      opacity: 0.9;
+    }
+
+    #best-current-game-players-previous-hour-leaders, #best-current-game-players-current-hour-leaders, #best-current-game-players-list, #best-game-launch-info-text  {
+      background-color: white;
+      padding: 6px 0px 6px 0px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0px 2px 4px 0px #00000014;
+    }
+
+    .best-leader-top-header, .best-game-launch-info-text-header {
+      font-family: "SB Sans Display Semibold";
+      padding-left: 21px;
+      padding-top: 10px;
+      font-size: 18px;
+    }
+
+    .best-game-launch-info-text-сontent {
+      font-family: "SB Sans Display Regular";
+      padding-left: 21px;
+      padding-top: 10px;
+      font-size: 18px;
+    }
+
+    .best-game-launch-info-text-сontent-image {
+      width: 34px;
+      height: 34px;
+      background-size: cover;
+      display: inline-flex;
+      margin-bottom: -10px;
+    }
+
+    #best-game-launch-info-qr {
+      width: 140px;
+      height: 140px;
+      margin-left: 20px;
+      margin-top: 20px;
+      margin-right: 6;
+      min-width: 140px;
+      min-height: 140px;
+    
+    }
+
+    
+
+
+    .best-leader-top-second-line {
+      font-family: "SB Sans Display Regular";
+      padding-left: 21px;
+      font-size: 14px;
+      color: #FE6125;
+    }
+
+    .best-leader-top-table {
+      font-family: "SB Sans Display Regular";
+      padding-left : 21px;
+      padding-top: 8px;
+      font-family: "Sans";
+      text-align: left;
+      border-spacing: 0px;
+      font-size: 18px;
+      padding-bottom: 10px;
+    }
+
+    .best-leader-table-first-column {
+      width: 52px;
+      text-align: left;
+      padding-left: 12px;
+    }
+
+    .best-leader-table-second-column {
+      width: 32px;
+      text-align: center;
+      font-family: SB Sans Display Semibold;
+    }
+
+    .best-leader-table-third-column {
+      width: 190px;
+      text-align: left;
+    }
+
+    .winner-leader-board-ava-container {
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0px 0px 4px 4px rgba(226, 88, 34, 0.8);
+      border: 3px solid white;
+      /*animation: scale 2s ease-in-out infinite;*/
+      border-radius: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      background-size: cover;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .winner-leader-board-ava-crown {
+      background-image: url("https://rezonx3m.github.io/friends/static/crown.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      margin-top: -18px;
+      margin-left: 16px;
+      transform: rotate(35deg);
+    }
+
+    .leader-board-ava-container {
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0px 0px 2px 2px rgba(38, 38, 38, 0.5);
+      border: 3px solid white;
+      /*aanimation: scale 2s ease-in-out infinite;*/
+      border-radius: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      background-size: cover;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .winner-fired-ava-container {
+      height: 48px;
+      width: 48px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      overflow: hidden;
+      position: absolute;
+      top: 24px;
+      left: 42px;
+      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+      z-index: 1000;
+    }
+
+    .winner-ava-container {
+      height: 48px;
+      width: 48px;
+      border-radius: 100px;
+      color: #262626;
+      background: #ffffff;
+      box-shadow: 0px 0px 10px 10px rgba(226, 88, 34, 0.8);
+      overflow: hidden;
+      border: 3px solid white;
+      animation: scale 2s ease-in-out infinite;
+    }
+
+
+    #best-game-launch-info-text {   
+      position: absolute;
+      top: 18px;
+      left: 380px; 
+      display: none;
+      justify-content: space-between;
+      opacity: 0.9;
+      margin-right: 34px; 
+    }
+
+    #best-current-game-players-list {
+      display: block;
+    }
+
+
+    .best-timer {
+      --progress: 100;
+      display: none;
+      position: absolute;
+      bottom: 18px;
+      right: 34px;
+      /* transform: translate(-50%, -50%); */
+      width: 150px;
+      height: 150px;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.8;
+    }
+    
+    .best-timer-progress {
+      --angle: calc(3.6deg * var(--progress, 0));
+
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: conic-gradient(#ffffff var(--angle, 0deg), transparent var(--angle, 0deg));
+      clip-path: circle(50% at 50%);
+
+    }
+
+    .best-timer-text {
+      margin: 0;
+      font-size: 2.5em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      z-index: 1;
+      text-align: center;
+      padding-top: 50px;
+    }
+
+
+    .best-emoji-marker-sticker {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 50px;
+      height: 50px;
+      min-width: 50px;
+      min-height: 50px;
+      animation: emoji-scale 5s ease-in-out;
+      -webkit-animation: emoji-scale 5s ease-in-out;
+    }
+
+    .best-emoji-marker-sticker-shot {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+    }
+
+   #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      display: none;
+    }
+
+    #overlay.show {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="overlay"></div>
+  <div id="global">
+    <div id="main">
+      <div id="container"> </div>
+    </div>
+
+    <!--
+    <div id="popup-qr" class="popup-qr-class">
+    </div>
+-->
+    <div id="connect-indi"></div>
+    <div id="controls">
+      <div id="div-id">
+        <input id="input-id" size="10" placeholder="userid" />
+        <button id="connect-button" onClick="connectButtonClick();">connect</button>
+        <button disabled id="connect-status">disconnected</button>
+      </div>
+      <!-- wft?
+      <div class="test-buttons-line">
+        <div id="div-id-follow"> </div>
+        <input id="input-follow-id" size="10" placeholder="public-user-id" />
+
+        <button id="input-follow-id-button" onClick="mapToUser();">mapToUser</button>
+      </div>
+      -->
+      <div id="test-buttons">
+        <div class="test-buttons-line">
+          <button onClick="testMove();">random move</button>
+          <button onClick="testRotate();">random rotate</button>
+          <button onClick="testRandomSticker();">send random sticker</button>
+          <button onClick="testChangeAva();">change ava</button>
+          <div class="test-buttons-line">
+            <button onClick="perfTest();">perf tests</button>
+          </div>
+          <div class="test-buttons-line">
+            <!-- <button onClick="startScene2fest();">2fest scene</button> -->
+            <!--  <button onClick="startScenePort();">port</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id='friends-list'>
+    </div>
+
+    <div id='stickers-list'>
+      
+    </div>
+
+    <!-- best time game html -->
+    <div id="best-leader-board">
+      <div id="best-current-game-players-previous-hour-leaders">
+        <div class = "best-leader-top-header">Лидеры предыдущего часа</div>
+        <div class = "best-leader-top-second-line">Приходи за призами</div>
+        <div id="best-current-game-players-previous-hour-leaders-container">
+        </div>
+      </div>
+      <div id="best-current-game-players-current-hour-leaders">
+        <div class = "best-leader-top-header">Лидеры текущего часа</div>
+        <div id="best-current-game-players-current-hour-leaders-container">  
+        </div>
+      </div>
+      <div id="best-current-game-players-list">
+        <div class = "best-leader-top-header">Лидеры текущего раунда</div>
+        <div id="best-current-game-players-table-container">  
+        </div>
+      </div>
+    </div>
+    <div id="best-game-launch-info-text">
+      <div>
+        <div class="best-game-launch-info-text-header">Подарки за эмоджи!</div>
+        <div class="best-game-launch-info-text-сontent">
+          Добавить 
+          <span class="best-game-launch-info-text-сontent-image" id="game-bot-launch-info-avatar"></span>
+          в друзья и отправь
+          <span class="best-game-launch-info-text-сontent-image emoji-go"></span>
+          , чтобы вступить в игру.<br/>
+          Смотри эмоджи на экране и отправляй в ответ такие же<br/>
+          быстрее всех.
+        </div>
+      </div>
+      <div id=best-game-launch-info-qr></div>
+    </div>
+
+    <div id="friend-qr-block">
+      <p>Добавьте</br>себя на карту</br><font style="font-size: 19px;">и получите подарок</font></p>
+      <div id="friend-qr">
+      </div>
+    </div>
+
+    <div class="best-timer">
+      <div class="best-timer-progress"></div>
+      <p class="best-timer-text" id="best-timer-text"></p>
+    </div>
+
+    
+  </div>
+  <div id="center-lottie-player">
+        <lottie-player id="lottie-player-new-friend" mode="normal" style="width: 100%">
+        </lottie-player>
+    </div>
+  <canvas id="canvas-cropper" style="display: none; width: 300px; height: 300px; position: absolute;"></canvas>
+</body>
+
+<script type="text/javascript">
+
+const lottiePlayerContainer = document.getElementById("center-lottie-player");
+const playerNewFriend = document.getElementById("lottie-player-new-friend");
+var centerLottiePlayerInUse = false;
+
+SHOW_ANIMATION_NEW_FRIEND = false;
+
+
+
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const getParamDebugMarkers = urlParams.get("debug_markers");
+const getParamDebug = urlParams.get("debug");
+const getParamDebugGame = urlParams.get("debug_game");
+const getParamUserId = urlParams.get("user_id");
+var CURRENT_USER_ID = null;
+const getParamAccessToken = urlParams.get("access_token");
+const getParamScene = urlParams.get("scene");
+const getParamSendBounds = urlParams.get("send_bounds");
+const getParamHideStatus = urlParams.get("hide_status");
+const getParamShowFriendsList = urlParams.get("show_friends_list");
+const getParamMarkStickersAsViewd = urlParams.get("mark_stickers_as_viewed");
+const getParamBestGameIgnorePlayerDistance = urlParams.get("best_game_ignore_player_distance");
+const getParamEnableClusters = urlParams.get("enable_clusters");
+const getParamMaxMarkersCount = urlParams.get("max_markers_count");
+
+const getParamSendStickers = urlParams.get("send_stickers");
+
+const getParamMapLon = urlParams.get("map_lon");
+const getParamMapLat = urlParams.get("map_lat");
+const getParamMapZoom = urlParams.get("map_zoom");
+const getParamMapPitch = urlParams.get("map_pitch");
+const getParamMapRotation = urlParams.get("map_rotation");
+const getParamMapScenario = urlParams.get("map_scenario");
+const getParamMapStyle = urlParams.get("map_style") || "30cdad11-5106-4f4f-b853-5601cb0d0c91";
+
+
+const getParamShowFriendQr = urlParams.get("show_friend_qr");
+
+const maxMarkersCount = getParamMaxMarkersCount ? Number(getParamMaxMarkersCount) : null;
+var markersLimitArray = [];
+
+const mapLon = getParamMapLon ? Number(getParamMapLon) : 82.963483;
+const mapLat = getParamMapLat ? Number(getParamMapLat) : 55.039882;
+const mapZoom = getParamMapZoom ? Number(getParamMapZoom) : 12;
+const mapPitch = getParamMapPitch ? Number(getParamMapPitch) : 0;
+const mapRotation = getParamMapRotation ? Number(getParamMapRotation) : 0;
+
+const sendStickersFromUI = (getParamSendStickers === 'true');
+
+
+// включаем дебак для кодпена или по параметру
+const DEBUG = window.location.host == "cdpn.io" || getParamDebug === "true";
+const ENABLE_DEBUG_MARKERS =
+  (false && window.location.host == "cdpn.io") ||
+  getParamDebugMarkers === "true";
+var debugMarkers = [];
+
+// костыль. если инит получен, а стикеры не прилетели — реконнект
+var IS_STICKERS_FETCHED_ON_CONNECT = false;
+var FORCE_RECONNECT_IF_NO_STICKERS = false;
+var ON_CONNECT_FUNCTION = () => {};
+
+const SUPER_USER_ID = "cd3f16bcdd5b4fc7a9bb02ba68e75536";
+const ENABLE_AUTO_RECONNECT = true;
+
+var LAST_SUPER_USER_STICKERS = [];
+
+const ENABLE_SEND_BOUNDS = false || getParamSendBounds == "true";
+var ENABLE_CLUSTERS = false || getParamEnableClusters == "true";
+var ENABLE_STICKERS = true;
+var ENABLE_STICKERS_TO_ME = true;
+var ENABLE_MARK_STICKERS_AS_VIEWED = false || getParamMarkStickersAsViewd == "true";
+const MIN_PIXEL_INTERSECTION_FOR_CLUSTER = 16;
+var OVERRIDED_ZOOM = null;
+const DROP_MARKERS_WITH_OLD_STATE = !DEBUG;
+
+
+
+
+// wtf?
+const SKIPED_ID = "0155140dfccb40739784b81e9faa445b";
+
+// маркера в кластерах (для быстрой чистки)
+var clusterMarkers = {};
+// идентификаторы юрезов в кластерах, для скрытия и восстановления основных маркеров @todo обощить с маркерами
+var idsUsersInClusters = {};
+
+var currentScene = null;
+
+// техническая переменная, в начале должна быть false
+var needReconnect = false;
+var reconnectTimerId = null;
+// таймер для пинг мессажа
+var connectTimerId = null;
+
+// техническая переменная, в начале должна быть true
+var isConnected = false;
+
+// используем таймауты с бека или же свои
+// @todo сделать таймер по обновлению маркеров раз в минуту
+const ENABLE_TIMEOUTS_FROM_BACKEND = true;
+var movingLivenessTimeout = 120000;
+var stoppedLivenessTimeout = 1000 * 60 * 60 * 24;
+// поправка на серверное вренмя
+var serverTimestampShift = 0;
+
+if (getParamHideStatus == "true") {
+  document.getElementById("connect-status").style.display = "none";
+}
+
+// список поддерживаемых эмодзи, при расширенни добавить css
+const SUPPORTED_EMOJI = [
+  "fire",
+  "greenheart",
+  "poop",
+  "wavinghand",
+  "angry",
+  "eyes",
+  "party",
+  "go",
+  "nav",
+  "cupid",
+  "lips",
+  "tulip",
+  "dyson",
+  "koffee",
+  "hotdog",
+  "cake",
+  "kebab",
+  "battery",
+  "beer",
+  "tea",
+  "pumpkin",
+  "leaf",
+  "ball",
+  "watermelon",
+  "balloons",
+  "popcorn",
+  "laughter",
+  "prayer",
+  "cry",
+  "clown",
+  "tomato",
+  "snail",
+  "cocktail",
+  "cherry",
+  "koreanheart",
+  "teddy",
+  "kiss",
+  "space",
+  "bell",
+  "dish",
+  "champagne",
+  "matchatea",
+  "zucchini",
+  "umbrella",
+  "snowball",
+
+  "mittens",
+  "puck",
+  "pine",
+  "kuper_ok",
+  "ghost"
+];
+
+// список поддерживаемых эмодзи, при расширенни добавить css
+const SUPPORTED_EMOJI_FOR_GAME = [
+  "fire",
+  "greenheart",
+  "poop",
+  "wavinghand",
+  "angry",
+  "eyes",
+  "party",
+  "go",
+  "nav",
+  "cupid",
+  "lips",
+  "tulip",
+  //"dyson",
+  "koffee",
+  "hotdog",
+  "cake",
+  //"kebab",
+  "battery",
+  "beer",
+  "tea",
+  "pumpkin",
+  "leaf",
+  //"ball",
+  //"watermelon",
+  //"balloons",
+  //"popcorn",
+  //"laughter",
+  //"prayer",
+  //"cry",
+  //"clown",
+  //"tomato",
+  //"snail",
+  //"cocktail",
+  //"cherry",
+  //"koreanheart",
+  //"teddy",
+  //"kiss",
+  //"space",
+  //"bell",
+  //"dish",
+  //"champagne",
+  //"matchatea",
+  //"zucchini",
+  //"umbrella"
+  "snowball"
+];
+
+
+
+
+
+
+// game params
+// params for game best time send sticker
+
+var BEST_GAME_CURRENT_ID = null;
+var BEST_GAME_PUBLIC_USER_ID = urlParams.get("game_public_user_id"); // отрефакторить и сделать просто параметр getParamUserId везде (в том числе в конфвлюенсе)
+var BEST_GAME_PUBLIC_USER_CACHE_COORDINATES = null;
+var BEST_GAME_INFO_RENDERED = false;
+var BEST_GAME_STAND = BEST_GAME_PUBLIC_USER_ID;
+var BEST_GAME_TIME_STARTED = null;
+var BEST_LOG_LAST_STICKERS_TO_ME = false;
+var BEST_WINNER_ID = null;
+var BEST_CURRENT_GAMERS = {};
+var BEST_GAME_STARTED = false;
+var BEST_GAME_IN_PROGRESS = false;
+var BEST_GAME_CURRENT_STICKERS = [];
+var BEST_GAME_CURRENT_STICKER_MARKERS = {}; 
+var BEST_GAME_CURRENT_ROUND = 0;
+var BEST_GAME_IGNORE_PLAYER_DISTANCE = false || getParamBestGameIgnorePlayerDistance === "true";
+const BEST_GAME_MIN_DISTANCE_TO_START = 1;
+const BEST_GAME_TOTAL_ROUNDS = 20; //20
+const BEST_SHOW_RULES_TIMER = 30000; // 30000
+const BEST_SHOW_FINISH_IMAGE = 10000; // 10000 @todo revert
+const BEST_GAME_ONE_ROUND_DURATION = 5; // change with best-emoji-marker-sticke
+const BEST_TIMER = document.querySelector('.best-timer');
+
+
+document.getElementById("global").style.maxWidth = urlParams.get("screen_width") || "100%";
+document.getElementById("global").style.maxHeight = urlParams.get("screen_height") || "100%";
+
+
+const BEST_AWAINING_NAMES = [
+  "Ждем тебя",
+  "Тут пока пусто",
+  "Место вакантно",
+  "Заходи сюда",
+  "Шли ГО!",
+  "Мог бы быть ты",
+  "Мы тебя ждем",
+  "Скоро появятся"
+];
+
+
+function sleep(time) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, time);
+    });
+}
+  
+function waitIdle() {
+    return new Promise((resolve) => {
+        map.once('idle', resolve);
+    });
+}
+  
+async function runScenario(scenario) {
+    for (const part of scenario) {
+        // console.log(part);
+        const duration = part.duration || 0;
+        if (part.zoom !== undefined) {
+            const params = {
+                duration,
+                animateHeight: true,
+            };
+            if (part.zoomEasing) {
+                params.easing = part.zoomEasing;
+            }
+            map.setZoom(part.zoom, params);
+        }
+        if (part.pitch !== undefined) {
+            const params = {
+                duration,
+            };
+            if (part.pitchEasing) {
+                params.easing = part.pitchEasing;
+            }
+            map.setPitch(part.pitch, params);
+        }
+        if (part.snowIntensity !== undefined) {
+            const intensity = part.snowIntensity;
+            snow.setOptions({
+                enabled: intensity > 0,
+                particleNumber: intensity * 1000,
+                velocityZ: 500 + intensity * 7,
+                velocityX: intensity * 4,
+                dispersion: intensity,
+            })
+        }
+        if (part.center) {
+            const params = {
+                duration,
+            };
+            if (part.centerEasing) {
+                params.easing = part.centerEasing;
+            }
+            map.setCenter(part.center, params);
+        }
+        if (part.rotation !== undefined) {
+            const params = {
+                duration,
+            };
+            if (part.rotationEasing) {
+                params.easing = part.rotationEasing;
+            }
+            map.setRotation(part.rotation, { ...params, normalize: false });
+        }
+  
+        if (typeof part.f === 'function') {
+            part.f();
+        }
+  
+        if (part.waitIdle) {
+            await waitIdle();
+        } else {
+            await sleep(duration);
+        }
+    }
+}
+
+
+const map = new mapgl.Map("container", {
+  center: [mapLon, mapLat],
+  zoom: mapZoom,
+  key: "2a5f353b-5172-411f-b1a2-8ea58b3f290c",
+  style: getParamMapStyle,
+  floorsEnabled: true,
+  minZoom: 2,
+  maxZoom: 20,
+  minPitch: 0,
+  maxPitch: 70,
+  lowZoomMaxPitch: 45,
+  zoomControl: false,
+  pitch: mapPitch,
+  rotation: mapRotation
+});
+
+
+map.on('floorplanshow', (e) => {
+    const length = e.floorLevels.length;
+    const { floorLevelIndex } = e.floorLevels[length - 2];
+    map.setFloorPlanLevel(e.floorPlanId, floorLevelIndex);
+});
+
+map.patchStyleState({ immersiveRoadsOn: true });
+
+// фиксим рамер карты при ресайзе
+window.addEventListener("resize", () => map.invalidateSize());
+
+
+
+
+// глобальный стейт @todo обобщить
+var globalProfiles = {};
+var globalMarkers = {};
+var globalStates = {};
+var globalProfilesByDebugApi = {};
+
+var globalWS = null;
+// поправочный коэффциент на вращение карты, чтобы огонь и аватарки были правильно повернуты
+var globalMapRotation = 0;
+const maxDebugMarkersLenght = 1000;
+
+var SOCKET_PATH =
+  "wss://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/:id/ws?get-friends-stickers=true";
+
+const FIRE_MARKER_CONTAINER = "fire-marker-container";
+const BASIC_MARKER_CONTAINER = "basic-marker-container";
+const STATE_MOVING = "moving";
+const STATE_STOPPED = "stopped";
+
+const BASE_ANIMATION_TIME = 0.2;
+const BASE_SPEED = 1;
+
+if (DEBUG) {
+  hideVisibilityTestButtons(false);
+}
+
+// if (getParamUserId !== null) {
+//   document.getElementById("input-id").value = getParamUserId;
+//   connectButtonClick();
+// }
+
+// скрытие кнопок дле тестов
+function hideVisibilityTestButtons(hide) {
+  const button = document.getElementById("test-buttons");
+  if (hide) {
+    button.style.display = "none";
+  } else {
+    button.style.display = "block";
+  }
+}
+
+// управления контролами и статусом коннекта
+function setConnectionState(state) {
+  const button = document.getElementById("connect-button");
+  const status = document.getElementById("connect-status");
+  const indi = document.getElementById("connect-indi");
+  const input = document.getElementById("input-id");
+  status.innerText = state;
+  switch (state) {
+    case "connected":
+      status.style.backgroundColor = "#9cf19c";
+      indi.style.backgroundColor = "#9cf19c";
+      input.disabled = true;
+      button.innerText = "disconnect";
+      isConnected = true;
+      break;
+    case "reconnecting":
+      status.style.backgroundColor = "#fc8016";
+      indi.style.backgroundColor = "#fc8016";
+      isConnected = false;
+      break;
+    case "connecting":
+      status.style.backgroundColor = "#839bff";
+      indi.style.backgroundColor = "#839bff";
+      isConnected = false;
+      break;
+    case "disconnected":
+      status.style.backgroundColor = "#ff8f8f";
+      indi.style.backgroundColor = "#ff8f8f";
+      button.innerText = "connect";
+      input.disabled = false;
+      isConnected = false;
+      break;
+  }
+}
+
+// нажатие в кнопку коннекта
+function connectButtonClick() {
+  const userId = document.getElementById("input-id").value;
+  CURRENT_USER_ID = userId;
+  if (userId.length > 0) {
+    if (!isConnected) {
+      hideVisibilityTestButtons(true);
+      setConnectionState("connecting");
+      globalWS = initSocket(document.getElementById("input-id").value);
+    } else {
+      if (globalWS) {
+        needReconnect = false;
+        globalWS.close();
+      }
+      setConnectionState("disconnected");
+    }
+  }
+}
+
+function showEmojiList() {
+  var html = ""
+  SUPPORTED_EMOJI.forEach((emoji) => {
+    html += renderEmojiButton(emoji);
+  });
+
+  document.getElementById("stickers-list").innerHTML = html;
+  return html;
+}
+
+if (sendStickersFromUI) {
+  showEmojiList();
+}
+
+function renderEmojiButton(emoji) {
+  return '<button onClick="sendStickerToAll(\'' + emoji +'\')" class="emoji-button emoji-' + emoji + '"></button>';
+}
+
+function sendStickerToAll(emoji) {
+
+  const overlay = document.getElementById("overlay");
+  overlay.classList.add("show");
+
+
+  function sendStickersAfterPause() {
+    alert("Стикеры " + emoji + " будут отправлены  " + Object.keys(globalProfiles).length + " друзьям");
+
+    if (getParamAccessToken !== null) {
+      for (const id in globalProfiles) {
+            sendStickerToUser(globalWS, id, emoji);   
+      }  
+    } else if (document.getElementById("input-id").value != "") {
+       const message = {
+          stickers: [
+              {
+                stickerId: emoji,
+                count: 10
+              }
+            ]
+        };
+        const urlForStickers = "https://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/" + document.getElementById("input-id").value + "/friends/sticker";
+        $.ajax(urlForStickers, {
+          data : JSON.stringify(message),
+          contentType : 'application/json',
+          type : 'POST',
+          success: function () {
+              ;
+          },
+          error: function (error) {
+            console.log(error);
+            //@todo make error on display
+          }
+        })
+    }
+    overlay.classList.remove("show");
+  }
+
+  setTimeout(sendStickersAfterPause, 300);
+  
+  
+}
+
+
+
+function sendStickerToUser(ws, friendId, emoji) {
+  if (ws && ws.readyState == 1) {
+    const message = {
+      type: "sendSticker",
+      payload: {
+        recipientId: friendId,
+        sticker: {
+          stickerId: emoji,
+          count: 1
+        }
+      }
+    };
+
+    const jsonMessage = JSON.stringify(message);
+    ws.send(jsonMessage);
+    if (DEBUG) {
+      console.log("send sendSticker", jsonMessage);
+    }
+  }
+}
+
+// уничтожение всех данных
+function clearAll() {
+  globalProfiles = {};
+  globalProfilesByDebugApi = {};
+  for (const id in globalMarkers) {
+    removeMarker(id);
+  }
+
+  debugMarkers.forEach((element) => element.destroy());
+
+  globalMarkers = {};
+  globalStates = {};
+  IS_STICKERS_FETCHED_ON_CONNECT = false;
+
+}
+
+// инициализация соккета
+function initSocket(id) {
+  const wssUrlPattern = SOCKET_PATH;
+  const wssUrl = wssUrlPattern.replace(":id", id);
+  const ws = new WebSocket(wssUrl);
+
+  clearInterval(reconnectTimerId);
+
+  ws.onopen = function () {
+    console.log("ws opened");
+    // чистимся от греха подальше, так как в коннекте прилетит инит
+    clearAll();
+    // отправка баундов, чтобы слежение было во вьюпорте
+    sendBounds(ws);
+    // при открытие соккета сообщаем, что его нужно реконнектить
+    needReconnect = true;
+    // циклически отправляем пинг, чтобы брайзер понял, что коннект сдох на случай проблем
+    connectTimerId = setInterval(() => {
+      ws.send('{"type":"pingFromWebUi","payload":{}}');
+    }, 1000);
+    setConnectionState("connected");
+    ON_CONNECT_FUNCTION();
+  };
+
+  ws.onclose = function () {
+    console.log("ws closed");
+    // стираем старый интервал
+    clearInterval(connectTimerId);
+    // шедулим новый интервал для реконнекта
+    if (needReconnect) {
+      setConnectionState("reconnecting");
+      reconnectTimerId = setInterval(() => {
+        if (ENABLE_AUTO_RECONNECT) {
+          setConnectionState("reconnecting");
+          globalWS = initSocket(id);
+        }
+      }, 1000);
+    }
+  };
+
+  ws.onerror = function (e) {
+    console.log("ws error");
+    console.log(e);
+    ws.close();
+  };
+
+  ws.onmessage = function (msgevent) {
+    const msg = JSON.parse(msgevent.data);
+    processMessage(msg);
+  };
+
+  return ws;
+}
+
+// обработка входящих
+function processMessage(msg) {
+  switch (msg.type) {
+    case "initialState":
+      if (DEBUG) {
+        console.log("init", msg);
+      }
+      processInitState(msg.payload);
+
+      setTimeout(() => { 
+        if (FORCE_RECONNECT_IF_NO_STICKERS && IS_STICKERS_FETCHED_ON_CONNECT === false) {
+          globalWS.close();
+        }
+      }, 1000);
+      if (getParamShowFriendsList === "true") {
+        refreshFriendsList();
+      }
+      break;
+
+    case "friendState":
+      processState(msg.payload);
+      break;
+
+    case "friendRemoved":
+      removeProfile(msg.payload);
+      break;
+
+    case "profile":
+      addProfile(msg.payload);
+      break;
+
+    case "stickersInitialState":
+      IS_STICKERS_FETCHED_ON_CONNECT = true;
+      if (ENABLE_MARK_STICKERS_AS_VIEWED) {
+        msg.payload.friendStickersStates.forEach(
+          (element) => {
+            const friendId = element.friendId;
+            const offset = element.unviewedStickerRecords[element.unviewedStickerRecords.length - 1].offset;
+            sendStickersViewed(globalWS, friendId, offset);
+          }
+        );
+      }
+      break;
+
+    case "stickerReceived":
+      if (ENABLE_STICKERS) {
+        if (DEBUG) {
+          console.log("new sticker message", msg.payload);
+        }
+        if (
+          msg.payload.hasOwnProperty("recipientId") &&
+          msg.payload.recipientId !== null
+        ) {
+          processStickerFromTo(msg.payload);
+        } else {
+          processStickerToMe(msg.payload);
+        }
+
+        if (ENABLE_MARK_STICKERS_AS_VIEWED) {
+          const friendId = msg.payload.senderId;
+          const offset = msg.payload.stickerRecord.offset;
+          sendStickersViewed(globalWS, friendId, offset);
+        }
+      }
+
+      break;
+    case "stickersViewed": 
+      break;
+
+    default:
+      console.log("unsupported type", msg.type, msg.payload);
+      break;
+  }
+}
+
+function processInitState(payload) {
+  if (DEBUG) {
+    console.log("markerSettings", payload.markerSettings);
+  }
+  if (ENABLE_TIMEOUTS_FROM_BACKEND) {
+    movingLivenessTimeout = payload.markerSettings.movingLivenessTimeout;
+    stoppedLivenessTimeout = payload.markerSettings.stoppedLivenessTimeout;
+  }
+  // поправка на серверное время
+  serverTimestampShift = Date.now() - payload.serverTime;
+  payload.profiles.forEach((profile) => {
+    addProfile(profile, true);
+  });
+  payload.states.forEach((state) => {
+    processState(state);
+  });
+}
+
+function addProfile(profile, isInit = false) {
+  const isItChange = globalProfiles.hasOwnProperty(profile.id);
+  const key = profile.id;
+  globalProfiles[key] = profile;
+  if (DEBUG) {
+    console.log("addProfile", key, profile);
+  }
+  if (isItChange) {
+    refreshAvaInMarker(profile.id);
+    clusteriseMarkers(true);
+  } 
+
+  if (maxMarkersCount !== null) {
+    markersLimitArray.push(profile.id);
+    if (markersLimitArray.length > maxMarkersCount) {
+      const first = markersLimitArray.shift();
+      removeProfile(first);
+    }
+  }
+
+  if (!isInit && (getParamShowFriendsList === "true")) {
+    refreshFriendsList();
+  }
+
+  if (SHOW_ANIMATION_NEW_FRIEND === true) {
+    runNewPlayerAnimation(globalProfiles[key].logo)
+  }
+}
+
+function clickInFriendsList(id) {
+  goMapCenterToId(id);
+  if (globalProfilesByDebugApi.hasOwnProperty(id)) {
+    const authUserId = globalProfilesByDebugApi[id].authUserId;
+    $.getJSON( `https://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/${authUserId}/state`, function( json ) {
+      var flag = false;
+      for(var k in json.visibilities) {
+        if (k == CURRENT_USER_ID) {
+          flag = true;
+          break;
+        }
+      }
+      if (flag == false ) {
+        alert(`Пользователь ${authUserId} не ограничил видимость для пользователя ${CURRENT_USER_ID}`);
+      } else {
+        const vilibility = JSON.stringify(json.visibilities[k]);
+        alert(`Пользователь ${authUserId} ограничил видимость для пользователя ${CURRENT_USER_ID}. ${vilibility}`);
+      }
+    });
+  }
+}
+
+function setGlobalProfilesByDebugApi(json) {
+  globalProfilesByDebugApi = {};
+  for(var k in json) {
+    globalProfilesByDebugApi[json[k].id] = json[k];
+  }
+  
+}
+
+function refreshFriendsList() {
+  if (CURRENT_USER_ID !== null) {
+    $.getJSON( `https://casino-zond-debug-api-production.k8s.n3.2gis.io/api/1.1/user/${CURRENT_USER_ID}/ugc-friends`, function( json ) {
+      setGlobalProfilesByDebugApi(json);
+    });
+  }
+
+  const friendsListDiv = document.getElementById("friends-list");
+  var tableContent = '<table class="friends-table">';
+  for (const id in globalProfiles) {
+    var acronym = "";
+    const avaUrl = globalProfiles[id].logo;
+    const name = globalProfiles[id].name;
+    const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+    if (backgroundImage === null) {
+      acronym = getAcronymFromName(name);
+    }
+    tableContent += `<tr id='friend-list-${id}' onclick="clickInFriendsList('${id}')">`;
+    tableContent += "<td>";
+    tableContent += `<div class="friend">
+                           <div class="friend-ava ava ava-only-text" style="${backgroundImage}">${acronym}</div>`;
+    tableContent += "</td>";
+    tableContent += `<td>${id}<br/>${globalProfiles[id].name}</td>`;
+    tableContent += "</td>";
+    tableContent += "</tr>";
+  }
+  tableContent += "</table>";
+  friendsListDiv.innerHTML = tableContent;
+}
+
+function removeProfile(id) {
+  delete globalProfiles[id];
+  removeMarker(id);
+  delete globalStates[id];
+}
+
+function removeMarker(id) {
+  if (globalMarkers.hasOwnProperty(id)) {
+    if (DEBUG) {
+      console.log("removeMarker", id);
+    }
+    globalMarkers[id].destroy();
+    delete globalMarkers[id];
+  }
+}
+
+function processState(state) {
+  const id = state.id;
+
+  if (id == SKIPED_ID) {
+    return;
+  }
+
+  // если включен лимиттер и маркер не в списке
+  if (maxMarkersCount !== null && !markersLimitArray.includes(id)) {
+    //removeMarker(id);
+    return;
+  }
+
+  if (DEBUG) {
+    console.log("processState", id, state);
+  }
+
+  const lastSeen = state.lastSeen;
+  const lon = state.location.lon;
+  const lat = state.location.lat;
+  // первое вхождение на карту
+  const isInit = !globalStates.hasOwnProperty(id);
+
+  const isOldDataMarker = Date.now() - serverTimestampShift - lastSeen > stoppedLivenessTimeout;
+  // дропаем "серые" (давно стоящие) маркера
+  // @todo почему-то при дропе маркера стали пропадать вообще
+  if (isOldDataMarker && DROP_MARKERS_WITH_OLD_STATE) {
+    hideMarker(id); // обратно раскрываются в moveMarker и в декластеризации
+    return;
+  }
+
+
+
+  const marker = isInit ? null : globalMarkers[id];
+  const lastLon = isInit ? null : globalStates[id]["lon"];
+  const lastLat = isInit ? null : globalStates[id]["lat"];
+  const lastLastSeen = isInit ? null : globalStates[id]["lastSeen"];
+
+  const animationTimeByDiffSeenTime =  isInit
+    ? BASE_ANIMATION_TIME :(lastSeen - lastLastSeen) / 1000;
+
+  var animationTime = BASE_ANIMATION_TIME;
+  if (animationTimeByDiffSeenTime >= 0 && animationTimeByDiffSeenTime < 25) {
+    animationTime = animationTimeByDiffSeenTime
+  } else {
+    const locationSpeed = state.location.hasOwnProperty("speed")
+    ? state.location.speed
+    : BASE_SPEED;
+
+    const tmpAnimationTime = isInit
+      ? BASE_ANIMATION_TIME
+      : calculateAnimationTime(lastLat, lastLon, lat, lon, state.location.speed);
+
+    if (tmpAnimationTime >= 0 && tmpAnimationTime < 25) {
+      animationTime = tmpAnimationTime
+    }
+  }
+
+
+  const azimuth = isInit
+    ? null
+    : bearing(marker.getCoordinates()[1], marker.getCoordinates()[0], lat, lon);
+
+  if (isInit) {
+    globalStates[id] = {};
+  }
+
+  // если маркер двигался давно, делаем его стоящим
+  const isOldMovingData =
+    Date.now() - serverTimestampShift - lastSeen > movingLivenessTimeout
+      ? true
+      : false;
+  const isMoving =
+    state.movement.status == STATE_MOVING && !isOldMovingData ? true : false;
+
+  if (globalProfiles[id] === undefined) {
+    console.log('id not found', id)
+  }
+
+  const avaUrl = globalProfiles[id].logo;
+  const name = globalProfiles[id].name;
+
+  // для дебага, чтобы проверить соответствуют ли маркера реальным позициям
+  addDebugMarker(lon, lat);
+
+  switch (true) {
+    case !isInit && !isMoving: // кейсы, когда маркер останавливается
+      if (globalStates[id]["state"] == STATE_STOPPED) {
+        // маркер остался стоять, но теоретически могла прилететь новая позиция
+        moveMarker(id, marker, lon, lat, BASE_ANIMATION_TIME);
+      } else {
+        // маркер был движущимся, а стал cтоящим, поэтому заменяем
+        moveMarker(id, marker, lastLon, lastLat, lon, lat, BASE_ANIMATION_TIME);
+        globalMarkers[id] = addOrReplaceMarker(
+          id,
+          lon,
+          lat,
+          isInit,
+          isMoving,
+          null,
+          avaUrl,
+          name
+        );
+        globalStates[id]["state"] = STATE_STOPPED;
+      }
+      break;
+    case !isInit && isMoving: // кейсы, когда маркер движется
+      if (globalStates[id]["state"] == STATE_STOPPED) {
+        // раньше стоял, начал двигаться, меняем маркер и стейт
+        // рисуем маркер сперва в предыдущей точке
+        globalMarkers[id] = addOrReplaceMarker(
+          id,
+          lastLon,
+          lastLat,
+          isInit,
+          isMoving,
+          azimuth,
+          avaUrl,
+          name,
+          isOldDataMarker
+        );
+
+        moveMarker(
+          id,
+          globalMarkers[id],
+          lon,
+          lat,
+          animationTime
+        );
+        globalStates[id]["state"] = STATE_MOVING;
+      } else {
+        rotateMarker(id, azimuth);
+        moveMarker(id, marker, lon, lat, animationTime);
+      }
+      break;
+    case isInit:
+      globalMarkers[id] = addOrReplaceMarker(
+        id,
+        lon,
+        lat,
+        isInit,
+        false,
+        null,
+        avaUrl,
+        name,
+        isOldDataMarker
+      );
+      globalStates[id]["state"] = STATE_STOPPED;
+      break;
+    default:
+      console("hbz case");
+  }
+
+  globalStates[id]["lon"] = lon;
+  globalStates[id]["lat"] = lat;
+  globalStates[id]["azimuth"] = azimuth;
+  globalStates[id]["lastUpdate"] = Date.now();
+  globalStates[id]["lastSeen"] = lastSeen;
+
+  // кусок от победителя игры
+  if (BEST_WINNER_ID == id) {
+    setTimeout(() => { bestSetWinnerMarkerClassForId(id);} , 500); 
+  }
+
+  clusteriseMarkers();
+}
+
+function stopOldMarkers() {
+  for (const id in globalStates) {
+    diffWithLastUpdate = Date.now() - globalStates[id]["lastUpdate"];
+    // тушим через минуту маркера, которые встали с огнём
+    if (
+      globalStates[id].state == STATE_MOVING &&
+      diffWithLastUpdate > 60 * 1000
+    ) {
+      const avaUrl = globalProfiles[id].logo;
+      const name = globalProfiles[id].name;
+      const acronym = getAcronymFromName(name);
+      globalMarkers[id].setContent(getHtmlForStaticMarker(id, avaUrl, acronym));
+      globalStates[id].state = STATE_STOPPED;
+      globalMarkers[id].setAnchor([18, 18]);
+    }
+  }
+  //alert('Привет');
+}
+
+setInterval(stopOldMarkers, 1000);
+
+function addOrReplaceMarker(
+  id,
+  lon,
+  lat,
+  isInit,
+  isMoving,
+  azimuth,
+  avaUrl,
+  name,
+  isOldDataMarker
+) {
+  if (DEBUG) {
+    console.log("addOrReplaceMarker", id);
+  }
+  // removeMarker(id);
+
+  const markerClass =
+    isMoving && !isInit // маркер из инита всегда рисуем стоячим
+      ? // Math.random() < 0.5 ?
+        FIRE_MARKER_CONTAINER
+      : BASIC_MARKER_CONTAINER;
+
+  const acronym = getAcronymFromName(name);
+
+  var htmlMarker = null;
+
+  const content = getHtmlForMarker(
+    id,
+    markerClass,
+    avaUrl,
+    acronym,
+    azimuth,
+    isOldDataMarker
+  );
+  if (globalMarkers.hasOwnProperty(id)) {
+    htmlMarker = globalMarkers[id];
+  } else {
+    htmlMarker = new mapgl.HtmlMarker(map, {
+      coordinates: [lon, lat],
+      interactive: DEBUG,
+      html: content
+    });
+    htmlMarker.id = id;
+  }
+
+  htmlMarker.setContent(content);
+
+  if (markerClass === FIRE_MARKER_CONTAINER) {
+    htmlMarker.setAnchor([58, 43]);
+  } else {
+    htmlMarker.setAnchor([18, 18]);
+  }
+
+  return htmlMarker;
+}
+
+function getBackgroundImageForAva(avaUrl, asStyle = true) {
+  return avaUrl !== null ? "background-image: url(" + avaUrl + ");" : null;
+}
+
+function getAcronymFromName(name) {
+  return name
+    .split(/\s/)
+    .reduce((response, word) => (response += word.slice(0, 1)), "")
+    .substr(0, 2);
+}
+
+function getRotateHtmlText(azimuth) {
+  return azimuth !== null ? azimuth + "deg" : "0deg";
+}
+
+function getInvertRotateHtmlText(azimuth) {
+  return azimuth !== null ? azimuth * -1 + "deg" : "0deg";
+}
+
+function getHtmlForMarker(
+  id,
+  markerClass,
+  avaUrl,
+  acronym,
+  azimuth,
+  isOldDataMarker
+) {
+  var html = "";
+
+  const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+  if (backgroundImage !== null) {
+    acronym = "";
+  }
+
+  const rotateText = getRotateHtmlText(azimuth);
+  const invertRotateText = getInvertRotateHtmlText(azimuth);
+
+  const textClass = acronym != "" ? "ava-only-text" : "";
+
+  if (markerClass === FIRE_MARKER_CONTAINER) {
+    html = `
+      <div id="marker-${id}" class="${FIRE_MARKER_CONTAINER}" style="transform: rotate(${rotateText});">
+        <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 84px; height: 84px;" loop autoplay>
+        </dotlottie-player>
+        <div class="fired-ava-container">
+          <div id="ava-${id}" style="${backgroundImage}; transform: rotate(${invertRotateText});" class="ava ${textClass}">
+            ${acronym}
+          </div>
+        </div>
+      </div>`;
+  } else {
+    html = getHtmlForStaticMarker(id, avaUrl, acronym, isOldDataMarker);
+  }
+  return html;
+}
+
+function getHtmlForStaticMarker(id, avaUrl, acronym, isOldDataMarker) {
+  const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+  if (backgroundImage !== null) {
+    acronym = "";
+  }
+
+  const textClass = acronym != "" ? "ava-only-text" : "";
+  const opacity = isOldDataMarker ? "opacity: 0.5; " : "";
+
+  let html = `<div id="marker-${id}" style="${opacity}">
+        <div class="ava-container">
+          <div id="ava-${id}" style="${backgroundImage};" class="ava ${textClass}">
+            ${acronym}
+          </div>
+        </div>
+      </div>`;
+
+  return html;
+}
+
+function refreshAvaInMarker(id) {
+  const div = document.getElementById("ava-" + id);
+  if (div !== null) {
+    var acronym = "";
+    const avaUrl = globalProfiles[id].logo;
+    const name = globalProfiles[id].name;
+    const backgroundImage = avaUrl !== null ? "url(" + avaUrl + ")" : null;
+
+    if (backgroundImage === null) {
+      acronym = getAcronymFromName(name);
+    }
+    div.innerText = acronym;
+    div.style.backgroundImage = backgroundImage;
+  }
+}
+
+function addDebugMarker(lon, lat) {
+  if (ENABLE_DEBUG_MARKERS) {
+    const debugMarker = new mapgl.Marker(map, {
+      coordinates: [lon, lat]
+    });
+    if (debugMarkers.length >= maxDebugMarkersLenght) {
+      const first = debugMarkers.shift();
+      first.destroy();
+    }
+    debugMarkers.push(debugMarker);
+  }
+}
+
+function toRadians(degrees) {
+  return (degrees * Math.PI) / 180;
+}
+
+// Converts from radians to degrees.
+function toDegrees(radians) {
+  return (radians * 180) / Math.PI;
+}
+
+function bearing(startLat, startLon, destLat, destLon) {
+  startLat = toRadians(startLat);
+  startLon = toRadians(startLon);
+  destLat = toRadians(destLat);
+  destLon = toRadians(destLon);
+
+  y = Math.sin(destLon - startLon) * Math.cos(destLat);
+  x =
+    Math.cos(startLat) * Math.sin(destLat) -
+    Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLon - startLon);
+  brng = Math.atan2(y, x);
+  brng = toDegrees(brng);
+  return ((brng + 360) % 360) - 90;
+}
+
+function moveMarker(id, marker, nextLon, nextLat, time) {
+  if (DEBUG) {
+    console.log("moveMarker", id);
+  }
+
+  showMarker(id);
+
+  const mapLon = marker.getCoordinates()[0];
+  const mapLat = marker.getCoordinates()[1];
+
+  const track = [
+    { coordinates: [mapLon, mapLat], t: 0 },
+    { coordinates: [nextLon, nextLat], t: time }
+  ];
+
+  // делаем анимацию для значимых движений
+  if (
+    Math.abs(mapLon - nextLon) > 0.00001 ||
+    Math.abs(mapLat - nextLat) > 0.00001
+  ) {
+    moveOn(track, marker, id);
+  }
+}
+
+function rotateMarker(id, azimuth) {
+  const fixedAzimuth = azimuth + globalMapRotation;
+  const avaElement = document.getElementById(`ava-${id}`);
+  const markerElement = document.getElementById(`marker-${id}`);
+  const invertAzimut = fixedAzimuth * -1;
+  if (markerElement !== null) {
+    markerElement.style.transform = `rotate(${fixedAzimuth}deg)`;
+  }
+  if (avaElement !== null) {
+    avaElement.style.transform = `rotate(${invertAzimut}deg)`;
+  }
+}
+
+async function moveOn(track, marker, userId) {
+  // current segment index
+  let i = 0;
+
+  // startup absolute time
+  const start = performance.now();
+
+  // segment points
+  let curr = track[i],
+    next = track[i + 1];
+
+  // сохраняем рандомный номер созданной анимации, чтобы не играть те, что не актуальны
+  const animationRandomNumber = Math.random();
+  if (userId) {
+    globalStates[userId]["animationRandomNumber"] = animationRandomNumber;
+  }
+
+  while (
+    next &&
+    (userId == null || 
+      (
+        globalStates.hasOwnProperty(userId) 
+        && 
+        globalStates[userId].hasOwnProperty("animationRandomNumber") 
+        && 
+        globalStates[userId]["animationRandomNumber"] == animationRandomNumber))
+  ) {
+    // time from start, ms
+    const dt = (performance.now() - start) / 1000;
+
+    // position in segment
+    const ratio = (dt - curr.t) / (next.t - curr.t);
+
+    if (isFinite(ratio)) {
+      // get current pos via lienar interpolation
+      const pos = lerp(curr.coordinates, next.coordinates, ratio);
+      if (pos[0] >= 180 || pos[0] <= -180 || pos[1] >= 90 || pos[1] <= -90) {
+        if (DEBUG) {
+          console.log("wrong track", track);
+          console.log("wrong pos", pos);
+          console.log("wrong ratio", ratio);
+        }
+      } else {
+        marker.setCoordinates(pos);
+        // wait next animation frame
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+    }
+
+    // iterate segments if needed
+    if (dt > next.t) {
+      i += 1;
+      curr = next;
+      next = track[i + 1];
+    }
+  }
+}
+
+function lerp(x, y, ratio) {
+  return [x[0] + (y[0] - x[0]) * ratio, x[1] + (y[1] - x[1]) * ratio];
+}
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the earth in km
+  const dLat = toRadians(lat2 - lat1); // deg2rad below
+  const dLon = toRadians(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c; // Distance in km
+  return d;
+}
+
+function calculateAnimationTime(lastLat, lastLon, lat, lon, speed) {
+  const distInMeters =
+    getDistanceFromLatLonInKm(lastLat, lastLon, lat, lon) * 1000;
+  const time = distInMeters / (speed > 0 ? speed : 0.1);
+  return time * 1.1; // костыль +10%
+}
+
+function reRotateMarkers() {
+  for (const id in globalStates) {
+    if (globalStates[id]["state"] == STATE_MOVING) {
+      rotateMarker(id, globalStates[id]["azimuth"]);
+    }
+  }
+}
+
+// при окончании вращения карты сохраняем поправочный коэффициент
+// шлем вьюпорт
+map.on("rotation", () => {
+  globalMapRotation = map.getRotation();
+  reRotateMarkers();
+});
+
+map.on("moveend", () => {
+  sendBounds(globalWS);
+  clusteriseMarkers(true);
+});
+
+map.on("move", () => {});
+
+function sendBounds(ws) {
+  if (ws && ws.readyState == 1 && ENABLE_SEND_BOUNDS) {
+    const bounds = map.getBounds();
+
+    const message = {
+      type: "viewportChanged",
+      payload: {
+        zoom:
+          OVERRIDED_ZOOM !== null ? OVERRIDED_ZOOM : Math.floor(map.getZoom()),
+        viewport: {
+          topLeft: {
+            lon: bounds.southWest[0],
+            lat: bounds.northEast[1]
+          },
+          bottomRight: {
+            lon: bounds.northEast[0],
+            lat: bounds.southWest[1]
+          }
+        }
+      }
+    };
+
+    const jsonMessage = JSON.stringify(message);
+    ws.send(jsonMessage);
+    if (DEBUG) {
+      console.log("send bounds", jsonMessage);
+    }
+  }
+}
+
+function sendStickersViewed(ws, friendId, offset) {
+  if (ws && ws.readyState == 1 && ENABLE_MARK_STICKERS_AS_VIEWED) {
+    const message = {
+      type: "stickersViewed",
+      payload: {
+        friendId: friendId,
+        lastViewedStickerOffset: offset
+      }
+    };
+
+    const jsonMessage = JSON.stringify(message);
+    ws.send(jsonMessage);
+    if (DEBUG) {
+      console.log("send StickersViewed", jsonMessage);
+    }
+  }
+}
+
+function processStickerToMe(payload) {
+  const senderId = payload.senderId;
+  const stickerId = payload.stickerRecord.sticker.stickerId;
+  const sendAt = payload.stickerRecord.sentAt
+  const stickersCount = payload.stickerRecord.sticker.count;
+
+  if (ENABLE_STICKERS_TO_ME) {
+    const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+    if (htmlMarker === null) {
+      console.log("can't find globalMarker for markerId", senderId);
+      return;
+    }
+
+    if (DEBUG && (BEST_LOG_LAST_STICKERS_TO_ME)) {
+      console.log(senderId, stickerId);
+    }
+
+    
+    setTimeout(function () {
+      htmlMarker.destroy();
+    }, 1000); // change time if changed animation css time
+  }
+
+  logStickerByUser(senderId, stickerId, sendAt);
+}
+
+function spawnEmoji(senderId, stickerId, stickersCount) {
+  //  startCoordinates = globalStates
+  //const senderLon = globalStates[senderId]["lon"];
+  //const senderLat = globalStates[senderId]["lat"];
+
+  if (!globalMarkers.hasOwnProperty(senderId)) {
+    return null;
+  }
+  const senderMarker = globalMarkers[senderId];
+  const senderLon = senderMarker.getCoordinates()[0];
+  const senderLat = senderMarker.getCoordinates()[1];
+
+  if (!SUPPORTED_EMOJI.includes(stickerId)) {
+    console.log("unsupported emoji", stickerId);
+    return;
+  }
+
+  return createStickerMapMarker(stickerId, senderLon, senderLat);
+}
+
+function createStickerMapMarker(stickerId, startLon, startLat, emojiClass = "emoji-marker", addRotation = false) {
+  const markerClass = "emoji-" + stickerId;
+
+  const html = addRotation ? `<div class="animate-rotating"><div class="${emojiClass} ${markerClass}"></div></div>` : `<div class="${emojiClass} ${markerClass}"></div>`;
+
+  const htmlMarker = new mapgl.HtmlMarker(map, {
+    coordinates: [startLon, startLat],
+    interactive: DEBUG, // @todo false
+    html: html
+  });
+  htmlMarker.setAnchor([10, 16]);
+  return htmlMarker;
+}
+
+function processStickerFromTo(payload) {
+  if (DEBUG) {
+    console.log("sticker from to", payload);
+  }
+  const senderId = payload.senderId;
+  const stickerId = payload.stickerRecord.sticker.stickerId;
+  const stickersCount = payload.stickerRecord.sticker.count;
+  const recipientId = payload.recipientId;
+  console.log(payload);
+  const htmlMarker = spawnEmoji(senderId, stickerId, stickersCount);
+  if (htmlMarker === null) {
+    console.log("can't find globalMarker for markerId", senderId);
+    return;
+  }
+  const coordinates = htmlMarker.getCoordinates();
+  if (!globalStates.hasOwnProperty(recipientId)) {
+    return;
+  }
+  const nextLon = globalStates[recipientId]["lon"];
+  const nextLat = globalStates[recipientId]["lat"];
+
+  moveMarker(
+    null,
+    htmlMarker,
+    nextLon,
+    nextLat,
+    1
+  );
+  setTimeout(function () {
+    htmlMarker.destroy();
+  }, 1000); // change time if changed animation css time
+}
+
+function clusteriseMarkers(forceRedraw = false) {
+  if (ENABLE_CLUSTERS) {
+    const bounds = map.getBounds();
+
+    const container = document.getElementById("container");
+    const countWidthSquare = Math.floor(
+      container.clientWidth / MIN_PIXEL_INTERSECTION_FOR_CLUSTER
+    );
+    const countHeigthSquare = Math.floor(
+      container.clientHeight / MIN_PIXEL_INTERSECTION_FOR_CLUSTER
+    );
+
+    const lonStep =
+      (bounds.northEast[0] - bounds.southWest[0]) / countWidthSquare;
+    const latStep =
+      (bounds.northEast[1] - bounds.southWest[1]) / countHeigthSquare;
+
+    var markersForClusters = [];
+
+    for (const id in globalMarkers) {
+      if (globalStates[id]["state"] == STATE_STOPPED) {
+        const markersCoordinates = globalMarkers[id].getCoordinates();
+        if (
+          bounds.northEast[0] > markersCoordinates[0] &&
+          bounds.southWest[0] < markersCoordinates[0] &&
+          bounds.northEast[1] > markersCoordinates[1] &&
+          bounds.southWest[1] < markersCoordinates[1]
+        ) {
+          markersForClusters.push(globalMarkers[id]);
+        }
+      }
+    }
+
+    // тупо взял тут https://ru.stackoverflow.com/questions/524772/%D0%9A%D0%B0%D0%BA%D0%BE%D0%B9-%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D1%83%D0%B5%D1%82-%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D0%B4%D0%BB%D1%8F-%D0%BE%D0%B1%D1%8A%D0%B5%D0%B4%D0%B8%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F-%D1%82%D0%BE%D1%87%D0%B5%D0%BA-%D0%B2-%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D0%B8
+    /* псевдокласс точки */
+
+    function Point(x, y, id) {
+      this._x = x;
+      this._y = y;
+      this._id = id;
+    }
+
+    Point.prototype.getX = function () {
+      return this._x;
+    };
+
+    Point.prototype.getY = function () {
+      return this._y;
+    };
+
+    Point.prototype.getId = function () {
+      return this._id;
+    };
+
+    /* расчеты */
+    var points = new Array(); // массив точек
+
+    for (const i in markersForClusters) {
+      const markerCoordinates = markersForClusters[i].getCoordinates();
+      points.push(
+        new Point(
+          markerCoordinates[0],
+          markerCoordinates[1],
+          markersForClusters[i].id
+        )
+      );
+    }
+
+    const mX = lonStep; // максимальное растояние по X
+    const mY = latStep; // максимальное растояние по Y
+
+    /* растояние между двумя точками */
+    function calcDistance(p1, p2) {
+      return Math.sqrt(
+        Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2)
+      );
+    }
+
+    /* условия объединения */
+    function isNear(p1, p2, mX, mY) {
+      return Math.abs(p1.getX() - p2.getX()) <= mX &&
+        Math.abs(p1.getY() - p2.getY()) <= mY
+        ? true
+        : false;
+    }
+
+    /* расчет матрицы расстояний */
+    function calcMasDistances(mas) {
+      var l = mas.length;
+      var r = [];
+      for (var i1 = 0; i1 < l; i1++) {
+        r[i1] = [];
+        for (var i2 = 0; i2 < l; i2++) {
+          if (i1 == i2) {
+            r[i1][i2] = 0;
+          } else if (i1 < i2) {
+            r[i1][i2] = calcDistance(mas[i1], mas[i2]);
+          } else {
+            r[i1][i2] = r[i2][i1];
+          }
+        }
+      }
+      return r;
+    }
+
+    /* смена элементов массива местами */
+    function swap(n1, n2, mas) {
+      var x;
+      x = mas[n1];
+      mas[n1] = mas[n2];
+      mas[n2] = x;
+      return mas;
+    }
+
+    /* расчет матрицы индексов близости */
+    function calcMasIndexes(mas) {
+      var l = mas.length;
+      var r = [];
+
+      var n = [];
+      for (var i = 0; i < l; i++) {
+        n[i] = i;
+      }
+
+      for (var i = 0; i < l; i++) {
+        var ns = n.slice();
+        var ds = mas[i].slice();
+
+        for (var i1 = 0; i1 < l - 1; i1++) {
+          for (var i2 = i1 + 1; i2 < l; i2++) {
+            if (ds[i1] > ds[i2]) {
+              ns = swap(i1, i2, ns);
+              ds = swap(i1, i2, ds);
+            }
+          }
+        }
+        r[i] = ns.slice();
+      }
+      return r;
+    }
+
+    /* существование элемента в массиве */
+    function exist(n, mas) {
+      for (var i = 0; i < mas.length; i++) {
+        if (n == mas[i]) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /* кластеризация */
+    function clastering(points, indexes, used, pn, cl) {
+      if (!used[pn]) {
+        cl[cl.length] = pn;
+        used[pn] = true;
+
+        for (var i = 1; i < points.length; i++) {
+          var pn2 = indexes[pn][i];
+
+          if (exist(pn2, cl)) {
+            continue;
+          } // условие выхода из цикла
+
+          if (isNear(points[pn], points[pn2], mX, mY)) {
+            clastering(points, indexes, used, pn2, cl);
+          } else {
+            break;
+          }
+        }
+      }
+    }
+
+    var distances = calcMasDistances(points); // матрица растояний
+    var indexes = calcMasIndexes(distances); // матрица индексов
+
+    var used = []; // массив задействованных элементов
+    for (var i = 0; i < points.length; i++) {
+      used[i] = false;
+    }
+
+    var clasters = []; // матрица кластеров
+
+    /* кластеризация */
+    for (var i = 0; i < points.length; i++) {
+      var cl = [];
+      clastering(points, indexes, used, i, cl);
+      if (cl.length > 0) {
+        clasters.push(cl.slice());
+      }
+    }
+
+    // конец спизженной часьи
+
+    var finalClasters = [];
+    var finalClastersIds = [];
+    for (var i = 0; i < clasters.length; i++) {
+      if (clasters[i].length > 1) {
+        var ids = [];
+        for (var j = 0; j < clasters[i].length; j++) {
+          ids.push(points[clasters[i][j]].getId());
+        }
+        finalClasters.push(ids);
+        finalClastersIds = finalClastersIds.concat(ids);
+      }
+    }
+
+    var currentclusterMarkers = {};
+    for (const i in finalClasters) {
+      const clusterId = finalClasters[i].join("-");
+
+      // приходится перерисовывать маркера, так как анимация слайдера ломается
+      // @todo, переписать слайдер, чтобы не зависил от позиции на экране
+      if (forceRedraw && clusterMarkers.hasOwnProperty(clusterId)) {
+        clusterMarkers[clusterId].destroy();
+        delete clusterMarkers[clusterId];
+      }
+
+      if (!clusterMarkers.hasOwnProperty(clusterId)) {
+        const marker = createClusterMarker(finalClasters[i]);
+        clusterMarkers[clusterId] = marker;
+      }
+
+      currentclusterMarkers[clusterId] = finalClasters[i];
+    }
+
+    Object.entries(clusterMarkers).forEach((entry) => {
+      const [key, value] = entry;
+
+      if (!currentclusterMarkers.hasOwnProperty(key)) {
+        value.destroy();
+        delete clusterMarkers[key];
+      }
+    });
+
+    for (const i in markersForClusters) {
+      if (!finalClastersIds.includes(markersForClusters[i].id)) {
+        showMarker(markersForClusters[i].id);
+      }
+    }
+  }
+}
+
+function shuffle(array) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex]
+    ];
+  }
+
+  return array;
+}
+
+function createClusterMarker(ids) {
+  const sliderId =
+    "slider-" + ids.join("-") + "-" + Math.floor(Math.random() * 1000000000);
+  // рандомим, чтобы при пересоздании кластера не повторять порядок
+  ids = shuffle(ids);
+  var sumLon = 0;
+  var sumLat = 0;
+  for (const id in ids) {
+    const coordinates = globalMarkers[ids[id]].getCoordinates();
+    sumLon += coordinates[0];
+    sumLat += coordinates[1];
+    hideMarker(ids[id]);
+  }
+  const medianLon = sumLon / ids.length;
+  const medianLat = sumLat / ids.length;
+
+  const html = getHtmlForClusterMarker(ids, sliderId);
+
+  const htmlMarker = new mapgl.HtmlMarker(map, {
+    coordinates: [medianLon, medianLat],
+    interactive: DEBUG,
+    html: html
+  });
+
+  htmlMarker.setAnchor([18, 18]);
+
+  waitForElement("#" + sliderId, 3000)
+    .then(function () {
+      new ItcSimpleSlider("#" + sliderId, {
+        loop: true,
+        autoplay: true,
+        swipe: false,
+        interval: 2000
+      });
+    })
+    .catch(() => {
+      console.log("Not found cluster div element");
+    });
+
+  return htmlMarker;
+}
+
+function getHtmlForClusterMarker(ids, sliderId) {
+  var html = "";
+  var items = "";
+
+  const count = ids.length;
+  const clusterCounterClass =
+    count < 100 ? "cluster-counter-small" : "cluster-counter-big";
+  for (const i in ids) {
+    var acronym = "";
+    const avaUrl = globalProfiles[ids[i]].logo;
+    const name = globalProfiles[ids[i]].name;
+    const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+    if (backgroundImage === null) {
+      acronym = getAcronymFromName(name);
+    }
+
+    const itemClass = acronym != "" ? "itcss_item_text" : "itcss_item_ava";
+    items += `
+      <div class="itcss__item">
+        <div style="${backgroundImage}"  class="${itemClass}">${acronym}</div>
+      </div>`;
+  }
+
+  html = `<div id="marker-${sliderId}" >
+           <div class="cluster-ava-container">
+            <div class="ava">
+              <div class="itcss" id="${sliderId}" >
+                <div class="itcss__wrapper" style="background-color: gray;">
+                  <div class="itcss__items">
+                    ${items}
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+           <div class="cluster-counter ${clusterCounterClass}">
+              ${count}
+           </div>
+         </div>`;
+
+  return html;
+}
+
+function hideMarker(id) {
+  if (globalMarkers.hasOwnProperty(id)) {
+    const divMarker = document.getElementById("marker-" + id);
+    if (divMarker !== null) {
+      divMarker.style.display = "none";
+      idsUsersInClusters[id] = true;
+    } else {
+      if (DEBUG) {
+        console.log("hideMarker. marker not found", id);
+      }
+    }
+  }
+}
+
+function showMarker(id) {
+  if (globalMarkers.hasOwnProperty(id)) {
+    const divMarker = document.getElementById("marker-" + id);
+    if (divMarker !== null) {
+      divMarker.style.display = "block";
+      divMarker.style.opacity = "1";
+      delete idsUsersInClusters[id];
+    } else {
+      if (DEBUG) {
+        console.log("showMarker. marker not found", id);
+        console.log(globalMarkers[id]);
+      }
+    }
+  }
+}
+
+function waitForElement(querySelector, timeout) {
+  return new Promise((resolve, reject) => {
+    var timer = false;
+    if (document.querySelectorAll(querySelector).length) return resolve();
+    const observer = new MutationObserver(() => {
+      if (document.querySelectorAll(querySelector).length) {
+        observer.disconnect();
+        if (timer !== false) clearTimeout(timer);
+        return resolve();
+      }
+    });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+    if (timeout)
+      timer = setTimeout(() => {
+        observer.disconnect();
+        reject();
+      }, timeout);
+  });
+}
+
+// function mapToUser(id) {
+//   goMapCenterToId(document.getElementById("input-follow-id").value);
+// }
+
+function goMapCenterToId(id) {
+  if (globalMarkers.hasOwnProperty(id)) {
+    map.setCenter(globalMarkers[id].getCoordinates());
+  }
+}
+
+// ------------------------------------ prewarm ------------------------------- //
+
+function prewarm() {
+  const controlsDiv = document.getElementById("controls");
+  SUPPORTED_EMOJI.forEach((emoji) => {
+    const elemDiv = document.createElement("div");
+    elemDiv.style.cssText = "width:0px;height:0px;";
+    elemDiv.classList.add("emoji-" + emoji);
+    controlsDiv.appendChild(elemDiv);
+  });
+
+  const elemDiv = document.createElement("div");
+  elemDiv.innerHTML = `<div>
+        <dotlottie-player src="https://rezonx3m.github.io/friends/static/fire.json" background="transparent" speed="1" style="width: 0px; height: 0px;">
+        </dotlottie-player>
+        
+        </div>
+        
+        
+        `;
+  controlsDiv.appendChild(elemDiv);
+}
+
+prewarm();
+
+// ------------------------------------ scenes ------------------------------- //
+
+switch (getParamScene) {
+  case "codefest": {
+    startSceneCodefest();
+    break;
+  }
+  case "game": {
+    startSceneGame();
+    break;
+  }
+  case "custom": {
+    startSceneCustom();
+    break;
+  }
+}
+
+function startSceneZEM() {
+  currentScene = "ZEM";
+  //OVERRIDED_ZOOM = 100;
+  map.setCenter([82.9145, 55.0295]);
+  //map.setZoom(17.5);
+  //map.setPitch(50);
+  //map.setRotation(-170.85);
+  document.getElementById("input-id").value = "ZEM";
+  
+  SOCKET_PATH =
+    "ws://zem.rezon.webapi-dnd.os-n3.hw/api/1.1/user/ws";
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+}
+
+
+function startSceneCodefest() {
+  currentScene = "codefest";
+  //OVERRIDED_ZOOM = 100;
+  
+  map.setCenter([82.747155, 54.99827]);
+  map.setZoom(19.68);
+  map.setPitch(30);
+  map.setRotation(40.84);
+  //const snow = new mapglSnow.Snow(map);
+  ENABLE_CLUSTERS = true;
+  ENABLE_STICKERS = true;
+  ENABLE_STICKERS_TO_ME = false;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+  document.getElementById("input-id").value = "codefest";
+
+  SOCKET_PATH =
+    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=d30ae1b6407301be189cb86fd14e629023e6d0aa&get-friends-stickers=true&channes=markers,stickers";
+  
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+  setTimeout(addCodefestBots, 1000);
+  ON_CONNECT_FUNCTION = addCodefestBots;
+
+
+  var gameStarted = false;
+  var positionSelected = false;
+
+  function getActionToStart() {
+    const d = new Date();
+    let hour = d.getHours();
+    if (positionSelected == false) {
+      positionSelected = true;
+      map.setCenter([82.812694, 54.995315]);
+      map.setZoom(13.15);
+      map.setPitch(45);
+      map.setRotation(-52.94);
+    } else if (hour >= 10 && gameStarted == false) {
+      map.setCenter([82.747155, 54.99827]);
+      map.setZoom(19.68);
+      map.setPitch(30);
+      map.setRotation(40.84);
+      gameStarted = true;
+      setTimeout(startGameBestTimeSticker, 1500);
+    }
+
+  }
+
+  setInterval(getActionToStart, 3000);
+  
+  
+
+  document.onkeypress = function (e) {
+    e = e || window.event;
+    switch (e.keyCode) {
+
+      case 49:
+        perfTest();
+        break;
+
+
+      case 48:
+        window.location.reload();;
+        break;
+      case 55:
+        var sticker = testMessageStickerFromToMe2;
+        sticker.stickerRecord.sticker.stickerId =  BEST_GAME_CURRENT_STICKERS[getRandom(0, BEST_GAME_CURRENT_STICKERS.length - 1, true)];
+        processStickerToMe(sticker);
+        break; 
+      case 56:
+        processStickerToMe(testMessageStickerFromToMe2);
+        break;
+
+      case 57:
+        processStickerToMe(testMessageStickerFromToMe);
+        break;
+        
+    }
+  };
+
+  //showScenePushButtonAnimation();
+}
+
+
+function startSceneGame() {
+  currentScene = "game";
+  //OVERRIDED_ZOOM = 100;
+  
+  
+
+  //const snow = new mapglSnow.Snow(map);
+  ENABLE_CLUSTERS = false;
+  ENABLE_STICKERS = true;
+  ENABLE_STICKERS_TO_ME = false;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+  document.getElementById("input-id").value = "game";
+
+  SOCKET_PATH =
+    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=" + getParamAccessToken + "&get-friends-stickers=true&channes=markers,stickers";
+  
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+  var gameStarted = false;
+  var positionSelected = false;
+
+  map.setPitch(mapPitch);
+  map.setRotation(mapRotation);
+
+  function connectGame() {
+    function setup() {
+      if (isConnected) {
+        if (!globalProfiles.hasOwnProperty(BEST_GAME_PUBLIC_USER_ID)) {
+          alert("Не найден пользователь " + BEST_GAME_PUBLIC_USER_ID + ". Возможно передан некорректный access_token или game_public_user_id");
+        } else if (BEST_GAME_INFO_RENDERED == false) {
+
+          if (BEST_GAME_PUBLIC_USER_CACHE_COORDINATES === null) {
+            if (globalMarkers.hasOwnProperty(BEST_GAME_PUBLIC_USER_ID)) {
+              BEST_GAME_PUBLIC_USER_CACHE_COORDINATES = globalMarkers[BEST_GAME_PUBLIC_USER_ID].getCoordinates();
+            } else {
+              window.location.reload();
+            }
+          }
+
+          BEST_GAME_INFO_RENDERED = true;
+          if (DEBUG) {
+            console.log('setup. connected');
+          }
+          const BEST_GAME_BOT_AVA = globalProfiles[BEST_GAME_PUBLIC_USER_ID].logoTpl.replace('{width}', '96').replace('{height}', '96');
+          const avatarElement = document.getElementById("game-bot-launch-info-avatar");
+          avatarElement.style.backgroundImage = "url('" + BEST_GAME_BOT_AVA + "')"
+          avatarElement.style.width = "28px";
+          avatarElement.style.height = "28px";
+          avatarElement.style.marginBottom = "-6px";
+
+          var renderQR = function (){
+            const QRemelemt = document.getElementById("best-game-launch-info-qr");
+            var qrcode = new QRCode(QRemelemt, {
+              width : QRemelemt.clientWidth,
+              height : QRemelemt.clientWidth, // не ошибка, рисуем квадратик
+            });
+            const gameQRLink = "https://2gis.ru/user/" + BEST_GAME_PUBLIC_USER_ID; 
+            qrcode.makeCode(gameQRLink);
+          }
+
+          setTimeout(renderQR, 2000);
+
+          setTimeout(startGameBestTimeSticker, 1000);
+          
+
+          
+        }
+      } else {
+        if (DEBUG) {
+          console.log('setup. not connected');
+        }
+      }
+    }
+
+    if (BEST_GAME_INFO_RENDERED == false) {
+      setTimeout(setup, 3000)
+    }
+  }
+
+  ON_CONNECT_FUNCTION = connectGame;
+  
+  
+  document.onkeypress = function (e) {
+    e = e || window.event;
+    switch (e.keyCode) {
+
+      case 49: // 1
+        perfTest();
+        break;
+
+
+      case 48: // 0
+        window.location.reload();;
+        break;
+      case 56: // 8
+        var sticker = testMessageStickerFromToMe2;
+        sticker.senderId = BEST_GAME_PUBLIC_USER_ID;
+        sticker.stickerRecord.sticker.stickerId =  BEST_GAME_CURRENT_STICKERS[getRandom(0, BEST_GAME_CURRENT_STICKERS.length - 1, true)];
+        processStickerToMe(sticker);
+        break; 
+
+      case 57: // 9
+        var sticker = testMessageStickerFromToMe2;
+        sticker.senderId = BEST_GAME_PUBLIC_USER_ID;
+        sticker.stickerRecord.sticker.stickerId =  "go";
+        processStickerToMe(sticker);
+        break;
+        
+    }
+  };
+
+  //showScenePushButtonAnimation();
+}
+
+function startSceneCustom() {
+
+  document.onkeypress = function (e) {
+    e = e || window.event;
+    switch (e.keyCode) {
+      case 48: // 0
+        window.location.reload();;
+        break;        
+    }
+  };
+
+  ENABLE_STICKERS = true;
+  ENABLE_MARK_STICKERS_AS_VIEWED = true;
+  FORCE_RECONNECT_IF_NO_STICKERS = true;
+
+
+  currentScene = "custom";
+  //OVERRIDED_ZOOM = 100;
+  document.getElementById("input-id").value = getParamUserId;
+
+  if (getParamShowFriendQr) {
+    document.getElementById('friend-qr-block').style.display = "block";
+    const QRemelemt = document.getElementById("friend-qr");
+    var qrcode = new QRCode(QRemelemt, {
+      width : QRemelemt.clientWidth - 20,
+      height : QRemelemt.clientWidth - 20, // не ошибка, рисуем квадратик
+    });
+    const gameQRLink = "https://2gis.ru/user/" + getParamUserId; 
+    qrcode.makeCode(gameQRLink);
+  }
+
+
+  SOCKET_PATH =
+    "wss://zond.api.2gis.ru/api/1.1/user/ws?token=" + getParamAccessToken + "&channes=markers,stickers";
+  
+  connectButtonClick();
+  document.getElementById("input-id").style.display = "none";
+  document.getElementById("connect-button").style.display = "none";
+
+  //setTimeout(addCodefestBots, 1000);
+  //ON_CONNECT_FUNCTION = addCodefestBots;
+
+
+  map.setPitch(0);
+  map.setRotation(0);
+
+  
+
+
+
+  function scenarioForCustom() {
+
+    runScenario([
+      {
+        duration: 10000, //20000
+        zoomEasing: 'easeOutCubic',
+        centerEasing: 'easeOutCubic',
+        zoom: 19.5,
+        pitch: 30,
+        rotation: 0,
+      },
+      {
+        duration: 90000,
+        zoomEasing: 'easeOutCubic',
+        centerEasing: 'easeOutCubic',
+        zoom: 18.5,
+        pitch: 45,
+        rotation: 181,
+      },
+      {
+        duration: 90000,
+        zoomEasing: 'easeOutCubic',
+        centerEasing: 'easeOutCubic',
+        zoom: 19,
+        pitch: 30,
+        rotation: 0,
+        
+      },
+      {
+        duration: 10000, //10000
+        zoomEasing: 'easeOutCubic',
+        centerEasing: 'easeOutCubic',
+        zoom: 11,
+        rotation: 0,
+        pitch: 10,
+      }]);
+
+  }
+
+  if (getParamMapScenario == "true") {
+    scenarioForCustom();
+    setInterval(scenarioForCustom, 10000 + 90000 + 90000 + 10000);
+  }
+}
+
+
+// function addGameBot() {
+//   const gameBotId = "gamebot";
+ 
+
+//   const profileBot = {
+//     id: gameBotId,
+//     name: "GameBot",
+//     logo: BEST_GAME_BOT_AVA
+//   };
+ 
+//   const profileStateGameBot = {
+//     type: "friendState",
+//     payload: {
+//       id: gameBotId,
+//       lastSeen: Date.now() * 1000,
+//       location: {
+//         lon: parseFloat(urlParams.get("game_bot_lon")) || 30.411119,
+//         lat: parseFloat(urlParams.get("game_bot_lat")) || 59.940555,
+//         azimuth: 0,
+//         speed: 0,
+//         accuracy: 1
+//       },
+//       battery: {
+//         level: 1
+//       },
+//       movement: {
+//         status: "stopped",
+//         stoppedAt: 1698728448409
+//       }
+//     }
+//   };
+
+ 
+//   addProfile(profileBot, true);
+//   processMessage(profileStateGameBot);
+
+  
+// }
+
+var CODEFEST_BOTS_STARTED = false;
+
+function addCodefestBots() {
+  const codefestBotId = "codefestbot";
+  const codefestBotId1 = "codefestbot1";
+  const codefestBotId2 = "codefestbot2";
+  const codefestBotId3 = "codefestbot3";
+
+  const profileCodefest = {
+    id: codefestBotId,
+    name: "Codefest",
+    logo: "https://i0.photo.2gis.com/images/profile/30258560181551409_d191.jpg"
+  };
+
+  const profileCodefest1 = {
+    id: codefestBotId1,
+    name: "Алиса Кюнтиева",
+    logo: "https://rezonx3m.github.io/friends/static/bot1.JPG"
+  };
+
+  const profileCodefest2 = {
+    id: codefestBotId2,
+    name: "Какоето Имя",
+    logo: "https://rezonx3m.github.io/friends/static/bot2.JPG"
+  };
+
+  const profileCodefest3 = {
+    id: codefestBotId3,
+    name: "Еще Фамилия",
+    logo: "https://rezonx3m.github.io/friends/static/bot3.JPG"
+  };
+
+  const profileState = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.99835,
+        lon: 82.747035,
+        azimuth: 0,
+        speed: 0,
+        accuracy: 1
+      },
+      battery: {
+        level: 1
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  var profileState1 = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId1,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.998436,
+        lon: 82.746965,
+        azimuth: 206.91267,
+        speed: 0.8,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "moving",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  const profileState2 = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId2,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.99804,
+        lon: 82.747539,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+
+  const profileState3 = {
+    type: "friendState",
+    payload: {
+      id: codefestBotId3,
+      lastSeen: Date.now() * 1000,
+      location: {
+        lat: 54.998515,
+        lon: 82.74775,
+        azimuth: 206.91267,
+        speed: 160,
+        accuracy: 17.823999404907227
+      },
+      battery: {
+        level: 0.81
+      },
+      movement: {
+        status: "stopped",
+        stoppedAt: 1698728448409
+      }
+    }
+  };
+  addProfile(profileCodefest, true);
+  addProfile(profileCodefest1, true);
+  addProfile(profileCodefest2, true);
+  addProfile(profileCodefest3, true);
+  processMessage(profileState);
+  processMessage(profileState1);
+  processMessage(profileState2);
+  processMessage(profileState3);
+
+  bot1movements = [[82.746965,54.998436],[82.746975,54.998399],[82.746985,54.998353],[82.746995,54.998315],[82.747005,54.998276],[82.747071,54.998278],[82.747137,54.998275],[82.747149,54.998239],[82.747158,54.998206],[82.747171,54.998167],[82.747176,54.998126],[82.747235,54.998106],[82.747301,54.998111],[82.747365,54.998115],[82.74743,54.998122],[82.747494,54.998127],[82.747563,54.998133],[82.74763,54.998139],[82.747682,54.998158],[82.747686,54.998195],[82.747672,54.998232],[82.747666,54.998269],[82.747657,54.998306],[82.747645,54.998344],[82.74764,54.99838],[82.74763,54.998414],[82.747619,54.998452],[82.74765,54.99848],[82.747718,54.998486]];
+  if (CODEFEST_BOTS_STARTED === false) {
+    moveBot(bot1movements, true, 0, 5000);
+    CODEFEST_BOTS_STARTED = true;
+  }
+
+  function moveBot(path, isForwardDirection, position, animationTime) {
+    if (position == 0) {
+      isForwardDirection = true;
+    } else if (position == path.length - 1) {
+      isForwardDirection = false;
+    }
+    // console.log("position", position);
+    const nextPosition = path[position];
+
+    profileState1.payload.location.lat = nextPosition[1];
+    profileState1.payload.location.lon = nextPosition[0];
+    profileState1.payload.lastSeen = Date.now() * 1000;
+    processMessage(profileState1);
+
+    currentPosition = isForwardDirection ? position++ : position--;
+    setTimeout(function () {
+      moveBot(path, isForwardDirection, position, animationTime);
+    }, animationTime);
+  }
+}
+
+
+// ------------------------------------ games ------------------------------- //
+
+
+function logStickerByUser(id, sticker, sendAt) {
+
+  if (id == SUPER_USER_ID) {
+    if (LAST_SUPER_USER_STICKERS.length >= 7) {
+        LAST_SUPER_USER_STICKERS.shift();
+    } 
+    LAST_SUPER_USER_STICKERS.push(sticker);
+
+    if (
+      LAST_SUPER_USER_STICKERS.length == 7 &&
+      LAST_SUPER_USER_STICKERS[0] == "poop" &&
+      LAST_SUPER_USER_STICKERS[1] == "poop" &&
+      LAST_SUPER_USER_STICKERS[2] == "poop" &&
+      LAST_SUPER_USER_STICKERS[3] == "go" &&
+      LAST_SUPER_USER_STICKERS[4] == "go" &&
+      LAST_SUPER_USER_STICKERS[5] == "go" &&
+      LAST_SUPER_USER_STICKERS[6] == "poop" 
+    ) {
+      window.location.reload();
+    }
+  }
+
+  
+
+
+  // игра на лучшее вресмя
+  if (BEST_LOG_LAST_STICKERS_TO_ME) {
+
+    if (!BEST_GAME_IGNORE_PLAYER_DISTANCE) {
+      if (!globalMarkers.hasOwnProperty(id)) {
+        return;
+      }
+      const senderMarker = globalMarkers[id];
+      const senderLon = senderMarker.getCoordinates()[0];
+      const senderLat = senderMarker.getCoordinates()[1];
+      const center = map.getCenter();
+      const distance = getDistanceFromLatLonInKm(senderLat, senderLon, center[1], center[0]);
+      if (distance > BEST_GAME_MIN_DISTANCE_TO_START) {
+        return;
+      }
+
+    }
+
+    if (sticker == "go") {
+      if (!BEST_CURRENT_GAMERS.hasOwnProperty(id)) {
+        BEST_CURRENT_GAMERS[id] = {
+          id: id,
+          name: globalProfiles[id].name,
+          avaUrl: globalProfiles[id].logo,
+          scores: {},
+          scoresSum: 0
+        }
+        bestRerenderCurrentPlayersList();   
+      }
+    }
+
+    if (BEST_GAME_IN_PROGRESS && BEST_CURRENT_GAMERS.hasOwnProperty(id)) {
+      if (BEST_GAME_CURRENT_STICKERS.includes(sticker)) {
+        bestGameProcessCorrectSticker(id, sticker, sendAt);
+      } else {
+        // bestGameProcessIncorrectSticker(id);
+      }
+    }
+    
+
+  } 
+}
+var startBestTime = 0;
+const now = () => performance.now();
+
+
+function startBestTimer(duration, showSec = false) {
+  BEST_TIMER.style.display = "block";
+  var duration;
+  var showSec;
+  
+  const update = () => {
+    const delta = now() - startBestTime;
+    const difference = duration - delta;
+    const percent = Math.max(0, Math.min(100, (difference / duration) * 100));
+    if (showSec) {
+      const sec = Math.floor(difference / 1000);
+      document.getElementById("best-timer-text").innerHTML = sec;
+    }
+    
+    BEST_TIMER.style.setProperty('--progress', percent);
+    
+    if (difference > 0) {
+      requestAnimationFrame(update);
+    }
+  };
+
+  startBestTime = now();
+    requestAnimationFrame(update);
+    setTimeout(() => {BEST_TIMER.style.display = "none"}, duration);
+};
+
+const fadeIn = (el, timeout, opacity = 1) => {
+  el.style.opacity = 0;
+  el.style.display = 'block';
+  el.style.transition = `opacity ${timeout}ms`;
+  setTimeout(() => {
+    el.style.opacity = opacity;
+  }, 10);
+};
+
+const fadeOut = (el, timeout) => {
+  el.style.opacity = 1;
+  el.style.transition = `opacity ${timeout}ms`;
+  el.style.opacity = 0;
+
+  setTimeout(() => {
+    el.style.display = 'none';
+  }, timeout);
+};
+
+function startGameBestTimeSticker() {
+  BEST_LOG_LAST_STICKERS_TO_ME = true;
+
+  // warmup
+  //document.getElementById("best-leader-board").style.display = "block";
+  map.invalidateSize();
+  // map.setCenter(
+  //   [
+  //     globalMarkers["codefestbot"].getCoordinates()[0],
+  //     globalMarkers["codefestbot"].getCoordinates()[1]
+  // ]);
+  
+  document.getElementById("best-game-launch-info-text").style.display = "flex";
+  bestGameReloadLiaders();
+  bestRerenderCurrentPlayersList();
+  bestLaunchTimerBeforeStartGame();  
+}
+
+function getRandom(min, max, integer = true) {
+  return integer ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min) + min;
+}
+
+function bestGetFirstColumnById(avaUrl, name, position, isLeader = false) {
+  var acronym = "";
+  
+  const backgroundImage = getBackgroundImageForAva(avaUrl);
+
+  if (backgroundImage === null) {
+    acronym = getAcronymFromName(name);
+    if (BEST_AWAINING_NAMES.includes(name)) {
+      acronym = "";
+    }
+  }
+
+  
+
+  const customStyle = position > 3 ? 'style="background-color: #131313;"' : "";
+  const positionHTML = BEST_AWAINING_NAMES.includes(name) ? "" : `<div class="leader-position" ${customStyle}>${position}</div>`
+
+
+  const classAva = isLeader ? "winner-leader-board-ava-container" : "leader-board-ava-container";
+  const winnerCrown = isLeader ? `<div class="winner-leader-board-ava-crown"></div>`: "";
+  return `<div>
+      ${positionHTML}${winnerCrown}
+      <div class="friend">
+          <div class="${classAva}" style="${backgroundImage}">${acronym}</div>
+      </div>
+    </div>`;
+
+}
+
+function bestRerenderCurrentPlayersList() {
+
+  var results = [];
+  if (Object.keys(BEST_CURRENT_GAMERS).length === 0) {
+    results = {codefestbot1:
+                {
+                  avaUrl: null, 
+                  id: "codefestbot1",
+                  name: getRandomAwaitingName(),
+                  scoresSum: ":)"
+                }
+      };
+  } else {
+    results = BEST_CURRENT_GAMERS;
+  }
+
+
+  var objectsToSort = {};
+  for (id in results) {
+    objectsToSort[id] = results[id].scoresSum;
+  }
+
+  let sortable = [];
+  for (var id in objectsToSort) {
+      sortable.push({id: id, score: objectsToSort[id]});
+  }
+
+  sortable.sort(function(a, b) {
+      return b.score - a.score;
+  });
+
+  var HTML = `<table class = "best-leader-top-table">`;
+  var i = 0;
+  sortable.forEach((item) => {
+
+    const name = results[item.id].name.replace(/>|</gi, '');
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[item.id].avaUrl, name, i + 1)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${name}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${results[item.id].scoresSum}</td>`;
+    HTML += `</tr>`;
+    i++;
+  });
+  HTML += `</table>`;
+
+  document.getElementById("best-current-game-players-table-container").innerHTML = HTML;
+
+}
+
+function bestRerenderLeaderCurrentHourList(results) {
+  if (results.length == 0) {
+    results = [ 
+                {
+                  user_ava_path: null, 
+                  user_name: getRandomAwaitingName(),
+                  max_score: ":)"
+                }
+      ]
+  }
+
+  var HTML = `<table class = "best-leader-top-table">`;
+  for (i = 0; i < results.length; i++) {
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name, i + 1)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${results[i].user_name.replace(/>|</gi, '')}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${results[i].max_score}</td>`;
+    HTML += `</tr>`;
+  }
+  HTML += `</table>`;
+  document.getElementById("best-current-game-players-current-hour-leaders-container").innerHTML = HTML;
+
+}
+
+function bestRerenderLeaderPreviousHourList(results) {
+  if (results.length == 0) {
+    results = [ 
+                {
+                  user_ava_path: null, 
+                  user_name: "Ждем тебя",
+                  max_score: ":)"
+                }
+      ]
+  }
+  
+
+  var HTML = `<table class = "best-leader-top-table">`;
+  for (i = 0; i < results.length; i++) {
+
+    if (i == 0) {
+      BEST_WINNER_ID = results[i].user_id;
+      bestSetWinnerMarkerClassForId(results[i].user_id);
+    }
+    HTML += `<tr>`;
+    HTML += `<td class = "best-leader-table-first-column">${bestGetFirstColumnById(results[i].user_ava_path, results[i].user_name, i + 1, i == 0)}</td>`;
+    HTML += `<td class = "best-leader-table-third-column">${results[i].user_name.replace(/>|</gi, '')}</td>`;
+    HTML += `<td class = "best-leader-table-second-column">${results[i].max_score}</td>`;
+    HTML += `</tr>`;
+  }
+  HTML += `</table>`;
+  document.getElementById("best-current-game-players-previous-hour-leaders-container").innerHTML = HTML;
+
+}
+
+function bestGameReloadLiaders() {
+
+    fadeOut(document.getElementById("best-leader-board"), 500);
+
+
+    setTimeout(() => {
+      const tsNow = Math.floor((Date.now() - serverTimestampShift) / 1000)
+      $.getJSON( `https://offline-zond.api.2gis.com/proxy/getGameLeaders?timestamp=${tsNow}&limit=5&stand=${BEST_GAME_STAND}`, function( json ) {
+        bestRerenderLeaderCurrentHourList(json);
+      });
+
+      const d = new Date();
+      const time = Math.floor((d.setHours(d.getHours() - 1) - serverTimestampShift) / 1000);
+
+      $.getJSON( `https://offline-zond.api.2gis.com/proxy/getGameLeaders?timestamp=${time}&limit=3&stand=${BEST_GAME_STAND}`, function( json ) {
+        bestRerenderLeaderPreviousHourList(json);
+      });
+      fadeIn(document.getElementById("best-leader-board"), 500, 0.9)
+      bestRerenderCurrentPlayersList();
+    }, 500);
+
+    ;
+}
+
+
+function bestLaunchTimerBeforeStartGame() {
+    BEST_GAME_CURRENT_ID = CryptoJS.MD5(Date.now().toString()).toString();
+    BEST_GAME_TIME_STARTED = Math.floor((Date.now() - serverTimestampShift) / 1000);
+    startBestTimer(BEST_SHOW_RULES_TIMER, true);
+    // fadeIn(document.getElementById("best-current-game-players-list"), 500);
+    // fadeOut(document.getElementById("best-game-launch-info"), 500);
+    
+    setTimeout(() => {
+      BEST_GAME_IN_PROGRESS = true;
+      bestStartPushingStickersWithTimersAndCountResults();
+    }, BEST_SHOW_RULES_TIMER + 100);
+}
+
+
+function bestStartPushingStickersWithTimersAndCountResults() {
+  bestSpawnRandomSticker();
+}
+
+function bestSpawnRandomSticker() {
+
+  BEST_GAME_CURRENT_STICKERS = [];
+  BEST_GAME_CURRENT_STICKER_MARKERS = {};
+  const duration = BEST_GAME_ONE_ROUND_DURATION;
+  BEST_GAME_CURRENT_ROUND++;
+
+  const bounds = map.getBounds();
+
+  const center = BEST_GAME_PUBLIC_USER_CACHE_COORDINATES;
+
+  const container = document.getElementById("container");
+  
+  var stickersCount = 1;
+  if (BEST_GAME_CURRENT_ROUND > 19 ) {
+    stickersCount = 10;
+  } else if (BEST_GAME_CURRENT_ROUND > 18 ) {
+    stickersCount = 10;
+  } else if (BEST_GAME_CURRENT_ROUND > 17) {
+    stickersCount = 3;
+  } else if (BEST_GAME_CURRENT_ROUND > 11) {
+    stickersCount = 2;
+  }
+
+  function getUniqSticker() {
+    while (true) {
+      const randomSticker = getRandomStickerForGame();
+      if (!BEST_GAME_CURRENT_STICKERS.includes(randomSticker)) {
+        return randomSticker;
+      }
+    }
+  }
+
+  for (var i = 0; i < stickersCount; i++) {
+    const randomSticker = getUniqSticker();
+    
+
+    const htmlMarker = createStickerMapMarker(randomSticker, center[0], center[1], "best-emoji-marker-sticker", true);
+    var randomPoint = null;
+    switch (getRandom(0,3)) {
+      case 0:
+        randomPoint = map.unproject([0, getRandom(0, container.clientHeight)]);
+        break;
+      case 1: 
+        randomPoint = map.unproject([container.clientWidth, getRandom(0, container.clientHeight)]);
+        break;
+      case 2: 
+        randomPoint = map.unproject([getRandom(0, container.clientWidth), 0]);
+        break;
+      case 3: 
+        randomPoint = map.unproject([getRandom(0, container.clientWidth), container.clientHeight]);
+        break;
+    }
+
+    moveMarker(
+      null,
+      htmlMarker,
+      randomPoint[0],
+      randomPoint[1],
+      duration
+    );
+
+    BEST_GAME_CURRENT_STICKERS.push(randomSticker);
+    BEST_GAME_CURRENT_STICKER_MARKERS[randomSticker] = htmlMarker;
+    setTimeout(function () {
+      htmlMarker.destroy();
+    }, duration * 1000); // change time if changed animation css time
+  }
+
+  const firstPartText = BEST_GAME_CURRENT_ROUND < 10 && BEST_GAME_TOTAL_ROUNDS > 10 ? '&nbsp&nbsp' : '';
+
+  document.getElementById("best-timer-text").innerHTML = `<div style="overflow: hidden;"><div style="text-align: center; display: inline-block; width: 50px;">${firstPartText}${BEST_GAME_CURRENT_ROUND}</div><div style="text-align: center; display: inline-block; width: 20px;">/</div><div style="text-align: center; display: inline-block; width: 50px;">${BEST_GAME_TOTAL_ROUNDS}</div></div>`;
+  startBestTimer(duration * 1000);
+
+  if (BEST_GAME_CURRENT_ROUND < BEST_GAME_TOTAL_ROUNDS) {
+    setTimeout(function () {
+      bestSpawnRandomSticker();
+    }, duration * 1000); // change time if changed animation css time
+  } else {
+    setTimeout(function () {
+      BEST_GAME_IN_PROGRESS = false;
+      bestFinishGame();
+    }, duration * 1000); // change time if changed animation css time
+  }
+}
+
+function bestFinishGame() {
+  bestSendResultsToBE(BEST_CURRENT_GAMERS);
+}
+
+function bestSendResultsToBE(results) {
+  // results.forEach((element) => element.ava_path = globalProfiles[element.id].logo);
+  // globalProfiles[id].logo
+  json = {
+    stand: BEST_GAME_STAND,
+    game_id: BEST_GAME_CURRENT_ID,
+    game_time: BEST_GAME_TIME_STARTED,
+    results: results
+  }
+
+  $.ajax("https://offline-zond.api.2gis.com/proxy/postGameResults", {
+    data : JSON.stringify(json),
+    contentType : 'application/json',
+    type : 'POST',
+    success: function () {
+        bestGameSuccessFinished();
+    },
+    error: function (error) {
+      console.log(error);
+      //@todo make error on display
+    }
+  })
+}
+
+function bestGameSuccessFinished() {
+  document.getElementById("best-timer-text").innerHTML = "";
+  //startBestTimer(BEST_SHOW_FINISH_IMAGE, true);
+  setTimeout(() => {
+    bestGameReloadLiaders();
+
+    BEST_CURRENT_GAMERS = {};
+    BEST_GAME_STARTED = false;
+    BEST_GAME_CURRENT_STICKERS = [];
+    BEST_GAME_CURRENT_STICKER_MARKERS = {};
+    BEST_GAME_CURRENT_ROUND = 0;
+    // fadeIn(document.getElementById("best-game-launch-info"), 500);
+    // fadeOut(document.getElementById("best-current-game-players-list"), 500);
+    setTimeout(() => {
+      bestLaunchTimerBeforeStartGame();
+    }, 200); 
+  }, BEST_SHOW_FINISH_IMAGE + 100);
+}
+
+
+function bestSetWinnerMarkerClassForId(id) {
+
+  const elemetsFiredWinners = document.getElementsByClassName("winner-fired-ava-container");
+  for (var i = 0; i < elemetsFiredWinners.length; i++) {
+    if (elemetsFiredWinners.item(i).classList.contains("winner-fired-ava-container")) {
+      elemetsFiredWinners.item(i).classList.add("fired-ava-container");
+      elemetsFiredWinners.item(i).classList.remove("winner-fired-ava-container");
+    }
+  }
+
+  const elemetsWinners = document.getElementsByClassName("winner-ava-container");
+  for (var i = 0; i < elemetsWinners.length; i++) {
+    if (elemetsWinners.item(i).classList.contains("winner-ava-container")) {
+      elemetsWinners.item(i).classList.add("ava-container");
+      elemetsWinners.item(i).classList.remove("winner-ava-container");
+    }
+  }
+
+  if (globalMarkers.hasOwnProperty(id)) {
+    const divMarker = document.getElementById("marker-" + id);
+    if (divMarker !== null) {
+      const markerFiredElement = divMarker.getElementsByClassName("fired-ava-container");
+      if (markerFiredElement.length > 0) {
+        if (markerFiredElement[0].classList.contains("fired-ava-container")) {
+          markerFiredElement[0].classList.add("winner-fired-ava-container");
+          markerFiredElement[0].classList.remove("fired-ava-container");
+        }
+      }
+
+      const markerAvaElement = divMarker.getElementsByClassName("ava-container");
+      if (markerAvaElement.length > 0) {
+        if (markerAvaElement[0].classList.contains("ava-container")) {
+          markerAvaElement[0].classList.add("winner-ava-container");
+          markerAvaElement[0].classList.remove("ava-container");
+        }
+      }    
+    } else {
+      if (DEBUG) {
+        console.log("bestSetWinnerMarkerClassForId. marker not found", id);
+        console.log(globalMarkers[id]);
+      }
+    }
+  }
+}
+
+function bestGameProcessCorrectSticker(userId, sticker, sendAt) {
+  //serverTimestampShift
+
+  const deltaTime = (now() - startBestTime - 500) / 1000;
+
+  const floorDelta = Math.floor(deltaTime);
+  const points = (BEST_GAME_ONE_ROUND_DURATION - floorDelta) > BEST_GAME_ONE_ROUND_DURATION ? BEST_GAME_ONE_ROUND_DURATION : BEST_GAME_ONE_ROUND_DURATION - floorDelta;
+  const additionalScore = points > 0 ? points : 0;
+  const key = BEST_GAME_CURRENT_ROUND.toString() + sticker 
+
+  if (!BEST_CURRENT_GAMERS[userId].scores.hasOwnProperty(key)) { // @todo сделать для двух и более стикеров
+    BEST_CURRENT_GAMERS[userId].scores[key] = additionalScore;
+    BEST_CURRENT_GAMERS[userId].scoresSum += additionalScore;
+  } 
+
+  bestRerenderCurrentPlayersList();
+
+  const senderMarker = globalMarkers[userId];
+  const senderLon = senderMarker.getCoordinates()[0];
+  const senderLat = senderMarker.getCoordinates()[1];
+  const htmlMarker = createStickerMapMarker(sticker, senderLon, senderLat, "best-emoji-marker-sticker-shot");
+
+  const duration = 200;
+  moveMarker(
+    null,
+    htmlMarker,
+    BEST_GAME_CURRENT_STICKER_MARKERS[sticker].getCoordinates()[0],
+    BEST_GAME_CURRENT_STICKER_MARKERS[sticker].getCoordinates()[1],
+    duration / 1000
+  );
+
+  setTimeout(function () {
+      htmlMarker.destroy();
+  }, duration);
+}
+
+function bestGameProcessIncorrectSticker(userId) {
+  
+}
+
+function getRandomStickerForGame() {
+  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI_FOR_GAME.length);
+  return SUPPORTED_EMOJI_FOR_GAME[stickerN];
+}
+
+function getRandomAwaitingName() {
+  const namesN = Math.floor(Math.random() * BEST_AWAINING_NAMES.length);
+  return BEST_AWAINING_NAMES[namesN];
+}
+
+
+// ------------------------------------ tests ------------------------------- //
+
+function perfTest() {
+  testMessage.payload.location.lat = map.getCenter()[1];
+  testMessage.payload.location.lon = map.getCenter()[0];
+  map.setZoom(11.5);
+
+  const maxI = 300;
+  const floor = Math.floor(Math.sqrt(maxI));
+  for (i = 1; i <= maxI; i++) {
+    testProfile.id = "test-" + i;
+    testMessage.payload.id = testProfile.id;
+    addProfile(testProfile);
+
+    testMessage.payload.location.lon += 0.01;
+
+    processMessage(testMessage);
+    if (i % floor == 0) {
+      testMessage.payload.location.lat += 0.01;
+      testMessage.payload.location.lon -= 0.01 * floor;
+      processMessage(testMessage);
+      testMessageStickerFromTo.senderId = "test-" + i;
+      testMessageStickerFromTo.recipientId = "test-" + (i - 9);
+      processStickerFromTo(testMessageStickerFromTo);
+    }
+  }
+}
+
+// 45755262
+const testId1 = "abc123";
+const testId2 = "xyz789";
+const testId3 = "zzz666";
+const testId4 = "999999";
+
+var testMessageStickerFromTo = {
+  senderId: testId1,
+  recipientId: testId2,
+  stickerRecord: {
+    sticker: {
+      stickerId: "fire",
+      count: 1
+    }
+  }
+};
+
+var testMessageStickerFromToMe = {
+  senderId: 'codefestbot1',
+  stickerRecord: {
+    sticker: {
+      stickerId: "go",
+      count: 1
+    }
+  }
+};
+
+var testMessageStickerFromToMe2 = {
+  senderId: 'codefestbot1',
+  stickerRecord: {
+    sticker: {
+      stickerId: "poop",
+      count: 1
+    }
+  }
+};
+
+var testProfile = {
+  id: testId1,
+  name: "Poop Boop",
+  logo: "https://rezonx3m.github.io/friends/static/poop.png"
+};
+
+var testProfile2 = {
+  id: testId2,
+  name: "Foo Bar",
+  logo: null
+};
+
+var testProfile3 = {
+  id: testId3,
+  name: "Zoo zoo",
+  logo: null
+};
+
+var testProfile4 = {
+  id: testId4,
+  name: "Yo Yo",
+  logo: "https://rezonx3m.github.io/friends/static/fire.png"
+};
+
+var testMessage = {
+  type: "friendState",
+  payload: {
+    id: testId1,
+    lastSeen: 16987361519730,
+    location: {
+      lat: map.getCenter()[1],
+      lon: map.getCenter()[0],
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+var testMessage2 = {
+  type: "friendState",
+  payload: {
+    id: testId2,
+    lastSeen: 16987361519730,
+    location: {
+      lat: 55.03,
+      lon: 82.99,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+var testMessage3 = {
+  type: "friendState",
+  payload: {
+    id: testId3,
+    lastSeen: 16987361519730,
+    location: {
+      lat: 55.02,
+      lon: 82.97,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+var testMessage4 = {
+  type: "friendState",
+  payload: {
+    id: testId4,
+    lastSeen: 16987361519730,
+    location: {
+      lat: 55.035,
+      lon: 82.999,
+      azimuth: 206.91267,
+      speed: 160,
+      accuracy: 17.823999404907227
+    },
+    battery: {
+      level: 0.81
+    },
+    movement: {
+      status: "moving",
+      stoppedAt: 1698728448409
+    }
+  }
+};
+
+function testMove() {
+  const multiplier1 = Math.random() > 0.5 ? 1 : -1;
+  const multiplier2 = Math.random() > 0.5 ? 1 : -1;
+  testMessage.payload.location.lon += 0.01 * multiplier1;
+  testMessage.payload.location.lat += 0.01 * multiplier2;
+  processMessage(testMessage);
+}
+
+function testRotate() {
+  rotateMarker(testId1, Math.random() * 360);
+}
+
+function testRandomSticker() {
+  const stickerN = Math.floor(Math.random() * SUPPORTED_EMOJI.length);
+  testMessageStickerFromTo.stickerRecord.sticker.stickerId =
+    SUPPORTED_EMOJI[stickerN];
+  processStickerFromTo(testMessageStickerFromTo);
+}
+
+function testChangeAva() {
+  testProfile["name"] = "Angry Bird";
+  testProfile["logo"] = "https://rezonx3m.github.io/friends/static/angry.png";
+  addProfile(testProfile);
+}
+
+if (DEBUG) {
+  addProfile(testProfile);
+  addProfile(testProfile2);
+  addProfile(testProfile3);
+  addProfile(testProfile4);
+  processMessage(testMessage);
+  processMessage(testMessage2);
+  processMessage(testMessage3);
+  processMessage(testMessage4);
+}
+
+
+//--------------------------------------------------------//
+
+
+
+// function getRoundedCanvas(sourceCanvas) {
+//   var canvas = document.createElement("canvas");
+//   var context = canvas.getContext("2d");
+//   var width = sourceCanvas.width;
+//   var height = sourceCanvas.height;
+
+//   canvas.width = width;
+//   canvas.height = height;
+//   context.imageSmoothingEnabled = true;
+//   context.drawImage(sourceCanvas, 0, 0, width, height);
+//   context.globalCompositeOperation = "destination-in";
+//   context.beginPath();
+//   context.arc(
+//     width / 2,
+//     height / 2,
+//     Math.min(width, height) / 2,
+//     0,
+//     2 * Math.PI,
+//     true
+//   );
+//   context.fill();
+//   return canvas;
+// }
+
+function cropImageAndRunAnimation(url = null) {
+  centerLottiePlayerInUse = true;
+  var canvas = document.getElementById("canvas-cropper");
+  var ctx = canvas.getContext("2d");
+
+  function hidePlayer() {
+    lottiePlayerContainer.style.display = "none";
+    centerLottiePlayerInUse = false;
+  }
+
+  function startWithoutUrl() {
+    //console.log(dataURL);
+    
+    playerNewFriend.load(lottieNewFriends);
+    playerNewFriend.seek(0);
+    playerNewFriend.play();
+    function hidePlayer() {
+      lottiePlayerContainer.style.display = "none";
+      centerLottiePlayerInUse = false;
+    }
+    setTimeout(hidePlayer, 4200);
+  }
+
+  function startWithUrl() {
+    var cw, ch;
+    cw = canvas.width = img.width;
+    ch = canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    ctx.globalCompositeOperation = "destination-in";
+    ctx.beginPath();
+    ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+    //console.log(canvas);
+    const dataURL = canvas.toDataURL("image/png");
+    //console.log(dataURL);
+    var clone = JSON.parse(JSON.stringify(lottieNewFriends));
+    clone.assets[1].p = dataURL;
+    playerNewFriend.load(clone);
+    playerNewFriend.seek(0);
+    playerNewFriend.play();
+    function hidePlayer() {
+      lottiePlayerContainer.style.display = "none";
+      centerLottiePlayerInUse = false;
+    }
+    setTimeout(hidePlayer, 4200);
+  }
+
+  if (url !== null) {
+    var img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = startWithUrl;
+    img.src = url;
+  } else {
+    startWithoutUrl();
+  }
+  
+}
+
+function runNewPlayerAnimation(avaUrl) {
+  if (centerLottiePlayerInUse == false) {
+    lottiePlayerContainer.style.display = "block";
+    cropImageAndRunAnimation(avaUrl);
+  }
+}
+
+//runNewPlayerAnimation(null);
+//runNewPlayerAnimation("https://i5.photo.2gis.com/images/profile/30258560205114664_a8b6_300x300.jpg");
+
+//  startSceneZEM();
+
+
+</script>
+</body>
+
+</html>
