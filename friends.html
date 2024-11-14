@@ -3321,6 +3321,15 @@ function startSceneGame() {
 
 function startSceneCustom() {
 
+  document.onkeypress = function (e) {
+    e = e || window.event;
+    switch (e.keyCode) {
+      case 48: // 0
+        window.location.reload();;
+        break;        
+    }
+  };
+
   ENABLE_STICKERS = true;
   ENABLE_MARK_STICKERS_AS_VIEWED = true;
   FORCE_RECONNECT_IF_NO_STICKERS = true;
