@@ -1358,9 +1358,9 @@ const SUPPORTED_EMOJI_FOR_GAME = [
   //"kebab",
   "battery",
   "beer",
-  "tea",
-  "pumpkin",
-  "leaf",
+  //"tea",
+  //"pumpkin",
+  //"leaf",
   //"ball",
   //"watermelon",
   //"balloons",
@@ -1383,7 +1383,10 @@ const SUPPORTED_EMOJI_FOR_GAME = [
   //"matchatea",
   //"zucchini",
   //"umbrella"
-  "snowball"
+  "snowball",
+  "mittens",
+  "puck",
+  "pine",
 ];
 
 
@@ -1989,6 +1992,7 @@ function removeMarker(id) {
   }
 }
 
+// @todo костыль для презентации
 function hashCode(str) {
   return str.split('').reduce((prevHash, currVal) =>
     (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
