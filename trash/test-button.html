@@ -54,6 +54,12 @@
 		<button class="btn-new" id="btn-onboarding-three">Перейти на dgis://2gis.ru/mapfriends/contest?skip_onboarding=true&utm_source=other&utm_campaign=friends_promo_smm_contest_1024</button>
 	    </br>
 	    </br>
+		<button class="btn-new" id="btn-onboarding-four">Перейти на intent://okko.ru#Intent;scheme=https;S.browser_fallback_url=https://okko.ru;end;</button>
+	    </br>
+	    </br>
+		<button class="btn-new" id="btn-onboarding-five">Перейти на https://okko.ru?openInBrowser=true</button>
+	    </br>
+	    </br>
 		<button class="btn-new" id="btn-go-to-search-eat">Перейти на dgis://2gis.ru/search/%D0%9F%D0%BE%D0%B5%D1%81%D1%82%D1%8C (поесть)</button>
 		</br>
 	    </br>
@@ -74,6 +80,16 @@
 
 			var clickButtonOnboardingThree = function(e) {
 			  window.open('dgis://2gis.ru/mapfriends/contest?skip_onboarding=true&utm_source=other&utm_campaign=friends_promo_smm_contest_1024', "_self");
+			};
+
+
+			var clickButtonOnboardingFour = function(e) {
+			  window.open('intent://okko.ru#Intent;scheme=https;S.browser_fallback_url=https://okko.ru;end;', "_self");
+			};
+
+
+			var clickButtonOnboardingFive = function(e) {
+			  window.open('https://okko.ru?openInBrowser=true', "_self");
 			};
 
 			var clickButtonEatSearch = function(e) {
@@ -98,6 +114,15 @@
 
 			var buttonOnboardingThree = document.getElementById("btn-onboarding-three");
 			buttonOnboardingThree.addEventListener('click', clickButtonOnboardingTwo, false);
+
+
+
+			var buttonOnboardingFour = document.getElementById("btn-onboarding-four");
+			buttonOnboardingFour.addEventListener('click', clickButtonOnboardingFour, false);
+
+			var buttonOnboardingFive = document.getElementById("btn-onboarding-five");
+			buttonOnboardingFive.addEventListener('click', clickButtonOnboardingFive, false);
+
 
 			var buttonEat = document.getElementById("btn-go-to-search-eat");
 			buttonEat.addEventListener('click', clickButtonEatSearch, false);
