@@ -60,6 +60,9 @@
 		<button class="btn-new" id="btn-onboarding-five">Перейти на https://okko.ru?openInBrowser=true</button>
 	    </br>
 	    </br>
+		<button class="btn-new" id="btn-onboarding-six">Перейти на intent://okko.ru#Intent;scheme=https;end;</button>
+	    </br>
+	    </br>
 		<button class="btn-new" id="btn-go-to-search-eat">Перейти на dgis://2gis.ru/search/%D0%9F%D0%BE%D0%B5%D1%81%D1%82%D1%8C (поесть)</button>
 		</br>
 	    </br>
@@ -92,6 +95,11 @@
 			  window.open('https://okko.ru?openInBrowser=true', "_self");
 			};
 
+			var clickButtonOnboardingSix = function(e) {
+			  window.open('intent://okko.ru#Intent;scheme=https;end;', "_self");
+			};
+
+
 			var clickButtonEatSearch = function(e) {
 			  window.open('dgis://2gis.ru/search/%D0%9F%D0%BE%D0%B5%D1%81%D1%82%D1%8C', "_self");
 			};
@@ -122,6 +130,9 @@
 
 			var buttonOnboardingFive = document.getElementById("btn-onboarding-five");
 			buttonOnboardingFive.addEventListener('click', clickButtonOnboardingFive, false);
+
+			var buttonOnboardingSix = document.getElementById("btn-onboarding-six");
+			buttonOnboardingSix.addEventListener('click', clickButtonOnboardingSix, false);
 
 
 			var buttonEat = document.getElementById("btn-go-to-search-eat");
