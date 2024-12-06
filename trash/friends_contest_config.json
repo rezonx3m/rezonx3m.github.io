@@ -1,29 +1,30 @@
 {
-    "contest": {
-    	"id": "597dc5cd-b732-4ffa-bba1-20f9ac5f2c6e",
-    	"image_template": "https://cachizer2.2gis.com/common/0623834e-0dfc-450f-9289-f01697dd8621.png",
-    	"countries": ["ru", "kz"],
-        "banner": {
-            "title": {
-                "ru": "Приглашай друзей и получай призы",
-                "en": "Invite friends and get rewards",
-                "az": "Dostları dəvət edin və hədiyyələr qazanın",
-                "kz": "Достарыңызды шақырыңыз және сыйлықтар алыңыз",
-                "ua": "Запрошуй друзів та отримуй призи",
-                "hy": "Հրավիրեք ընկերներին և ստացեք մրցանակներ",
-                "uz": "Do'stlaringizni taklif qiling va sovg'alarni oling"
-            },
-            "button": {
-                "ru": "Подробности конкурса",
-                "en": "Contest details",
-                "az": "Müsabiqə təfərrüatları",
-                "kz": "Жарыс туралы мәліметтер",
-                "ua": "Подробиці конкурсу",
-                "hy": "Մրցույթի մանրամասները",
-                "uz": "Musobaqa tafsilotlari"
-            },
-            "image_template": "https://cachizer1.2gis.com/common/607d0d4e-3a8c-4700-861e-78bea3ca5086.png",
-            "link": "https://rezonx3m.github.io/trash/test-button.html"
-        }
-    }
+	"contest": {
+		"id": "NY-ID-TEST-BUTTONS",
+		"image_template": "https://cachizer1.2gis.com/common/6bc69136-229c-449a-b293-bc5f00392665.png",
+		"countries": ["ru"],
+		"link": "https://rezonx3m.github.io/trash/test-button.html",
+		"banner": {
+			"title": {
+				"ru": "Адвент-календарь с подарками",
+				"en": "Advent calendar with gifts",
+				"az": "Hədiyyələrlə Advent təqvimi",
+				"kz": "Сыйлықтары бар Адвент күнтізбесі",
+				"ua": "Адвент-календар із подарунками",
+				"hy": "Նվերներով Ադվենտ օրացույց",
+				"uz": "Sovg'alar bilan Advent kalendari"
+			},
+			"button": {
+				"ru": "Смотрите скорее",
+				"en": "Check it out now",
+				"az": "Tez baxın",
+				"kz": "Тезірек қараңыз",
+				"ua": "Дивіться швидше",
+				"hy": "Արագ նայեք",
+				"uz": "Tezroq ko'ring"
+			},
+			"image_template": "https://cachizer1.2gis.com/common/4d38f3ed-667d-4bbc-bd68-1e320c2877f5.png",
+			"link": "https://rezonx3m.github.io/trash/test-button.html"
+		}
+	}
 }
