@@ -51,16 +51,16 @@
 		<button class="btn-new" id="btn-onboarding-two">Перейти на dgis://2gis.ru/mapfriends/contest</button>
 	    </br>
 	    </br>
-		<button class="btn-new" id="btn-onboarding-three">Перейти на dgis://2gis.ru/mapfriends/contest?skip_onboarding=true&utm_source=other&utm_campaign=friends_promo_smm_contest_1024</button>
+		<button class="btn-new" id="btn-onboarding-three">test window open self</button>
 	    </br>
 	    </br>
-		<button class="btn-new" id="btn-onboarding-four">Перейти на intent://okko.ru#Intent;scheme=https;S.browser_fallback_url=https://okko.ru;end;</button>
+		<button class="btn-new" id="btn-onboarding-four">test window open system</button>
 	    </br>
 	    </br>
-		<button class="btn-new" id="btn-onboarding-five">open okko target system</button>
+		<button class="btn-new" id="btn-onboarding-five">test window location href self</button>
 	    </br>
 	    </br>
-		<button class="btn-new" id="btn-onboarding-six">Перейти на intent://okko.ru#Intent;scheme=https;end;</button>
+		<button class="btn-new" id="btn-onboarding-six">test window location system</button>
 	    </br>
 	    </br>
 		<button class="btn-new" id="btn-go-to-search-eat">Перейти на dgis://2gis.ru/search/%D0%9F%D0%BE%D0%B5%D1%81%D1%82%D1%8C (поесть)</button>
@@ -72,10 +72,8 @@
 		<button class="btn-new" id="btn-cookie-test-write">Записать в куки Foo значение Bar</button>
 		</br>
 		</br>
-		<a href="intent://okko.ru#Intent;scheme=https;end;" target="_self">okko intent link</a>
-		</br>
-		</br>
-		<a href="dgis://2gis.ru/mapfriends/advent/taks2" target="_self">browser test 1</a>
+		<a href="https://otello.ru/collection/kak-v-skazke?adults=2&utm_source=2gis&utm_medium=selfad&utm_campaign=kak-v-skazke-131224&utm_content=no-paid_banner_advent-calendar_na_na_travel_131224_online_russia_rf&openInBrowser=true" target="_self">okko link with href</a>
+		
 
 		<script>
 			var clickButtonOnboardingOne = function(e) {
@@ -88,21 +86,21 @@
 
 
 			var clickButtonOnboardingThree = function(e) {
-			  window.open('dgis://2gis.ru/mapfriends/contest?skip_onboarding=true&utm_source=other&utm_campaign=friends_promo_smm_contest_1024', "_self");
+			  window.open('https://otello.ru/collection/kak-v-skazke?adults=2&utm_source=2gis&utm_medium=selfad&utm_campaign=kak-v-skazke-131224&utm_content=no-paid_banner_advent-calendar_na_na_travel_131224_online_russia_rf&openInBrowser=true', "_self");
 			};
 
 
 			var clickButtonOnboardingFour = function(e) {
-			  window.open('intent://okko.ru#Intent;scheme=https;S.browser_fallback_url=https://okko.ru;end;', "_self");
+			  window.open('https://otello.ru/collection/kak-v-skazke?adults=2&utm_source=2gis&utm_medium=selfad&utm_campaign=kak-v-skazke-131224&utm_content=no-paid_banner_advent-calendar_na_na_travel_131224_online_russia_rf&openInBrowser=true', "_system");
 			};
 
 
 			var clickButtonOnboardingFive = function(e) {
-			  window.open('https://okko.ru', "_system");
+			  window.location.href('https://otello.ru/collection/kak-v-skazke?adults=2&utm_source=2gis&utm_medium=selfad&utm_campaign=kak-v-skazke-131224&utm_content=no-paid_banner_advent-calendar_na_na_travel_131224_online_russia_rf&openInBrowser=true', "_self");
 			};
 
 			var clickButtonOnboardingSix = function(e) {
-			  window.open('intent://okko.ru#Intent;scheme=https;end;', "_self");
+			  window.location.href('https://otello.ru/collection/kak-v-skazke?adults=2&utm_source=2gis&utm_medium=selfad&utm_campaign=kak-v-skazke-131224&utm_content=no-paid_banner_advent-calendar_na_na_travel_131224_online_russia_rf&openInBrowser=true;', "_system");
 			};
 
 
