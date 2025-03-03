@@ -1202,7 +1202,7 @@ const getParamMapPitch = urlParams.get("map_pitch");
 const getParamMapRotation = urlParams.get("map_rotation");
 const getParamMapScenario = urlParams.get("map_scenario");
 const getParamMapStyle = urlParams.get("map_style") || "8f12233d-c016-443e-8301-0e0fcf61922d";
-const getParamMapFloorsEnabled = urlParams.get("map_floors_enabled") || true;
+const getParamMapFloorsEnabled = (urlParams.get("map_floors_enabled") !== null && urlParams.get("map_floors_enabled") !== 'false') ? true : false
 
 
 // @todo костыль для презентации
