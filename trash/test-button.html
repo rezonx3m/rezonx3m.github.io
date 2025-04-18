@@ -89,12 +89,9 @@
 </br>
 
 
-		</br>
-		</br>
-		<a href="https://2gis.ru/novosibirsk/search/pivo" target="_self">test - 8.1</a>
-	</br>
+<button class="btn-new" id="btn-onboarding-eight">test - 8</button>
 </br>
-<a href="dgis://2gis.ru/novosibirsk/search/pivo" target="_self">test - 8.2</a>
+</br>
 		
 
 		<script>
@@ -161,6 +158,10 @@
 			};
 
 
+
+			var clickButtonOnboardingEight = function(e) {
+			  window.open('https://go.2gis.com/contestios?openInBrowser=true', "_system");
+			};
 			
 
 
@@ -189,6 +190,8 @@
 
 			document.getElementById("btn-onboarding-seven").addEventListener('click', clickButtonOnboardingSeven, false);
 			document.getElementById("btn-onboarding-seven-dgis").addEventListener('click', clickButtonOnboardingSevenDgis, false);
+
+			document.getElementById("btn-onboarding-eight").addEventListener('click', clickButtonOnboardingEight, false);
 
 
 		
