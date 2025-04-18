@@ -92,6 +92,18 @@
 <button class="btn-new" id="btn-onboarding-eight">test - 8</button>
 </br>
 </br>
+
+<button class="btn-new" id="btn-onboarding-nine">test - 9</button>
+</br>
+</br>
+
+<button class="btn-new" id="btn-onboarding-ten">test - 10</button>
+</br>
+</br>
+
+<a href="https://go.2gis.com/contestios?openInBrowser=true" target="_system">test666</a><br><br>
+<a href="https://go.2gis.com/contestios?openInBrowser=true" target="_blank">test667</a><br><br>
+<a href="https://go.2gis.com/contestios?openInBrowser=true" target="_self">test668</a><br><br>
 		
 
 		<script>
@@ -158,9 +170,16 @@
 			};
 
 
-
 			var clickButtonOnboardingEight = function(e) {
 			  window.open('https://go.2gis.com/contestios?openInBrowser=true', "_system");
+			};
+
+			var clickButtonOnboardingNine = function(e) {
+			  window.open('https://go.2gis.com/contestios?openInBrowser=true', "_self");
+			};
+
+			var clickButtonOnboardingTen = function(e) {
+			  location.href('https://go.2gis.com/contestios?openInBrowser=true');
 			};
 			
 
@@ -192,6 +211,10 @@
 			document.getElementById("btn-onboarding-seven-dgis").addEventListener('click', clickButtonOnboardingSevenDgis, false);
 
 			document.getElementById("btn-onboarding-eight").addEventListener('click', clickButtonOnboardingEight, false);
+
+			document.getElementById("btn-onboarding-nine").addEventListener('click', clickButtonOnboardingNine, false);
+
+			document.getElementById("btn-onboarding-ten").addEventListener('click', clickButtonOnboardingTen, false);
 
 
 		
