@@ -174,8 +174,8 @@
     const open = (url, target = "_self") => window.open(url, target);
     const redirect = (url) => window.location.href = url;
 
-    document.getElementById("btn-1").onclick = () => open('https://2gis.ru/novosibirsk/search/pivo');
-    document.getElementById("btn-2").onclick = () => open('dgis://2gis.ru/novosibirsk/search/pivo');
+    document.getElementById("btn-1").onclick = () => open('dgis://2gis.ru/novosibirsk/search/pivo');
+    document.getElementById("btn-2").onclick = () => open('https://2gis.ru/novosibirsk/search/pivo');
     document.getElementById("btn-3").onclick = () => open('https://google.com');
     document.getElementById("btn-4").onclick = () => open('https://google.com?openInBrowser=true');
   </script>
