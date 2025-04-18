@@ -9,6 +9,7 @@
       font-family: sans-serif;
       padding: 1rem;
       font-size: 1rem;
+      margin: 0;
     }
 
     .btn-new {
@@ -37,6 +38,51 @@
       font-size: 1rem;
       margin-bottom: 1rem;
     }
+
+    /* Модальное окно /
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 90%;
+      max-height: 80%;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.8rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+    }
+
+    / Отключение прокрутки */
+    body.modal-open {
+      overflow: hidden;
+    }
   </style>
 </head>
 <body>
@@ -46,7 +92,7 @@
   <button class="btn-new" id="btn-show-cookies">Показать все cookie</button><br>
 
 
-  
+
   <!-- Кнопки -->
   <button class="btn-new" id="btn-onboarding-one">test - 1.1</button><br>
   <button class="btn-new" id="btn-onboarding-one-dgis">test - 1.2</button><br>
@@ -73,7 +119,7 @@
   <a href="https://go.2gis.com/contestios?openInBrowser=true" target="_system">test 666-4</a><br>
   <a href="https://go.2gis.com/contestios?openInBrowser=true" target="_parent">test 666-5</a><br>
 
-	<a href="https://go.2gis.com/contestios2" target="_self">test 777</a><br>
+  <a href="https://go.2gis.com/contestios2" target="_self">test 777</a><br>
 
 	<button class="btn-new" id="btn-onboarding-11">test - 11</button><br>
 
@@ -82,9 +128,18 @@
 	<a href="dgis://go.2gis.com/contestios?openInBrowser=true" target="_self">test 888</a><br>
 
 
-    <!-- Скрипты (оставлены без изменений) -->
+ 
+  <!-- Модальное окно -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <span class="modal-close" id="modal-close">×</span>
+      <h2>Текущие cookie</h2>
+      <pre id="cookie-content"></pre>
+    </div>
+  </div>
+
   <script>
-    // Функции для работы с cookie
+    // Cookie-функции
     function setCookie(name, value, days = 365) {
       const expires = new Date(Date.now() + days * 864e5).toUTCString();
       document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
@@ -97,11 +152,37 @@
       }, '');
     }
 
-    // Функция для открытия URL
+    // Открытие и закрытие модального окна
+    const modalOverlay = document.getElementById("modal-overlay");
+    const modalClose = document.getElementById("modal-close");
+    const cookieContent = document.getElementById("cookie-content");
+
+    document.getElementById("btn-show-cookies").onclick = () => {
+      cookieContent.textContent = document.cookie || "Нет cookie";
+      modalOverlay.style.display = "flex";
+      document.body.classList.add("modal-open");
+    };
+
+    modalClose.onclick = () => {
+      modalOverlay.style.display = "none";
+      document.body.classList.remove("modal-open");
+    };
+
+    // Закрытие по клику вне модального окна
+    modalOverlay.onclick = (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.style.display = "none";
+        document.body.classList.remove("modal-open");
+      }
+    };
+
+    // Пример установки cookie
+    setCookie("example", "testValue");
+
+    // Кнопки переходов
     const open = (url, target = "_self") => window.open(url, target);
     const redirect = (url) => window.location.href = url;
 
-    // Обработчики кнопок
     document.getElementById("btn-onboarding-one").onclick = () => open('https://2gis.ru/novosibirsk/search/pivo');
     document.getElementById("btn-onboarding-one-dgis").onclick = () => open('dgis://2gis.ru/novosibirsk/search/pivo');
 
