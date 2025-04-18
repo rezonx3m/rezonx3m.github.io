@@ -135,7 +135,8 @@
     const cookieContent = document.getElementById("cookie-content");
 
     document.getElementById("btn-show-cookies").onclick = () => {
-      cookieContent.textContent = document.cookie || "Нет cookie";
+	  const cookies = document.cookie.split('; ').join('\n');
+	  cookieContent.textContent = cookies || "Нет cookie";
       modalOverlay.style.display = "flex";
       document.body.classList.add("modal-open");
     };
