@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -33,9 +32,14 @@
       top: 2px;
     }
 
-    a {
-      display: inline-block;
+    input[type="text"] {
+      padding: 0.5rem;
       font-size: 1rem;
+      margin-right: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .cookie-form {
       margin-bottom: 1rem;
     }
 
@@ -79,7 +83,6 @@
       margin-top: 0;
     }
 
-    /* Отключение прокрутки */
     body.modal-open {
       overflow: hidden;
     }
@@ -87,48 +90,22 @@
 </head>
 <body>
 
-
   <!-- Кнопка для вывода всех cookie -->
   <button class="btn-new" id="btn-show-cookies">Показать все cookie</button><br>
 
-
+  <!-- Форма добавления cookie -->
+  <div class="cookie-form">
+    <input type="text" id="cookie-name" placeholder="Имя cookie" />
+    <input type="text" id="cookie-value" placeholder="Значение cookie" />
+    <button class="btn-new" id="btn-add-cookie">Добавить cookie</button>
+  </div>
 
   <!-- Кнопки -->
-  <button class="btn-new" id="btn-onboarding-one">test - 1.1</button><br>
-  <button class="btn-new" id="btn-onboarding-one-dgis">test - 1.2</button><br>
-  <button class="btn-new" id="btn-onboarding-two">test - 2.1</button><br>
-  <button class="btn-new" id="btn-onboarding-two-dgis">test - 2.2</button><br>
-  <button class="btn-new" id="btn-onboarding-three">test - 3.1</button><br>
-  <button class="btn-new" id="btn-onboarding-three-dgis">test - 3.2</button><br>
-  <button class="btn-new" id="btn-onboarding-four">test - 4.1</button><br>
-  <button class="btn-new" id="btn-onboarding-four-dgis">test - 4.2</button><br>
-  <button class="btn-new" id="btn-onboarding-five">test - 5.1</button><br>
-  <button class="btn-new" id="btn-onboarding-five-dgis">test - 5.2</button><br>
-  <button class="btn-new" id="btn-onboarding-six">test - 6.1</button><br>
-  <button class="btn-new" id="btn-onboarding-six-dgis">test - 6.2</button><br>
-  <button class="btn-new" id="btn-onboarding-seven">test - 7.1</button><br>
-  <button class="btn-new" id="btn-onboarding-seven-dgis">test - 7.2</button><br>
-  <button class="btn-new" id="btn-onboarding-eight">test - 8</button><br>
-  <button class="btn-new" id="btn-onboarding-nine">test - 9</button><br>
-  <button class="btn-new" id="btn-onboarding-ten">test - 10</button><br>
+  <button class="btn-new" id="btn-1">Открыть dgis://2gis.ru, поискать pivo</button><br>
+  <button class="btn-new" id="btn-2">Открыть https://2gis.ru, поискать pivo</button><br>
+  <button class="btn-new" id="btn-3">Открыть google в вебвью</button><br>
+  <button class="btn-new" id="btn-4">Открыть google в браузере</button><br>
 
-  <!-- Ссылки -->
-  <a href="https://go.2gis.com/contestios?openInBrowser=true" target="_blank">test 666-1</a><br>
-  <a href="https://go.2gis.com/contestios?openInBrowser=true" target="_self">test 666-2</a><br>
-  <a href="https://go.2gis.com/contestios?openInBrowser=true" target="_top">test 666-3</a><br>
-  <a href="https://go.2gis.com/contestios?openInBrowser=true" target="_system">test 666-4</a><br>
-  <a href="https://go.2gis.com/contestios?openInBrowser=true" target="_parent">test 666-5</a><br>
-
-  <a href="https://go.2gis.com/contestios2" target="_self">test 777</a><br>
-
-	<button class="btn-new" id="btn-onboarding-11">test - 11</button><br>
-
-	<button class="btn-new" id="btn-onboarding-12">test - 12</button><br>
-
-	<a href="dgis://go.2gis.com/contestios?openInBrowser=true" target="_self">test 888</a><br>
-
-
- 
   <!-- Модальное окно -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
@@ -168,11 +145,25 @@
       document.body.classList.remove("modal-open");
     };
 
-    // Закрытие по клику вне модального окна
     modalOverlay.onclick = (e) => {
       if (e.target === modalOverlay) {
         modalOverlay.style.display = "none";
         document.body.classList.remove("modal-open");
+      }
+    };
+
+    // Добавление cookie по нажатию кнопки
+    document.getElementById("btn-add-cookie").onclick = () => {
+      const name = document.getElementById("cookie-name").value.trim();
+      const value = document.getElementById("cookie-value").value.trim();
+
+      if (name && value) {
+        setCookie(name, value);
+        alert(`Cookie "${name}" добавлен.`);
+        document.getElementById("cookie-name").value = '';
+        document.getElementById("cookie-value").value = '';
+      } else {
+        alert("Пожалуйста, введите имя и значение cookie.");
       }
     };
 
@@ -183,36 +174,10 @@
     const open = (url, target = "_self") => window.open(url, target);
     const redirect = (url) => window.location.href = url;
 
-    document.getElementById("btn-onboarding-one").onclick = () => open('https://2gis.ru/novosibirsk/search/pivo');
-    document.getElementById("btn-onboarding-one-dgis").onclick = () => open('dgis://2gis.ru/novosibirsk/search/pivo');
-
-    document.getElementById("btn-onboarding-two").onclick = () => open('https://2gis.ru/novosibirsk/search/pivo', "_system");
-    document.getElementById("btn-onboarding-two-dgis").onclick = () => open('dgis://2gis.ru/novosibirsk/search/pivo', "_system");
-
-    document.getElementById("btn-onboarding-three").onclick = () => redirect('https://2gis.ru/novosibirsk/search/pivo');
-    document.getElementById("btn-onboarding-three-dgis").onclick = () => redirect('dgis://2gis.ru/novosibirsk/search/pivo');
-
-    document.getElementById("btn-onboarding-four").onclick = () => window.location.assign('https://2gis.ru/novosibirsk/search/pivo');
-    document.getElementById("btn-onboarding-four-dgis").onclick = () => window.location.assign('dgis://2gis.ru/novosibirsk/search/pivo');
-
-    document.getElementById("btn-onboarding-five").onclick = () => window.location.replace('https://2gis.ru/novosibirsk/search/pivo');
-    document.getElementById("btn-onboarding-five-dgis").onclick = () => window.location.replace('dgis://2gis.ru/novosibirsk/search/pivo');
-
-    document.getElementById("btn-onboarding-six").onclick = () => location.href = 'https://2gis.ru/novosibirsk/search/pivo';
-    document.getElementById("btn-onboarding-six-dgis").onclick = () => location.href = 'dgis://2gis.ru/novosibirsk/search/pivo';
-
-    document.getElementById("btn-onboarding-seven").onclick = () => document.location.href = 'https://2gis.ru/novosibirsk/search/pivo';
-    document.getElementById("btn-onboarding-seven-dgis").onclick = () => document.location.href = 'dgis://2gis.ru/novosibirsk/search/pivo';
-
-    document.getElementById("btn-onboarding-eight").onclick = () => open('https://go.2gis.com/contestios?openInBrowser=true', "_system");
-    document.getElementById("btn-onboarding-nine").onclick = () => open('https://go.2gis.com/contestios?openInBrowser=true');
-    document.getElementById("btn-onboarding-ten").onclick = () => redirect('https://go.2gis.com/contestios?openInBrowser=true');
-
-    // Кнопка для показа всех cookie
-    document.getElementById("btn-onboarding-11").onclick = () => open('https://go.2gis.com/contestios2');
-    
-    document.getElementById("btn-onboarding-12").onclick = () => open('dgis://go.2gis.com/contestios?openInBrowser=true');
-
+    document.getElementById("btn-1").onclick = () => open('https://2gis.ru/novosibirsk/search/pivo');
+    document.getElementById("btn-2").onclick = () => open('dgis://2gis.ru/novosibirsk/search/pivo');
+    document.getElementById("btn-3").onclick = () => open('https://google.com');
+    document.getElementById("btn-4").onclick = () => open('https://google.com?openInBrowser=true');
   </script>
 </body>
 </html>
