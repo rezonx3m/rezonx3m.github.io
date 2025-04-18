@@ -101,10 +101,12 @@
   </div>
 
   <!-- Кнопки -->
-  <button class="btn-new" id="btn-1">Открыть dgis://2gis.ru, поискать pivo</button><br>
-  <button class="btn-new" id="btn-2">Открыть https://2gis.ru, поискать pivo</button><br>
-  <button class="btn-new" id="btn-3">Открыть google в вебвью</button><br>
-  <button class="btn-new" id="btn-4">Открыть google в браузере</button><br>
+  <button class="btn-new" id="btn-1">dgis://2gis.ru/novosibirsk/search/pivo</button><br>
+  <button class="btn-new" id="btn-2">https://2gis.ru/novosibirsk/search/pivo</button><br>
+  <button class="btn-new" id="btn-3">https://google.com</button><br>
+  <button class="btn-new" id="btn-4">https://google.com?openInBrowser=true</button><br>
+  <button class="btn-new" id="btn-5">https://google.com target=_system</button><br>
+  <button class="btn-new" id="btn-6">https://google.com target=_blank</button><br>
 
   <!-- Модальное окно -->
   <div class="modal-overlay" id="modal-overlay">
@@ -179,6 +181,8 @@
     document.getElementById("btn-2").onclick = () => open('https://2gis.ru/novosibirsk/search/pivo');
     document.getElementById("btn-3").onclick = () => open('https://google.com');
     document.getElementById("btn-4").onclick = () => open('https://google.com?openInBrowser=true');
+	document.getElementById("btn-5").onclick = () => open('https://google.com', "_system");
+	document.getElementById("btn-6").onclick = () => open('https://google.com', "_blank");
   </script>
 </body>
 </html>
