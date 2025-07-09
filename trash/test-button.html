@@ -181,7 +181,12 @@
     document.getElementById("btn-4").onclick = () => open('https://google.com?openInBrowser=true');
     document.getElementById("btn-5").onclick = () => open('dgis://2gis.ru/webview?url=https%3A%2F%2Frezonx3m.github.io%2Ftrash%2Ftest-button.html&send_cookies=true');
 
-    
+    // Проверка наличия cookie "platform" и GET-параметра frtne=true
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!getCookie("platform") && urlParams.get("frtne") === "true") {
+      open('dgis://2gis.ru/webview?url=https%3A%2F%2Frezonx3m.github.io%2Ftrash%2Ftest-button.html&send_cookies=true');
+    }
+
   </script>
 </body>
 </html>
