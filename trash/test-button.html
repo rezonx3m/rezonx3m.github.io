@@ -106,6 +106,9 @@
   <button class="btn-new" id="btn-3">https://google.com</button><br>
   <button class="btn-new" id="btn-4">https://google.com?openInBrowser=true</button><br>
   <button class="btn-new" id="btn-5">Открыть dgis://2gis.ru/webview?url=https%3A%2F%2Frezonx3m.github.io%2Ftrash%2Ftest-button.html&send_cookies=true</button><br>
+  <button class="btn-new" id="btn-6">Открыть https://t.me/city_helpers_2gis</button><br>
+  <button class="btn-new" id="btn-7">Открыть https://t.me/city_helpers_2gis?openInBrowser=true</button><br>
+  
   <!-- Модальное окно -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
@@ -180,6 +183,8 @@
     document.getElementById("btn-3").onclick = () => open('https://google.com');
     document.getElementById("btn-4").onclick = () => open('https://google.com?openInBrowser=true');
     document.getElementById("btn-5").onclick = () => open('dgis://2gis.ru/webview?url=https%3A%2F%2Frezonx3m.github.io%2Ftrash%2Ftest-button.html&send_cookies=true');
+    document.getElementById("btn-6").onclick = () => open('https://t.me/city_helpers_2gis');
+    document.getElementById("btn-7").onclick = () => open('https://t.me/city_helpers_2gis?openInBrowser=true');
 
     // Проверка наличия cookie "platform" и GET-параметра frtne=true
     const urlParams = new URLSearchParams(window.location.search);
