@@ -1107,14 +1107,14 @@ function getBackgroundForLevel(level) {
   const value = parseFloat(level);
   
   if (value >= 2) {
-    // 2 и выше - яркий радужный градиент
-    return 'linear-gradient(90deg, #ff6b6b, #ffa726, #ffd93d, #6bcf7f, #4fc3f7, #9575cd, #f06292)';
+    // 2 и выше - зеленый цвет
+    return '#10b981';
   } else if (value >= 1) {
     // От 1 до 2: плавный переход от желтого к зеленому
     const ratio = value - 1; // 0..1
-    const r = Math.round(255 - (255 - 107) * ratio);   // от 255 (желтый) до 107 (зеленый)
-    const g = Math.round(217 - (217 - 207) * ratio);   // от 217 (желтый) до 207 (зеленый)
-    const b = Math.round(61 + (127 - 61) * ratio);     // от 61 (желтый) до 127 (зеленый)
+    const r = Math.round(255 - (255 - 16) * ratio);    // от 255 (желтый) до 16 (зеленый)
+    const g = Math.round(217 - (217 - 185) * ratio);   // от 217 (желтый) до 185 (зеленый)
+    const b = Math.round(61 + (129 - 61) * ratio);     // от 61 (желтый) до 129 (зеленый)
     return `rgb(${r}, ${g}, ${b})`;
   } else {
     // От 0 до 1: плавный переход от красного к желтому
