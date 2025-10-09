@@ -34,6 +34,25 @@
     border-bottom: 1px solid #e5e7eb;
   }
   
+  .mobile-warning {
+    display: none;
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    color: #92400e;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  @media (max-width: 768px) {
+    .mobile-warning {
+      display: block;
+    }
+  }
+  
   h1 {
     font-size: 28px;
     font-weight: 700;
@@ -535,6 +554,9 @@
 
 <div class="container">
   <div class="header">
+    <div class="mobile-warning">
+      ⚠️ Данный калькулятор не адаптирован под мобильную версию. Пожалуйста, используйте широкие экраны для корректного отображения.
+    </div>
     <h1>Калькулятор уровня зрелости команды</h1>
     <div class="subtitle">Оцените компетенции вашей команды по ключевым процессам</div>
   </div>
