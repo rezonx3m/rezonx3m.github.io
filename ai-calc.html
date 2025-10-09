@@ -152,6 +152,41 @@
     flex-wrap: wrap;
   }
   
+  .storage-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .storage-btn {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  }
+  
+  .storage-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+  
+  .storage-btn:active {
+    transform: translateY(0);
+  }
+  
+  #fileInput {
+    display: none;
+  }
+  
   .result-box {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -562,6 +597,12 @@
   </div>
   
   <div class="content">
+    <div class="storage-controls">
+      <button class="storage-btn" onclick="exportData()">📤 Выгрузить данные</button>
+      <button class="storage-btn" onclick="document.getElementById('fileInput').click()">📥 Загрузить данные</button>
+      <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
+    </div>
+    
     <div class="info-container">
       <div class="info-toggle" onclick="toggleInfo('info1')">
         <span class="info-toggle-title">📖 Инструкция по использованию</span>
@@ -583,6 +624,7 @@
           </li>
           <li>Если процесс <b>автоматизирован</b>, поставьте галочку — тогда уровень считается максимальным (2), а вклад сотрудников не учитывается.</li>
           <li>Внизу отображается <b>общий уровень команды</b>.</li>
+          <li><b>💾 Сохранение данных:</b> Все данные хранятся локально в браузере (localStorage). Однако, чтобы не потерять информацию при очистке кэша или переустановке браузера, рекомендуется периодически выгружать данные в JSON-файл с помощью кнопки "Выгрузить данные".</li>
         </ul>
         
         <p style="margin-top: 16px;"><b>Что означает «Процесс автоматизирован»?</b></p>
@@ -1315,6 +1357,81 @@ function toggleInfo(id) {
     infoBlock.classList.add('open');
     icon.classList.add('open');
   }
+}
+
+// ===== Экспорт и импорт данных =====
+function exportData() {
+  const employees = getLocalStorage('employees') || [];
+  const processes = getLocalStorage('processes') || [];
+  
+  const data = {
+    version: "1.0",
+    exportDate: new Date().toISOString(),
+    employees: employees,
+    processes: processes
+  };
+  
+  // Создаем blob с JSON данными
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  
+  // Создаем ссылку для скачивания
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `team-maturity-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  
+  // Очищаем
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  alert('✅ Данные успешно выгружены!');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      
+      // Проверяем структуру данных
+      if (!data.employees || !data.processes) {
+        throw new Error('Неверный формат файла');
+      }
+      
+      // Сохраняем данные в localStorage
+      setLocalStorage('employees', data.employees);
+      setLocalStorage('processes', data.processes);
+      
+      // Очищаем таблицы
+      document.getElementById("leftBody").innerHTML = '';
+      document.getElementById("centerBody").innerHTML = '';
+      document.getElementById("rightBody").innerHTML = '';
+      document.getElementById("centerHeader").innerHTML = '';
+      rowIndex = 0;
+      
+      // Перезагружаем таблицу
+      loadTableFromStorage();
+      
+      alert('✅ Данные успешно загружены!');
+    } catch (error) {
+      console.error('Ошибка импорта:', error);
+      alert('❌ Ошибка при загрузке файла. Убедитесь, что файл имеет правильный формат.');
+    }
+  };
+  
+  reader.onerror = function() {
+    alert('❌ Ошибка при чтении файла.');
+  };
+  
+  reader.readAsText(file);
+  
+  // Сбрасываем значение input, чтобы можно было загрузить тот же файл повторно
+  event.target.value = '';
 }
 
 // ===== Инициализация =====
