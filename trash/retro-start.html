@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рейтинг со звездами</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .input-group {
+            margin-bottom: 200px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="number"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .stars-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .rating-number {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            min-width: 40px;
+        }
+
+        .copy-button {
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .copy-button:hover {
+            background-color: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        .copy-button.copied {
+            background-color: #48bb78;
+        }
+
+        .star {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+
+        .star svg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .star-bg {
+            fill: #d0d0d0;
+        }
+
+        .star-fill {
+            fill: #ffd700;
+            clip-path: inset(0 0 0 0);
+            transition: clip-path 0.3s ease;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-group">
+            <input 
+                type="number" 
+                id="rating-input" 
+                min="0" 
+                max="5" 
+                step="0.1" 
+                value="0"
+                placeholder="0 - 5"
+            >
+        </div>
+
+        <div class="stars-wrapper" id="stars-wrapper">
+            <div class="stars-container" id="stars-container">
+                <!-- Звезды будут созданы через JavaScript -->
+            </div>
+            <div class="rating-number" id="rating-number">0</div>
+        </div>
+
+        <button class="copy-button" id="copy-button">Копировать картинку</button>
+    </div>
+
+    <script>
+        const ratingInput = document.getElementById('rating-input');
+        const starsContainer = document.getElementById('stars-container');
+        const ratingNumber = document.getElementById('rating-number');
+        const starsWrapper = document.getElementById('stars-wrapper');
+        const copyButton = document.getElementById('copy-button');
+
+        // SVG путь для звезды
+        const starPath = "M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z";
+
+        // Создаем 5 звезд
+        function createStars() {
+            starsContainer.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const starDiv = document.createElement('div');
+                starDiv.className = 'star';
+                starDiv.innerHTML = `
+                    <svg viewBox="0 0 24 24">
+                        <path class="star-bg" d="${starPath}"/>
+                    </svg>
+                    <svg viewBox="0 0 24 24">
+                        <path class="star-fill" d="${starPath}" id="star-fill-${i}"/>
+                    </svg>
+                `;
+                starsContainer.appendChild(starDiv);
+            }
+        }
+
+        // Обновляем заполнение звезд
+        function updateStars(rating) {
+            // Валидация
+            if (rating < 0 || rating > 5 || isNaN(rating)) {
+                return;
+            }
+
+            // Обновляем число справа от звезд
+            ratingNumber.textContent = rating;
+
+            for (let i = 0; i < 5; i++) {
+                const starFill = document.getElementById(`star-fill-${i}`);
+                
+                if (rating >= i + 1) {
+                    // Полностью заполненная звезда
+                    starFill.style.clipPath = 'inset(0 0 0 0)';
+                } else if (rating > i) {
+                    // Частично заполненная звезда
+                    const fillPercentage = (rating - i) * 100;
+                    const clipValue = 100 - fillPercentage;
+                    starFill.style.clipPath = `inset(0 ${clipValue}% 0 0)`;
+                } else {
+                    // Пустая звезда
+                    starFill.style.clipPath = 'inset(0 100% 0 0)';
+                }
+            }
+        }
+
+        // Обработчик изменения инпута
+        ratingInput.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value) || 0;
+            updateStars(value);
+        });
+
+        // Функция копирования элемента как картинки
+        async function copyAsImage() {
+            try {
+                // Используем html2canvas для конвертации элемента в canvas
+                const canvas = await html2canvas(starsWrapper, {
+                    backgroundColor: '#ffffff',
+                    scale: 2, // Увеличиваем качество
+                    logging: false
+                });
+
+                // Конвертируем canvas в blob
+                canvas.toBlob(async (blob) => {
+                    try {
+                        // Копируем в буфер обмена
+                        await navigator.clipboard.write([
+                            new ClipboardItem({
+                                'image/png': blob
+                            })
+                        ]);
+
+                        // Визуальная обратная связь
+                        copyButton.textContent = 'Скопировано!';
+                        copyButton.classList.add('copied');
+
+                        setTimeout(() => {
+                            copyButton.textContent = 'Копировать картинку';
+                            copyButton.classList.remove('copied');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Ошибка копирования:', err);
+                        alert('Не удалось скопировать изображение');
+                    }
+                }, 'image/png');
+            } catch (err) {
+                console.error('Ошибка создания изображения:', err);
+                alert('Не удалось создать изображение');
+            }
+        }
+
+        // Обработчик кнопки копирования
+        copyButton.addEventListener('click', copyAsImage);
+
+        // Инициализация
+        createStars();
+        updateStars(0);
+    </script>
+    
+    <!-- Подключаем библиотеку html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>
+
